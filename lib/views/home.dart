@@ -22,7 +22,6 @@ class _MyHomeState extends State<MyHome> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: MyAppBar,
       body: _views[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
         items: [
@@ -32,7 +31,6 @@ class _MyHomeState extends State<MyHome> {
               icon: Icon(Icons.settings), label: 'Settings'),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.cyan,
         onTap: _onItemTapped,
       ),
     );
