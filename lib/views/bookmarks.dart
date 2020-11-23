@@ -140,9 +140,7 @@ class _BookmarksState extends State<Bookmarks> {
                       RaisedButton(
                           child: Text(
                             'Cancel',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white),
+                            style: TextStyle(color: Colors.white),
                           ),
                           onPressed: () {
                             Navigator.pop(context);
@@ -150,9 +148,7 @@ class _BookmarksState extends State<Bookmarks> {
                       RaisedButton(
                           color: Color(0xff4ecdc4),
                           child: Text('Add',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white)),
+                              style: TextStyle(color: Colors.white)),
                           onPressed: () {
                             setState(() {
                               _quotes.add(_quote);
