@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:stoic/theme/text.dart';
 import 'package:stoic/models/quote.dart';
 
 class Bookmarks extends StatefulWidget {
@@ -96,5 +97,74 @@ class _BookmarksState extends State<Bookmarks> {
     );
   }
 
-  void addQuote() {}
+  void addQuote() {
+    Quote _quote = Quote('');
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return SimpleDialog(
+            children: [
+              Container(
+                padding: EdgeInsets.all(8),
+                child: Column(children: [
+                  Text('Add a quote',
+                      style: myTextTheme.bodyText1
+                          .copyWith(fontWeight: FontWeight.bold)),
+                  Container(
+                      padding: EdgeInsets.all(8),
+                      child: Column(children: [
+                        TextField(
+                          decoration: InputDecoration(
+                            labelText: 'What does it say',
+                          ),
+                          onChanged: (String text) => _quote.content = text,
+                        ),
+                        TextField(
+                          decoration: InputDecoration(
+                            labelText: 'Who said it (optional)',
+                          ),
+                          onChanged: (String text) =>
+                              _quote.author = (text != '') ? text : null,
+                        ),
+                        TextField(
+                          decoration: InputDecoration(
+                            labelText: 'Where did you find it (optional)',
+                          ),
+                          onChanged: (String text) =>
+                              _quote.source = (text != '') ? text : null,
+                        ),
+                      ])),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      RaisedButton(
+                          child: Text(
+                            'Cancel',
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white),
+                          ),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          }),
+                      RaisedButton(
+                          color: Color(0xff4ecdc4),
+                          child: Text('Add',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white)),
+                          onPressed: () {
+                            setState(() {
+                              _quotes.add(_quote);
+                            });
+                            Navigator.pop(context);
+                          }),
+                    ],
+                  )
+                ]),
+              )
+            ],
+          );
+        });
+  }
 }
