@@ -7,15 +7,21 @@ class Bookmarks extends StatefulWidget {
 class _BookmarksState extends State<Bookmarks> {
   @override
   Widget build(BuildContext context) {
+    ThemeData _theme = Theme.of(context);
+    TextTheme _textTheme = Theme.of(context).textTheme;
+
     return Scaffold(
       body: Center(
         child: Text(
           'Bookmarks',
-          style: Theme.of(context).textTheme.headline6,
+          style: _textTheme.headline6,
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
+        child: Icon(
+          Icons.add,
+          color: _theme.backgroundColor,
+        ),
         onPressed: addQuote,
       ),
     );

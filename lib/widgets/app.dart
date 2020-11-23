@@ -14,7 +14,12 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) => MyHome(),
       },
-      theme: ThemeData(textTheme: myTextTheme),
+      theme: ThemeData(
+          primaryColor: Color(0xff4ecdc4),
+          accentColor: Color(0xff4ecdc4),
+          backgroundColor: Color(0xffe1e2e7),
+          buttonColor: Color(0xff555b69),
+          textTheme: myTextTheme),
     );
   }
 }
