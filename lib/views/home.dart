@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 // import 'package:stoic/widgets/appbar.dart';
 import 'package:stoic/views/bookmarks.dart';
@@ -18,6 +19,13 @@ class _MyHomeState extends State<MyHome> {
   }
 
   final Map<int, Widget> _views = {0: Bookmarks(), 1: Settings()};
+
+  @override
+  void initState() {
+    super.initState();
+    SystemChrome.setPreferredOrientations(
+        [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+  }
 
   @override
   Widget build(BuildContext context) {
