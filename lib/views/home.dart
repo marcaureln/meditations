@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-// import 'package:stoic/widgets/appbar.dart';
 import 'package:stoic/views/bookmarks.dart';
 import 'package:stoic/views/settings.dart';
 
