@@ -96,14 +96,6 @@ class _SettingsState extends State<Settings> {
                   onChanged: null,
                 ),
               ),
-              ListTile(
-                title: Text('Français'),
-                leading: Radio(
-                  value: 'Français',
-                  groupValue: _language,
-                  onChanged: null,
-                ),
-              ),
             ],
           );
         });
