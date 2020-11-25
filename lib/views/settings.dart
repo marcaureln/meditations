@@ -68,7 +68,7 @@ class _SettingsState extends State<Settings> {
                 child: Center(
                   child: ListTile(
                     leading: Container(child: Icon(Icons.info)),
-                    title: Text('About'),
+                    title: Text('About us'),
                     onTap: _about,
                   ),
                 ),
@@ -118,6 +118,22 @@ class _SettingsState extends State<Settings> {
   }
 
   void _about() {
-    // TODO: display simple dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return SimpleDialog(
+          children: [
+            ListTile(
+              leading: Container(
+                height: double.infinity,
+                child: Icon(Icons.info),
+              ),
+              title: Text('Version'),
+              subtitle: Text('beta'),
+            )
+          ],
+        );
+      },
+    );
   }
 }
