@@ -9,17 +9,6 @@ class Bookmarks extends StatefulWidget {
 }
 
 class _BookmarksState extends State<Bookmarks> {
-  // List<Quote> _quotes = [
-  //   Quote("Vivre, c'est s'adapter.", source: 'Hippie', author: 'Paulo Coelho'),
-  //   Quote('Impossible is for the unwilling', author: 'John Keats'),
-  //   Quote(
-  //       'My biggest fear is that eventually you will see me the way I see myself.',
-  //       source: 'Your Life User Manual '),
-  //   Quote('No pressure, no diamonds.', author: 'Thomas Carlyle'),
-  //   Quote(
-  //       'It’s a good poem if I’m a different person when I’m finished reading it.')
-  // ];
-
   List<Quote> _quotes = [];
 
   @override
