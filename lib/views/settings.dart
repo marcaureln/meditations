@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:stoic/theme/theme.dart';
+
 class Settings extends StatefulWidget {
   _SettingsState createState() => _SettingsState();
 }
@@ -7,15 +9,10 @@ class Settings extends StatefulWidget {
 class _SettingsState extends State<Settings> {
   @override
   Widget build(BuildContext context) {
-    ThemeData _theme = Theme.of(context);
-    TextTheme _textTheme = Theme.of(context).textTheme;
-    double _deviceHeight = MediaQuery.of(context).size.height;
-    double _deviceWidth = MediaQuery.of(context).size.width;
-
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: _theme.scaffoldBackgroundColor,
+        backgroundColor: myTheme.scaffoldBackgroundColor,
         title: Text('Settings'),
         centerTitle: true,
       ),
@@ -84,7 +81,32 @@ class _SettingsState extends State<Settings> {
   }
 
   void _changeLanguage() {
-    // TODO: display simple dialog
+    String _language = 'English';
+
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return SimpleDialog(
+            children: [
+              ListTile(
+                title: Text('English'),
+                leading: Radio(
+                  value: 'English',
+                  groupValue: _language,
+                  onChanged: null,
+                ),
+              ),
+              ListTile(
+                title: Text('Français'),
+                leading: Radio(
+                  value: 'Français',
+                  groupValue: _language,
+                  onChanged: null,
+                ),
+              ),
+            ],
+          );
+        });
   }
 
   void _sendFeedback() async {
