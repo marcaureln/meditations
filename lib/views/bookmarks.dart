@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:stoic/theme/text.dart';
+import 'package:stoic/theme/theme.dart';
 import 'package:stoic/models/quote.dart';
 import 'package:stoic/widgets/no_data.dart';
 
@@ -13,13 +13,10 @@ class _BookmarksState extends State<Bookmarks> {
 
   @override
   Widget build(BuildContext context) {
-    ThemeData _theme = Theme.of(context);
-    TextTheme _textTheme = Theme.of(context).textTheme;
-
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: _theme.scaffoldBackgroundColor,
+        backgroundColor: myTheme.scaffoldBackgroundColor,
         title: Text('Your quotes'),
         centerTitle: true,
       ),
@@ -48,7 +45,7 @@ class _BookmarksState extends State<Bookmarks> {
                         children: [
                           Icon(
                             Icons.delete,
-                            color: _theme.scaffoldBackgroundColor,
+                            color: myTheme.scaffoldBackgroundColor,
                           ),
                           Container(width: 8),
                         ],
@@ -62,14 +59,14 @@ class _BookmarksState extends State<Bookmarks> {
                             width: double.infinity,
                             child: Text(
                               '"$content"',
-                              style: _textTheme.subtitle1,
+                              style: myTheme.textTheme.subtitle1,
                             ),
                           ),
                           Container(
                             width: double.infinity,
                             child: Text(
                               author,
-                              style: _textTheme.subtitle2,
+                              style: myTheme.textTheme.subtitle2,
                             ),
                           ),
                           if (source != null)
@@ -86,7 +83,7 @@ class _BookmarksState extends State<Bookmarks> {
       floatingActionButton: FloatingActionButton(
         child: Icon(
           Icons.add,
-          color: _theme.scaffoldBackgroundColor,
+          color: myTheme.scaffoldBackgroundColor,
         ),
         onPressed: addQuote,
       ),
@@ -96,15 +93,16 @@ class _BookmarksState extends State<Bookmarks> {
   void addQuote() {
     Quote _quote = Quote('');
     showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return SimpleDialog(
-            children: [
-              Container(
-                padding: EdgeInsets.all(8),
-                child: Column(children: [
+      context: context,
+      builder: (BuildContext context) {
+        return SimpleDialog(
+          children: [
+            Container(
+              padding: EdgeInsets.all(8),
+              child: Column(
+                children: [
                   Text('Add a quote',
-                      style: myTextTheme.bodyText1
+                      style: myTheme.textTheme.bodyText1
                           .copyWith(fontWeight: FontWeight.bold)),
                   Container(
                       padding: EdgeInsets.all(8),
@@ -142,7 +140,7 @@ class _BookmarksState extends State<Bookmarks> {
                             Navigator.pop(context);
                           }),
                       RaisedButton(
-                          color: Color(0xff4ecdc4),
+                          color: myTheme.accentColor,
                           child: Text('Add',
                               style: TextStyle(color: Colors.white)),
                           onPressed: () {
@@ -153,10 +151,12 @@ class _BookmarksState extends State<Bookmarks> {
                           }),
                     ],
                   )
-                ]),
-              )
-            ],
-          );
-        });
+                ],
+              ),
+            )
+          ],
+        );
+      },
+    );
   }
 }
