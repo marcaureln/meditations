@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:url_launcher/url_launcher.dart';
+
 import 'package:stoic/theme/theme.dart';
 
 class Settings extends StatefulWidget {
@@ -102,11 +104,12 @@ class _SettingsState extends State<Settings> {
   }
 
   void _sendFeedback() async {
-    // TODO: send mail
+    _launchURL("mailto:alexmarcaureln@gmail.com");
   }
 
   void _share() {
-    // TODO: share link
+    // TODO: url of the launch page
+    _launchURL("https://github.com/marcaureln");
   }
 
   void _about() {
@@ -127,5 +130,13 @@ class _SettingsState extends State<Settings> {
         );
       },
     );
+  }
+
+  _launchURL(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 }
