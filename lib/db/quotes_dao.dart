@@ -15,12 +15,12 @@ class QuotesDao {
     return await _store.add(await _db, quote.toMap());
   }
 
-  Future updateBooks(Quote quote) async {
+  Future updateQuote(Quote quote) async {
     final finder = Finder(filter: Filter.byKey(quote.id));
     await _store.update(await _db, quote.toMap(), finder: finder);
   }
 
-  Future delete(Quote quote) async {
+  Future deleteQuote(Quote quote) async {
     final finder = Finder(filter: Filter.byKey(quote.id));
     await _store.delete(await _db, finder: finder);
   }

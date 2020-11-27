@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:stoic/theme/theme.dart';
 import 'package:stoic/models/quote.dart';
+import 'package:stoic/db/quotes_dao.dart';
 import 'package:stoic/widgets/no_data.dart';
 
 class Bookmarks extends StatefulWidget {
@@ -9,10 +10,21 @@ class Bookmarks extends StatefulWidget {
 }
 
 class _BookmarksState extends State<Bookmarks> {
-  List<Quote> _quotes = [];
+  QuotesDao dao = QuotesDao();
+  List<Quote> quotes;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchQuotes();
+  }
 
   @override
   Widget build(BuildContext context) {
+    if (quotes == null) {
+      _fetchQuotes();
+      return Center(child: CircularProgressIndicator());
+    }
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -20,23 +32,20 @@ class _BookmarksState extends State<Bookmarks> {
         title: Text('Your quotes'),
         centerTitle: true,
       ),
-      body: (_quotes.isEmpty)
+      body: (quotes.length == 0)
           ? NoData()
           : ListView.builder(
               padding: EdgeInsets.all(8),
-              itemCount: _quotes.length,
+              itemCount: quotes.length,
               itemBuilder: (BuildContext context, int index) {
-                String content = _quotes[index].content;
-                String author = _quotes[index].author;
-                String source = _quotes[index].source;
+                print('listview built');
+                Quote quote = quotes[index];
 
                 return Dismissible(
-                  key: ValueKey(content),
+                  key: ValueKey(quote.content),
                   direction: DismissDirection.endToStart,
                   onDismissed: (DismissDirection direction) {
-                    setState(() {
-                      _quotes.removeAt(index);
-                    });
+                    _removeQuote(quote);
                   },
                   background: Card(
                       color: Color(0xffd72323),
@@ -58,39 +67,41 @@ class _BookmarksState extends State<Bookmarks> {
                           Container(
                             width: double.infinity,
                             child: Text(
-                              '"$content"',
+                              '"${quote.content}"',
                               style: myTheme.textTheme.subtitle1,
                             ),
                           ),
                           Container(
                             width: double.infinity,
                             child: Text(
-                              author,
+                              quote.author,
                               style: myTheme.textTheme.subtitle2,
                             ),
                           ),
-                          if (source != null)
+                          if (quote.source != null)
                             Container(
                               width: double.infinity,
-                              child: Text(source),
+                              child: Text(quote.source),
                             ),
                         ],
                       ),
                     ),
                   ),
                 );
-              }),
+              },
+            ),
       floatingActionButton: FloatingActionButton(
         child: Icon(
           Icons.add,
           color: myTheme.scaffoldBackgroundColor,
         ),
-        onPressed: addQuote,
+        onPressed: addQuoteDialog,
       ),
     );
   }
 
-  void addQuote() {
+  // TODO: move addquote dialog to a dedicated page
+  void addQuoteDialog() {
     Quote _quote = Quote('');
     showDialog(
       context: context,
@@ -144,9 +155,7 @@ class _BookmarksState extends State<Bookmarks> {
                           child: Text('Add',
                               style: TextStyle(color: Colors.white)),
                           onPressed: () {
-                            setState(() {
-                              _quotes.add(_quote);
-                            });
+                            _addQuote(_quote);
                             Navigator.pop(context);
                           }),
                     ],
@@ -158,5 +167,28 @@ class _BookmarksState extends State<Bookmarks> {
         );
       },
     );
+  }
+
+  _fetchQuotes() async {
+    await dao.getAllQuotes().then((data) {
+      setState(() {
+        quotes = data;
+      });
+      print('Last delivery:\n$quotes');
+    });
+  }
+
+  _removeQuote(Quote quote) {
+    print('Removed: $quote');
+    dao.deleteQuote(quote);
+    setState(() => quotes.remove(quote));
+    _fetchQuotes();
+  }
+
+  _addQuote(Quote quote) {
+    print('Added: $quote');
+    dao.insertQuote(quote);
+    // setState(() => quotes.add(quote));
+    _fetchQuotes();
   }
 }
