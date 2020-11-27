@@ -80,11 +80,10 @@ class _AddQuoteState extends State<AddQuote> {
                       ),
                     ),
                     onPressed: () {
-                      if (_quote.content == '' || _quote.content == null) {
-                        //TODO: show snackbar or an alert dialog
+                      if (_quote.content != '' && _quote.content != null) {
+                        dao.insertQuote(_quote);
+                        Navigator.pop(context);
                       }
-                      dao.insertQuote(_quote);
-                      Navigator.pop(context);
                     },
                   ),
                 )
