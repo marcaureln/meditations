@@ -95,77 +95,10 @@ class _BookmarksState extends State<Bookmarks> {
           Icons.add,
           color: myTheme.scaffoldBackgroundColor,
         ),
-        onPressed: addQuoteDialog,
+        onPressed: () {
+          Navigator.pushNamed(context, '/add_quote');
+        },
       ),
-    );
-  }
-
-  // TODO: move addquote dialog to a dedicated page
-  void addQuoteDialog() {
-    Quote _quote = Quote('');
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return SimpleDialog(
-          children: [
-            Container(
-              padding: EdgeInsets.all(8),
-              child: Column(
-                children: [
-                  Text('Add a quote',
-                      style: myTheme.textTheme.bodyText1
-                          .copyWith(fontWeight: FontWeight.bold)),
-                  Container(
-                      padding: EdgeInsets.all(8),
-                      child: Column(children: [
-                        TextField(
-                          decoration: InputDecoration(
-                            labelText: 'What does it say',
-                          ),
-                          onChanged: (String text) => _quote.content = text,
-                        ),
-                        TextField(
-                          decoration: InputDecoration(
-                            labelText: 'Who said it (optional)',
-                          ),
-                          onChanged: (String text) =>
-                              _quote.author = (text != '') ? text : null,
-                        ),
-                        TextField(
-                          decoration: InputDecoration(
-                            labelText: 'Where did you find it (optional)',
-                          ),
-                          onChanged: (String text) =>
-                              _quote.source = (text != '') ? text : null,
-                        ),
-                      ])),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      RaisedButton(
-                          child: Text(
-                            'Cancel',
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          onPressed: () {
-                            Navigator.pop(context);
-                          }),
-                      RaisedButton(
-                          color: myTheme.accentColor,
-                          child: Text('Add',
-                              style: TextStyle(color: Colors.white)),
-                          onPressed: () {
-                            _addQuote(_quote);
-                            Navigator.pop(context);
-                          }),
-                    ],
-                  )
-                ],
-              ),
-            )
-          ],
-        );
-      },
     );
   }
 
@@ -182,13 +115,6 @@ class _BookmarksState extends State<Bookmarks> {
     print('Removed: $quote');
     dao.deleteQuote(quote);
     setState(() => quotes.remove(quote));
-    _fetchQuotes();
-  }
-
-  _addQuote(Quote quote) {
-    print('Added: $quote');
-    dao.insertQuote(quote);
-    // setState(() => quotes.add(quote));
     _fetchQuotes();
   }
 }
