@@ -114,7 +114,9 @@ class _BookmarksState extends State<Bookmarks> {
   _removeQuote(Quote quote) {
     print('Removed: $quote');
     dao.deleteQuote(quote);
-    setState(() => quotes.remove(quote));
+    setState(() {
+      quotes.remove(quote);
+    });
     _fetchQuotes();
   }
 }
