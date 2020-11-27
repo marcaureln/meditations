@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:stoic/views/home.dart';
+import 'package:stoic/views/add_quote.dart';
 import 'package:stoic/theme/theme.dart';
 
 class MyApp extends StatelessWidget {
@@ -12,6 +13,7 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/': (context) => MyHome(),
+        '/add_quote': (context) => AddQuote(),
       },
       theme: myTheme,
     );
