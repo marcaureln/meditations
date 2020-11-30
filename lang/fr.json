@@ -1,0 +1,14 @@
+{
+  "bottomnavbar_bookmarks": "Favoris",
+  "bottomnavbar_settings": "Paramètres",
+  "bookmarks_appbar_title": "Vos citations",
+  "no_data": "Aucune citations trouvées... Ajoutez votre première citation",
+  "settings_appbar_title": "Paramètres",
+  "settings_language": "Langue",
+  "settings_feedback": "Envoyer un commentaire",
+  "settings_feedback_sub": "Signaler un bug ou proposer une fonctionalité",
+  "settings_share": "Partager",
+  "settings_share_sub": "Partager l'application avec ses amis et sa famille",
+  "settings_about": "À propos de",
+  "version": "Version"
+}

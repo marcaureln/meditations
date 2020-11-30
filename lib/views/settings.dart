@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'package:stoic/theme/theme.dart';
+import 'package:stoic/theme/app_localizations.dart';
 
 class Settings extends StatefulWidget {
   _SettingsState createState() => _SettingsState();
@@ -15,7 +16,8 @@ class _SettingsState extends State<Settings> {
       appBar: AppBar(
         elevation: 0,
         backgroundColor: myTheme.scaffoldBackgroundColor,
-        title: Text('Settings'),
+        title: Text(
+            AppLocalizations.of(context).translate('settings_appbar_title')),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
@@ -31,8 +33,10 @@ class _SettingsState extends State<Settings> {
                       height: double.infinity,
                       child: Icon(Icons.translate),
                     ),
-                    title: Text('Language'),
-                    subtitle: Text('Change application language'),
+                    title: Text(AppLocalizations.of(context)
+                        .translate('settings_language')),
+                    subtitle:
+                        Text(AppLocalizations.of(context).locale.languageCode),
                     onTap: _changeLanguage,
                   ),
                 ),
@@ -45,8 +49,10 @@ class _SettingsState extends State<Settings> {
                       height: double.infinity,
                       child: Icon(Icons.feedback),
                     ),
-                    title: Text('Send feedback'),
-                    subtitle: Text('Report a bug or request a feature'),
+                    title: Text(AppLocalizations.of(context)
+                        .translate('settings_feedback')),
+                    subtitle: Text(AppLocalizations.of(context)
+                        .translate('settings_feedback_sub')),
                     onTap: _sendFeedback,
                   ),
                 ),
@@ -59,8 +65,10 @@ class _SettingsState extends State<Settings> {
                       height: double.infinity,
                       child: Icon(Icons.share),
                     ),
-                    title: Text('Share'),
-                    subtitle: Text('Share with friends and family'),
+                    title: Text(AppLocalizations.of(context)
+                        .translate('settings_share')),
+                    subtitle: Text(AppLocalizations.of(context)
+                        .translate('settings_share_sub')),
                     onTap: _share,
                   ),
                 ),
@@ -70,7 +78,8 @@ class _SettingsState extends State<Settings> {
                 child: Center(
                   child: ListTile(
                     leading: Container(child: Icon(Icons.info)),
-                    title: Text('About us'),
+                    title: Text(AppLocalizations.of(context)
+                        .translate('settings_about')),
                     onTap: _about,
                   ),
                 ),
@@ -123,7 +132,7 @@ class _SettingsState extends State<Settings> {
                 height: double.infinity,
                 child: Icon(Icons.info),
               ),
-              title: Text('Version'),
+              title: Text(AppLocalizations.of(context).translate('version')),
               subtitle: Text('beta'),
             )
           ],
