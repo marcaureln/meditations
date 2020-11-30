@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import 'package:stoic/theme/app_localizations.dart';
 import 'package:stoic/views/bookmarks.dart';
 import 'package:stoic/views/settings.dart';
 
@@ -33,9 +34,13 @@ class _MyHomeState extends State<MyHome> {
       bottomNavigationBar: BottomNavigationBar(
         items: [
           BottomNavigationBarItem(
-              icon: Icon(Icons.bookmark), label: 'Bookmarks'),
+              icon: Icon(Icons.bookmark),
+              label: AppLocalizations.of(context)
+                  .translate('bottomnavbar_bookmarks')),
           BottomNavigationBarItem(
-              icon: Icon(Icons.settings), label: 'Settings'),
+              icon: Icon(Icons.settings),
+              label: AppLocalizations.of(context)
+                  .translate('bottomnavbar_settings')),
         ],
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
