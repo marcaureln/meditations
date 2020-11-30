@@ -35,6 +35,8 @@ dev_dependencies:
   google_fonts: ^1.1.1
   path_provider: ^1.6.24
   sembast: ^2.4.8
+  flutter_localizations:
+    sdk: flutter
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -50,6 +52,8 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/google_fonts/
+    - lang/en.json
+    - lang/fr.json
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 
