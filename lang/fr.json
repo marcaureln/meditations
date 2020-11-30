@@ -1,7 +1,8 @@
 {
     "bookmarks_appbar_title": "Vos citations",
     "no_data": "Aucune citations trouvées... Ajoutez votre première citation",
-    "bookmarks": "Favoris",
-    "settings": "Paramètres"
+    "bottomnavbar_bookmarks": "Favoris",
+    "bottomnavbar_settings": "Paramètres",
+    "settings_appbar_title": "Paramètres"
   }
   
