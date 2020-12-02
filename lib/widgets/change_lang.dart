@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:stoic/theme/app_localizations.dart';
 import 'package:stoic/theme/theme.dart';
 import 'package:stoic/widgets/app.dart';
 
@@ -48,7 +49,7 @@ class _ChangeLanguageDialogContentState
             ),
           ),
         RaisedButton(
-          child: Text('Save'),
+          child: Text(AppLocalizations.of(context).translate('save')),
           color: myTheme.accentColor,
           onPressed: () {
             Navigator.pop(context);

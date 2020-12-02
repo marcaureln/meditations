@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:stoic/db/quotes_dao.dart';
+import 'package:stoic/theme/app_localizations.dart';
 import 'package:stoic/theme/theme.dart';
 import 'package:stoic/models/quote.dart';
 
@@ -23,7 +24,7 @@ class _AddQuoteState extends State<AddQuote> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Add a quote'),
+        title: Text(AppLocalizations.of(context).translate('add_quote')),
         centerTitle: true,
         elevation: 0,
         leading: IconButton(
@@ -47,7 +48,8 @@ class _AddQuoteState extends State<AddQuote> {
                 TextField(
                     // autofocus: true,
                     decoration: InputDecoration(
-                      labelText: 'What does it say',
+                      labelText: AppLocalizations.of(context)
+                          .translate('what_does_it_say'),
                       border: OutlineInputBorder(),
                     ),
                     onChanged: (String text) {
@@ -55,7 +57,9 @@ class _AddQuoteState extends State<AddQuote> {
                     }),
                 TextField(
                     decoration: InputDecoration(
-                      labelText: 'Who said it (optional)',
+                      labelText: AppLocalizations.of(context)
+                              .translate('who_said_it') +
+                          ' (${AppLocalizations.of(context).translate('optional').toLowerCase()})',
                       border: OutlineInputBorder(),
                     ),
                     onChanged: (String text) {
@@ -63,7 +67,9 @@ class _AddQuoteState extends State<AddQuote> {
                     }),
                 TextField(
                     decoration: InputDecoration(
-                      labelText: 'Where did you find it (optional)',
+                      labelText: AppLocalizations.of(context)
+                              .translate('where_did_you_find_it') +
+                          ' (${AppLocalizations.of(context).translate('optional').toLowerCase()})',
                       border: OutlineInputBorder(),
                     ),
                     onChanged: (String text) {
@@ -74,7 +80,7 @@ class _AddQuoteState extends State<AddQuote> {
                     elevation: 6,
                     color: myTheme.accentColor,
                     child: Text(
-                      'Save',
+                      AppLocalizations.of(context).translate('save'),
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                       ),

@@ -10,5 +10,11 @@
   "settings_share": "Share",
   "settings_share_sub": "Share with friends and family",
   "settings_about": "About",
-  "version": "Version"
+  "version": "Version",
+  "save": "Save",
+  "add_quote": "Add quote",
+  "optional": "Optional",
+  "what_does_it_say": "What does it say",
+  "who_said_it": "Who said it",
+  "where_did_you_find_it": "Where did you find it"
 }
