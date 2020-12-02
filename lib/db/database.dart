@@ -11,7 +11,7 @@ class AppDatabase {
   static final AppDatabase _instance = AppDatabase._();
   static AppDatabase get instance => _instance;
 
-  String _dbName = 'database.db';
+  static const String _dbName = 'database.db';
 
   Future<Database> get database async {
     final appDocumentDir = await getApplicationDocumentsDirectory();
