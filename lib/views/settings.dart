@@ -10,6 +10,8 @@ class Settings extends StatefulWidget {
 }
 
 class _SettingsState extends State<Settings> {
+  static const String _currentVersion = '1.0.0';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -77,10 +79,15 @@ class _SettingsState extends State<Settings> {
               Container(
                 child: Center(
                   child: ListTile(
-                    leading: Container(child: Icon(Icons.info)),
+                    leading: Container(
+                      height: double.infinity,
+                      child: Icon(Icons.info),
+                    ),
                     title: Text(AppLocalizations.of(context)
                         .translate('settings_about')),
-                    onTap: _about,
+                    subtitle: Text(
+                        AppLocalizations.of(context).translate('version') +
+                            ': $_currentVersion'),
                   ),
                 ),
               ),
@@ -117,28 +124,7 @@ class _SettingsState extends State<Settings> {
   }
 
   void _share() {
-    // TODO: url of the launch page
     _launchURL("https://github.com/marcaureln");
-  }
-
-  void _about() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return SimpleDialog(
-          children: [
-            ListTile(
-              leading: Container(
-                height: double.infinity,
-                child: Icon(Icons.info),
-              ),
-              title: Text(AppLocalizations.of(context).translate('version')),
-              subtitle: Text('beta'),
-            )
-          ],
-        );
-      },
-    );
   }
 
   _launchURL(String url) async {
