@@ -4,6 +4,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import 'package:stoic/theme/theme.dart';
 import 'package:stoic/theme/app_localizations.dart';
+import 'package:stoic/widgets/change_lang.dart';
 
 class Settings extends StatefulWidget {
   _SettingsState createState() => _SettingsState();
@@ -99,24 +100,19 @@ class _SettingsState extends State<Settings> {
   }
 
   void _changeLanguage() {
-    String _language = 'English';
-
     showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return SimpleDialog(
-            children: [
-              ListTile(
-                title: Text('English'),
-                leading: Radio(
-                  value: 'English',
-                  groupValue: _language,
-                  onChanged: null,
-                ),
-              ),
-            ],
-          );
-        });
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return SimpleDialog(
+          contentPadding: EdgeInsets.all(8),
+          children: [
+            ChangeLanguageDialogContent(
+                AppLocalizations.of(context).locale.languageCode)
+          ],
+        );
+      },
+    );
   }
 
   void _sendFeedback() async {
