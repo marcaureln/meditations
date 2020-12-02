@@ -102,7 +102,6 @@ class _SettingsState extends State<Settings> {
   void _changeLanguage() {
     showDialog(
       context: context,
-      barrierDismissible: false,
       builder: (BuildContext context) {
         return SimpleDialog(
           contentPadding: EdgeInsets.all(8),

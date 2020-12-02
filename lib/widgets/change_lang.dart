@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:stoic/theme/app_localizations.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stoic/theme/theme.dart';
+import 'package:stoic/widgets/app.dart';
 
 class ChangeLanguageDialogContent extends StatefulWidget {
   final String currentLanguage;
@@ -51,9 +52,17 @@ class _ChangeLanguageDialogContentState
           color: myTheme.accentColor,
           onPressed: () {
             Navigator.pop(context);
+            MyApp.setLocale(context, Locale(_selectedLanguage));
+            _saveLocale(_selectedLanguage);
           },
-        )
+        ),
       ],
     );
+  }
+
+  _saveLocale(String languageCode) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('lang', languageCode);
+    print(prefs.getString('lang'));
   }
 }
