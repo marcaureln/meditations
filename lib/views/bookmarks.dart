@@ -15,12 +15,6 @@ class _BookmarksState extends State<Bookmarks> {
   List<Quote> quotes;
 
   @override
-  void initState() {
-    super.initState();
-    _fetchQuotes();
-  }
-
-  @override
   Widget build(BuildContext context) {
     if (quotes == null) {
       _fetchQuotes();
@@ -34,19 +28,19 @@ class _BookmarksState extends State<Bookmarks> {
             AppLocalizations.of(context).translate('bookmarks_appbar_title')),
         centerTitle: true,
       ),
-      body: (quotes.length == 0)
+      body: (quotes.isEmpty)
           ? NoData()
           : ListView.builder(
               padding: EdgeInsets.all(8),
               itemCount: quotes.length,
-              itemBuilder: (BuildContext context, int index) {
+              itemBuilder: (context, index) {
                 print('listview built');
                 Quote quote = quotes[index];
 
                 return Dismissible(
-                  key: ValueKey(quote.content),
+                  key: ValueKey(quote.id),
                   direction: DismissDirection.endToStart,
-                  onDismissed: (DismissDirection direction) {
+                  onDismissed: (_) {
                     _removeQuote(quote);
                   },
                   background: Card(
@@ -109,16 +103,14 @@ class _BookmarksState extends State<Bookmarks> {
       setState(() {
         quotes = data;
       });
-      print('Last delivery:\n$quotes');
+      print('Last delivery: $quotes');
     });
   }
 
   _removeQuote(Quote quote) {
-    print('Removed: $quote');
-    dao.deleteQuote(quote);
     setState(() {
       quotes.remove(quote);
     });
-    _fetchQuotes();
+    dao.deleteQuote(quote);
   }
 }

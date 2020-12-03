@@ -87,8 +87,7 @@ class _SettingsState extends State<Settings> {
                     title: Text(AppLocalizations.of(context)
                         .translate('settings_about')),
                     subtitle: Text(
-                        AppLocalizations.of(context).translate('version') +
-                            ': $_currentVersion'),
+                        '${AppLocalizations.of(context).translate('version')}: $_currentVersion'),
                   ),
                 ),
               ),
@@ -102,7 +101,7 @@ class _SettingsState extends State<Settings> {
   void _changeLanguage() {
     showDialog(
       context: context,
-      builder: (BuildContext context) {
+      builder: (context) {
         return SimpleDialog(
           contentPadding: EdgeInsets.all(8),
           children: [

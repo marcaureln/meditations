@@ -28,7 +28,7 @@ class _ChangeLanguageDialogContentState
   @override
   void initState() {
     super.initState();
-    _selectedLanguage = this.currentLanguage;
+    _selectedLanguage = currentLanguage;
   }
 
   @override

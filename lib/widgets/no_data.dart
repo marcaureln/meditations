@@ -10,7 +10,7 @@ class NoData extends StatelessWidget {
       child: Container(
         width: MediaQuery.of(context).size.width * .8,
         child: Text(
-          AppLocalizations.of(context).translate('no_data') + ' 👇',
+          '${AppLocalizations.of(context).translate('no_data')} 👇',
           style: myTheme.textTheme.bodyText1,
           textAlign: TextAlign.center,
         ),

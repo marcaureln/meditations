@@ -13,7 +13,7 @@ class AddQuote extends StatefulWidget {
 class _AddQuoteState extends State<AddQuote> {
   Quote _quote;
 
-  initState() {
+  void initState() {
     super.initState();
     _quote = Quote('');
   }
@@ -52,27 +52,25 @@ class _AddQuoteState extends State<AddQuote> {
                           .translate('what_does_it_say'),
                       border: OutlineInputBorder(),
                     ),
-                    onChanged: (String text) {
+                    onChanged: (text) {
                       _quote.content = text;
                     }),
                 TextField(
                     decoration: InputDecoration(
-                      labelText: AppLocalizations.of(context)
-                              .translate('who_said_it') +
-                          ' (${AppLocalizations.of(context).translate('optional').toLowerCase()})',
+                      labelText:
+                          '${AppLocalizations.of(context).translate('who_said_it')} ${'(${AppLocalizations.of(context).translate('optional').toLowerCase()})'}',
                       border: OutlineInputBorder(),
                     ),
-                    onChanged: (String text) {
+                    onChanged: (text) {
                       _quote.author = (text != '') ? text : null;
                     }),
                 TextField(
                     decoration: InputDecoration(
-                      labelText: AppLocalizations.of(context)
-                              .translate('where_did_you_find_it') +
-                          ' (${AppLocalizations.of(context).translate('optional').toLowerCase()})',
+                      labelText:
+                          '${AppLocalizations.of(context).translate('where_did_you_find_it')} ${'(${AppLocalizations.of(context).translate('optional').toLowerCase()})'}',
                       border: OutlineInputBorder(),
                     ),
-                    onChanged: (String text) {
+                    onChanged: (text) {
                       _quote.source = (text != '') ? text : null;
                     }),
                 Container(
