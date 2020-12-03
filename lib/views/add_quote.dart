@@ -11,7 +11,9 @@ class AddQuote extends StatefulWidget {
 }
 
 class _AddQuoteState extends State<AddQuote> {
+  QuotesDao dao = QuotesDao();
   Quote _quote;
+  bool isQuoteContentEmpty = true;
 
   void initState() {
     super.initState();
@@ -20,7 +22,6 @@ class _AddQuoteState extends State<AddQuote> {
 
   @override
   Widget build(BuildContext context) {
-    QuotesDao dao = QuotesDao();
     final FocusScopeNode node = FocusScope.of(context);
 
     return Scaffold(
@@ -55,6 +56,9 @@ class _AddQuoteState extends State<AddQuote> {
                   ),
                   onChanged: (text) {
                     _quote.content = text;
+                    setState(() {
+                      isQuoteContentEmpty = (text.isNotEmpty) ? false : true;
+                    });
                   },
                   onEditingComplete: () {
                     node.nextFocus();
@@ -92,16 +96,8 @@ class _AddQuoteState extends State<AddQuote> {
                     color: myTheme.accentColor,
                     child: Text(
                       AppLocalizations.of(context).translate('save'),
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
                     ),
-                    onPressed: () {
-                      if (_quote.content != '' && _quote.content != null) {
-                        dao.insertQuote(_quote);
-                        Navigator.pop(context);
-                      }
-                    },
+                    onPressed: (isQuoteContentEmpty) ? null : _addQuote,
                   ),
                 )
               ],
@@ -110,5 +106,10 @@ class _AddQuoteState extends State<AddQuote> {
         ),
       ),
     );
+  }
+
+  void _addQuote() {
+    dao.insertQuote(_quote);
+    Navigator.pop(context);
   }
 }
