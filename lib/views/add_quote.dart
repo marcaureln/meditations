@@ -56,7 +56,7 @@ class _AddQuoteState extends State<AddQuote> {
                     border: OutlineInputBorder(),
                   ),
                   onChanged: (text) {
-                    _quote.content = text;
+                    _quote.content = text.trim();
                     setState(() {
                       isQuoteContentEmpty = (text.isNotEmpty) ? false : true;
                     });
@@ -72,7 +72,7 @@ class _AddQuoteState extends State<AddQuote> {
                     border: OutlineInputBorder(),
                   ),
                   onChanged: (text) {
-                    _quote.author = (text != '') ? text : null;
+                    _quote.author = (text != '') ? text.trim() : null;
                   },
                   onEditingComplete: () {
                     node.nextFocus();
@@ -85,7 +85,7 @@ class _AddQuoteState extends State<AddQuote> {
                     border: OutlineInputBorder(),
                   ),
                   onChanged: (text) {
-                    _quote.source = (text != '') ? text : null;
+                    _quote.source = (text != '') ? text.trim() : null;
                   },
                   onEditingComplete: () {
                     node.unfocus();
