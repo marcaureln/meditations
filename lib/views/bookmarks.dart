@@ -34,7 +34,6 @@ class _BookmarksState extends State<Bookmarks> {
               padding: EdgeInsets.all(8),
               itemCount: quotes.length,
               itemBuilder: (context, index) {
-                print('listview built');
                 Quote quote = quotes[index];
 
                 return Dismissible(
@@ -101,7 +100,6 @@ class _BookmarksState extends State<Bookmarks> {
       setState(() {
         quotes = data;
       });
-      print('Last delivery: $quotes');
     });
   }
 

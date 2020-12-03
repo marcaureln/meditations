@@ -64,6 +64,5 @@ class _ChangeLanguageDialogContentState
   _saveLocale(String languageCode) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('lang', languageCode);
-    print(prefs.getString('lang'));
   }
 }
