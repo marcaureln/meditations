@@ -11,7 +11,7 @@ class Settings extends StatefulWidget {
 }
 
 class _SettingsState extends State<Settings> {
-  static const String _currentVersion = '1.0.0';
+  static const String _currentVersion = '1.0.0-b';
 
   @override
   Widget build(BuildContext context) {
