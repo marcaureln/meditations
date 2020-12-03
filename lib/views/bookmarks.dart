@@ -91,9 +91,7 @@ class _BookmarksState extends State<Bookmarks> {
           Icons.add,
           color: myTheme.scaffoldBackgroundColor,
         ),
-        onPressed: () {
-          Navigator.pushNamed(context, '/add_quote');
-        },
+        onPressed: _openAddQuotePage,
       ),
     );
   }
@@ -112,5 +110,14 @@ class _BookmarksState extends State<Bookmarks> {
       quotes.remove(quote);
     });
     dao.deleteQuote(quote);
+  }
+
+  _openAddQuotePage() async {
+    var returnedQuote = await Navigator.pushNamed(context, '/add_quote');
+    if (returnedQuote != null) {
+      setState(() {
+        quotes.add(returnedQuote);
+      });
+    }
   }
 }

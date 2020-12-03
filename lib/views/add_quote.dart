@@ -27,12 +27,13 @@ class _AddQuoteState extends State<AddQuote> {
     return Scaffold(
       appBar: AppBar(
         title: Text(AppLocalizations.of(context).translate('add_quote')),
+        backgroundColor: myTheme.scaffoldBackgroundColor,
         centerTitle: true,
         elevation: 0,
         leading: IconButton(
             icon: Icon(Icons.arrow_back),
             onPressed: () {
-              Navigator.pop(context);
+              Navigator.pop(context, null);
             }),
       ),
       body: GestureDetector(
@@ -108,8 +109,9 @@ class _AddQuoteState extends State<AddQuote> {
     );
   }
 
-  void _addQuote() {
-    dao.insertQuote(_quote);
-    Navigator.pop(context);
+  void _addQuote() async {
+    var _quoteId = await dao.insertQuote(_quote);
+    _quote.id = _quoteId;
+    Navigator.pop(context, _quote);
   }
 }
