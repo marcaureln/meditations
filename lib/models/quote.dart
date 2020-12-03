@@ -4,7 +4,7 @@ class Quote {
   String author;
   String source;
 
-  Quote(this.content, {this.author = 'Anonymous', this.source, this.id});
+  Quote(this.content, {this.author, this.source, this.id});
 
   Quote.fromMap(this.id, Map<String, dynamic> map) {
     content = map['content'];

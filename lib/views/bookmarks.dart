@@ -69,7 +69,10 @@ class _BookmarksState extends State<Bookmarks> {
                           Container(
                             width: double.infinity,
                             child: Text(
-                              quote.author,
+                              (quote.author != null)
+                                  ? quote.author
+                                  : AppLocalizations.of(context)
+                                      .translate('anonymous'),
                               style: myTheme.textTheme.subtitle2,
                             ),
                           ),
