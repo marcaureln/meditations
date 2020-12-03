@@ -21,6 +21,7 @@ class _AddQuoteState extends State<AddQuote> {
   @override
   Widget build(BuildContext context) {
     QuotesDao dao = QuotesDao();
+    final FocusScopeNode node = FocusScope.of(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -35,7 +36,7 @@ class _AddQuoteState extends State<AddQuote> {
       ),
       body: GestureDetector(
         onTap: () {
-          FocusScope.of(context).requestFocus(FocusNode());
+          node.requestFocus(FocusNode());
         },
         child: SingleChildScrollView(
           physics: AlwaysScrollableScrollPhysics(),
@@ -46,33 +47,45 @@ class _AddQuoteState extends State<AddQuote> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 TextField(
-                    // autofocus: true,
-                    decoration: InputDecoration(
-                      labelText: AppLocalizations.of(context)
-                          .translate('what_does_it_say'),
-                      border: OutlineInputBorder(),
-                    ),
-                    onChanged: (text) {
-                      _quote.content = text;
-                    }),
+                  autofocus: true,
+                  decoration: InputDecoration(
+                    labelText: AppLocalizations.of(context)
+                        .translate('what_does_it_say'),
+                    border: OutlineInputBorder(),
+                  ),
+                  onChanged: (text) {
+                    _quote.content = text;
+                  },
+                  onEditingComplete: () {
+                    node.nextFocus();
+                  },
+                ),
                 TextField(
-                    decoration: InputDecoration(
-                      labelText:
-                          '${AppLocalizations.of(context).translate('who_said_it')} ${'(${AppLocalizations.of(context).translate('optional').toLowerCase()})'}',
-                      border: OutlineInputBorder(),
-                    ),
-                    onChanged: (text) {
-                      _quote.author = (text != '') ? text : null;
-                    }),
+                  decoration: InputDecoration(
+                    labelText:
+                        '${AppLocalizations.of(context).translate('who_said_it')} ${'(${AppLocalizations.of(context).translate('optional').toLowerCase()})'}',
+                    border: OutlineInputBorder(),
+                  ),
+                  onChanged: (text) {
+                    _quote.author = (text != '') ? text : null;
+                  },
+                  onEditingComplete: () {
+                    node.nextFocus();
+                  },
+                ),
                 TextField(
-                    decoration: InputDecoration(
-                      labelText:
-                          '${AppLocalizations.of(context).translate('where_did_you_find_it')} ${'(${AppLocalizations.of(context).translate('optional').toLowerCase()})'}',
-                      border: OutlineInputBorder(),
-                    ),
-                    onChanged: (text) {
-                      _quote.source = (text != '') ? text : null;
-                    }),
+                  decoration: InputDecoration(
+                    labelText:
+                        '${AppLocalizations.of(context).translate('where_did_you_find_it')} ${'(${AppLocalizations.of(context).translate('optional').toLowerCase()})'}',
+                    border: OutlineInputBorder(),
+                  ),
+                  onChanged: (text) {
+                    _quote.source = (text != '') ? text : null;
+                  },
+                  onEditingComplete: () {
+                    node.unfocus();
+                  },
+                ),
                 Container(
                   child: RaisedButton(
                     elevation: 6,
