@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:clipboard/clipboard.dart';
+
 import 'package:stoic/theme/theme.dart';
 import 'package:stoic/theme/app_localizations.dart';
 import 'package:stoic/models/quote.dart';
@@ -43,45 +45,51 @@ class _BookmarksState extends State<Bookmarks> {
                     _removeQuote(quote);
                   },
                   background: Card(
-                      color: Color(0xffd72323),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Icon(
-                            Icons.delete,
-                            color: myTheme.scaffoldBackgroundColor,
-                          ),
-                          Container(width: 8),
-                        ],
-                      )),
+                    color: Color(0xffd72323),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Icon(
+                          Icons.delete,
+                          color: myTheme.scaffoldBackgroundColor,
+                        ),
+                        Container(width: 8),
+                      ],
+                    ),
+                  ),
                   child: Card(
-                    child: Container(
-                      padding: EdgeInsets.all(8),
-                      child: Column(
-                        children: [
-                          Container(
-                            width: double.infinity,
-                            child: Text(
-                              '"${quote.content}"',
-                              style: myTheme.textTheme.subtitle1,
-                            ),
-                          ),
-                          Container(
-                            width: double.infinity,
-                            child: Text(
-                              (quote.author != null)
-                                  ? quote.author
-                                  : AppLocalizations.of(context)
-                                      .translate('anonymous'),
-                              style: myTheme.textTheme.subtitle2,
-                            ),
-                          ),
-                          if (quote.source != null)
+                    child: InkWell(
+                      onLongPress: () {
+                        _saveToClipboard(quote);
+                      },
+                      child: Container(
+                        padding: EdgeInsets.all(8),
+                        child: Column(
+                          children: [
                             Container(
                               width: double.infinity,
-                              child: Text(quote.source),
+                              child: Text(
+                                '"${quote.content}"',
+                                style: myTheme.textTheme.subtitle1,
+                              ),
                             ),
-                        ],
+                            Container(
+                              width: double.infinity,
+                              child: Text(
+                                (quote.author != null)
+                                    ? quote.author
+                                    : AppLocalizations.of(context)
+                                        .translate('anonymous'),
+                                style: myTheme.textTheme.subtitle2,
+                              ),
+                            ),
+                            if (quote.source != null)
+                              Container(
+                                width: double.infinity,
+                                child: Text(quote.source),
+                              ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -120,5 +128,27 @@ class _BookmarksState extends State<Bookmarks> {
         quotes.add(returnedQuote);
       });
     }
+  }
+
+  _saveToClipboard(Quote quote) {
+    var text = '"${quote.content}"';
+
+    if (quote.source != null) {
+      text += ' ${quote.source}';
+      if (quote.author != null) {
+        text += ', ${quote.author}';
+      }
+    } else if (quote.author != null) {
+      text += ' ${quote.author}';
+    }
+
+    FlutterClipboard.copy(text).then((_) {
+      Scaffold.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Copied to clipboard!'),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+    });
   }
 }
