@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:stoic/db/database.dart';
 
 import 'package:stoic/db/quotes_dao.dart';
 import 'package:stoic/theme/app_localizations.dart';
@@ -110,7 +111,7 @@ class _AddQuoteState extends State<AddQuote> {
   }
 
   void _addQuote() async {
-    var _quoteId = await dao.insertQuote(_quote);
+    var _quoteId = await AppDatabase.insert('quotes', _quote.toMap());
     _quote.id = _quoteId;
     Navigator.pop(context, _quote);
   }

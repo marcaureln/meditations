@@ -11,18 +11,9 @@ class QuotesDao {
 
   Future<Database> get _db async => await AppDatabase.instance.database;
 
-  Future<int> insertQuote(Quote quote) async {
-    return await _store.add(await _db, quote.toMap());
-  }
-
   Future updateQuote(Quote quote) async {
     final finder = Finder(filter: Filter.byKey(quote.id));
     await _store.update(await _db, quote.toMap(), finder: finder);
-  }
-
-  Future deleteQuote(Quote quote) async {
-    final finder = Finder(filter: Filter.byKey(quote.id));
-    await _store.delete(await _db, finder: finder);
   }
 
   Future<List<Quote>> getAllQuotes() async {

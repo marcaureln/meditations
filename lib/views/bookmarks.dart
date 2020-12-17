@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:clipboard/clipboard.dart';
+import 'package:stoic/db/database.dart';
 
 import 'package:stoic/theme/theme.dart';
 import 'package:stoic/theme/app_localizations.dart';
@@ -137,7 +138,7 @@ class _BookmarksState extends State<Bookmarks> {
         .closed
         .then((reason) {
       if (reason != SnackBarClosedReason.action) {
-        dao.deleteQuote(quote);
+        AppDatabase.delete('quotes', quote.id);
       }
     });
   }
