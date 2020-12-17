@@ -118,7 +118,28 @@ class _BookmarksState extends State<Bookmarks> {
     setState(() {
       quotes.remove(quote);
     });
-    dao.deleteQuote(quote);
+    Scaffold.of(context)
+        .showSnackBar(
+          SnackBar(
+            duration: Duration(seconds: 2),
+            content: Text('Quote removed'),
+            action: SnackBarAction(
+              label: 'Undo',
+              onPressed: () {
+                setState(() {
+                  quotes.add(quote);
+                });
+              },
+            ),
+            behavior: SnackBarBehavior.floating,
+          ),
+        )
+        .closed
+        .then((reason) {
+      if (reason != SnackBarClosedReason.action) {
+        dao.deleteQuote(quote);
+      }
+    });
   }
 
   _openAddQuotePage() async {
