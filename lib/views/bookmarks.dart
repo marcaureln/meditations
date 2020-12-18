@@ -129,9 +129,10 @@ class _BookmarksState extends State<Bookmarks> {
         .showSnackBar(
           SnackBar(
             duration: Duration(seconds: 2),
-            content: Text('Quote removed'),
+            content:
+                Text(AppLocalizations.of(context).translate('quote_removed')),
             action: SnackBarAction(
-              label: 'Undo',
+              label: AppLocalizations.of(context).translate('undo'),
               onPressed: () {
                 setState(() {
                   quotes.add(quote);
@@ -173,7 +174,8 @@ class _BookmarksState extends State<Bookmarks> {
     FlutterClipboard.copy(text).then((_) {
       Scaffold.of(context).showSnackBar(
         SnackBar(
-          content: Text('Copied to clipboard!'),
+          content: Text(
+              AppLocalizations.of(context).translate('copied_to_clipboard')),
           behavior: SnackBarBehavior.floating,
         ),
       );

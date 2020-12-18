@@ -17,5 +17,8 @@
   "what_does_it_say": "Qu'est-ce que ça dit",
   "who_said_it": "Qui l'a dit",
   "where_did_you_find_it": "Où l'avez-vous trouvée",
-  "anonymous": "Anonyme"
+  "anonymous": "Anonyme",
+  "copied_to_clipboard": "Copié dans le presse-papier",
+  "quote_removed": "Citation supprimée",
+  "undo": "Annuler"
 }
