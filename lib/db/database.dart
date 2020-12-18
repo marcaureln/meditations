@@ -31,10 +31,20 @@ class AppDatabase {
     await store.delete(await AppDatabase.instance.database, finder: finder);
   }
 
-  // TODO: implement update and select
+  static Future update(String storeName, int id, Map newMap) async {
+    final store = intMapStoreFactory.store(storeName);
+    final finder = Finder(filter: Filter.byKey(id));
+    await store.update(await AppDatabase.instance.database, newMap,
+        finder: finder);
+  }
 
-  // TODO: return a list instead of record snapshot
-  static Future getAllRecords(String storeName) async {
+  static Future<Map> select(String storeName, int id) async {
+    final store = intMapStoreFactory.store(storeName);
+    final record = store.record(id);
+    return await record.get(await AppDatabase.instance.database);
+  }
+
+  static Future<List> selectAll(String storeName) async {
     final store = intMapStoreFactory.store(storeName);
     return await store.find(await AppDatabase.instance.database);
   }

@@ -63,6 +63,9 @@ class _BookmarksState extends State<Bookmarks> {
                       onLongPress: () {
                         _saveToClipboard(quote);
                       },
+                      onDoubleTap: () {
+                        print('double tap detected');
+                      },
                       child: Container(
                         padding: EdgeInsets.all(8),
                         child: Column(
@@ -108,10 +111,15 @@ class _BookmarksState extends State<Bookmarks> {
   }
 
   _fetchQuotes() async {
-    await dao.getAllQuotes().then((data) {
-      setState(() {
-        quotes = data;
-      });
+    List<Quote> records = [];
+    await AppDatabase.selectAll('quotes').then((data) {
+      for (var snapshot in data) {
+        records.add(Quote.fromMap(snapshot.key, snapshot.value));
+      }
+    });
+
+    setState(() {
+      quotes = records;
     });
   }
 
