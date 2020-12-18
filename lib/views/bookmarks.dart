@@ -6,7 +6,6 @@ import 'package:stoic/db/database.dart';
 import 'package:stoic/theme/theme.dart';
 import 'package:stoic/theme/app_localizations.dart';
 import 'package:stoic/models/quote.dart';
-import 'package:stoic/db/quotes_dao.dart';
 import 'package:stoic/widgets/no_data.dart';
 
 class Bookmarks extends StatefulWidget {
@@ -14,7 +13,6 @@ class Bookmarks extends StatefulWidget {
 }
 
 class _BookmarksState extends State<Bookmarks> {
-  QuotesDao dao = QuotesDao();
   List<Quote> quotes;
 
   @override

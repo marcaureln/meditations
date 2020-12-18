@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:stoic/db/database.dart';
 
-import 'package:stoic/db/quotes_dao.dart';
 import 'package:stoic/theme/app_localizations.dart';
 import 'package:stoic/theme/theme.dart';
 import 'package:stoic/models/quote.dart';
@@ -12,7 +11,6 @@ class AddQuote extends StatefulWidget {
 }
 
 class _AddQuoteState extends State<AddQuote> {
-  QuotesDao dao = QuotesDao();
   Quote _quote;
   bool isQuoteContentEmpty = true;
 
