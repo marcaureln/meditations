@@ -88,6 +88,7 @@ class _AddQuoteState extends State<AddQuote> {
                   },
                   onEditingComplete: () {
                     node.unfocus();
+                    (isQuoteContentEmpty) ? null : _addQuote();
                   },
                 ),
                 Container(
