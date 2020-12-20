@@ -135,7 +135,7 @@ class _BookmarksState extends State<Bookmarks> {
               label: AppLocalizations.of(context).translate('undo'),
               onPressed: () {
                 setState(() {
-                  quotes.add(quote);
+                  quotes.insert(0, quote);
                 });
               },
             ),
