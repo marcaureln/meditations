@@ -122,6 +122,8 @@ class _BookmarksState extends State<Bookmarks> {
   }
 
   _removeQuote(Quote quote) {
+    final index = quotes.indexOf(quote);
+
     setState(() {
       quotes.remove(quote);
     });
@@ -135,7 +137,7 @@ class _BookmarksState extends State<Bookmarks> {
               label: AppLocalizations.of(context).translate('undo'),
               onPressed: () {
                 setState(() {
-                  quotes.insert(0, quote);
+                  quotes.insert(index, quote);
                 });
               },
             ),
