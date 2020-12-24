@@ -5,7 +5,7 @@ import 'package:stoic/theme/text.dart';
 ThemeData myTheme = ThemeData(
   primaryColor: Color(0xff4ecdc4),
   accentColor: Color(0xff4ecdc4),
-  scaffoldBackgroundColor: Color(0xfffdfdfd),
+  scaffoldBackgroundColor: Color(0xffffffff),
   buttonColor: Color(0xff555b69),
   textTheme: myTextTheme,
 );
