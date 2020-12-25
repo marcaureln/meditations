@@ -25,8 +25,7 @@ class _BookmarksState extends State<Bookmarks> {
       appBar: AppBar(
         elevation: 0,
         backgroundColor: myTheme.scaffoldBackgroundColor,
-        title: Text(
-            AppLocalizations.of(context).translate('bookmarks_appbar_title')),
+        title: Text(AppLocalizations.of(context).translate('bookmarks_appbar_title')),
         centerTitle: true,
       ),
       body: (quotes.isEmpty)
@@ -58,11 +57,11 @@ class _BookmarksState extends State<Bookmarks> {
                   ),
                   child: Card(
                     child: InkWell(
+                      onTap: () {
+                        _showActions(quote);
+                      },
                       onLongPress: () {
                         _saveToClipboard(quote);
-                      },
-                      onDoubleTap: () {
-                        print('double tap detected');
                       },
                       child: Container(
                         padding: EdgeInsets.all(8),
@@ -80,8 +79,7 @@ class _BookmarksState extends State<Bookmarks> {
                               child: Text(
                                 (quote.author != null)
                                     ? quote.author
-                                    : AppLocalizations.of(context)
-                                        .translate('anonymous'),
+                                    : AppLocalizations.of(context).translate('anonymous'),
                                 style: myTheme.textTheme.subtitle2,
                               ),
                             ),
@@ -131,8 +129,7 @@ class _BookmarksState extends State<Bookmarks> {
         .showSnackBar(
           SnackBar(
             duration: Duration(seconds: 2),
-            content:
-                Text(AppLocalizations.of(context).translate('quote_removed')),
+            content: Text(AppLocalizations.of(context).translate('quote_removed')),
             action: SnackBarAction(
               label: AppLocalizations.of(context).translate('undo'),
               onPressed: () {
@@ -161,6 +158,54 @@ class _BookmarksState extends State<Bookmarks> {
     }
   }
 
+  _showActions(Quote quote) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return SimpleDialog(
+            contentPadding: EdgeInsets.all(8),
+            children: [
+              Center(
+                  child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      IconButton(
+                        icon: Icon(Icons.mode_edit),
+                        onPressed: () {
+                          Navigator.pop(context);
+                          _openAddQuotePage();
+                        },
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.delete),
+                        onPressed: () {
+                          Navigator.pop(context);
+                          _removeQuote(quote);
+                        },
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.content_copy),
+                        onPressed: () {
+                          Navigator.pop(context);
+                          _saveToClipboard(quote);
+                        },
+                      ),
+                    ],
+                  ),
+                  OutlineButton.icon(
+                    onPressed: null,
+                    icon: Icon(Icons.help),
+                    label: Text('Help'),
+                  )
+                ],
+              )),
+            ],
+          );
+        });
+  }
+
   _saveToClipboard(Quote quote) {
     var text = '"${quote.content}"';
 
@@ -176,8 +221,7 @@ class _BookmarksState extends State<Bookmarks> {
     FlutterClipboard.copy(text).then((_) {
       Scaffold.of(context).showSnackBar(
         SnackBar(
-          content: Text(
-              AppLocalizations.of(context).translate('copied_to_clipboard')),
+          content: Text(AppLocalizations.of(context).translate('copied_to_clipboard')),
           behavior: SnackBarBehavior.floating,
         ),
       );
