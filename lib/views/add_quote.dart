@@ -42,13 +42,13 @@ class _AddQuoteState extends State<AddQuote> {
         child: SingleChildScrollView(
           physics: AlwaysScrollableScrollPhysics(),
           child: Container(
-            height: MediaQuery.of(context).size.height * .5,
             padding: EdgeInsets.all(16),
             child: Form(
               key: _formKey,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
+                  const SizedBox(height: 20),
                   TextFormField(
                     textCapitalization: TextCapitalization.sentences,
                     initialValue: quote.content,
@@ -70,6 +70,7 @@ class _AddQuoteState extends State<AddQuote> {
                       node.nextFocus();
                     },
                   ),
+                  const SizedBox(height: 20),
                   TextFormField(
                     textCapitalization: TextCapitalization.words,
                     initialValue: quote.author,
@@ -85,6 +86,7 @@ class _AddQuoteState extends State<AddQuote> {
                       node.nextFocus();
                     },
                   ),
+                  const SizedBox(height: 20),
                   TextFormField(
                     textCapitalization: TextCapitalization.sentences,
                     initialValue: quote.source,
@@ -101,6 +103,7 @@ class _AddQuoteState extends State<AddQuote> {
                       if (_formKey.currentState.validate()) _addQuote();
                     },
                   ),
+                  const SizedBox(height: 20),
                   RaisedButton(
                     elevation: 6,
                     color: myTheme.accentColor,
