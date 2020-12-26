@@ -11,8 +11,8 @@ class AddQuote extends StatefulWidget {
 }
 
 class _AddQuoteState extends State<AddQuote> {
+  final _formKey = GlobalKey<FormState>();
   Quote quote = Quote('');
-  bool isQuoteContentEmpty = true;
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +21,6 @@ class _AddQuoteState extends State<AddQuote> {
 
     if (sendedQuote != null) {
       quote = sendedQuote;
-      isQuoteContentEmpty = false;
     }
 
     return Scaffold(
@@ -45,69 +44,75 @@ class _AddQuoteState extends State<AddQuote> {
           child: Container(
             height: MediaQuery.of(context).size.height * .5,
             padding: EdgeInsets.all(16),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                TextFormField(
-                  textCapitalization: TextCapitalization.sentences,
-                  initialValue: quote.content,
-                  autofocus: true,
-                  decoration: InputDecoration(
-                    labelText: AppLocalizations.of(context).translate('what_does_it_say'),
-                    border: OutlineInputBorder(),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  TextFormField(
+                    textCapitalization: TextCapitalization.sentences,
+                    initialValue: quote.content,
+                    autofocus: true,
+                    decoration: InputDecoration(
+                      labelText: AppLocalizations.of(context).translate('what_does_it_say'),
+                      border: OutlineInputBorder(),
+                    ),
+                    validator: (text) {
+                      if (text.isEmpty) {
+                        return 'We cannot save an empty quote.';
+                      }
+                      return null;
+                    },
+                    onChanged: (text) {
+                      quote.content = text.trim();
+                    },
+                    onEditingComplete: () {
+                      node.nextFocus();
+                    },
                   ),
-                  onChanged: (text) {
-                    quote.content = text.trim();
-                    setState(() {
-                      isQuoteContentEmpty = (text.isNotEmpty) ? false : true;
-                    });
-                  },
-                  onEditingComplete: () {
-                    node.nextFocus();
-                  },
-                ),
-                TextFormField(
-                  textCapitalization: TextCapitalization.words,
-                  initialValue: quote.author,
-                  decoration: InputDecoration(
-                    labelText:
-                        '${AppLocalizations.of(context).translate('who_said_it')} ${'(${AppLocalizations.of(context).translate('optional').toLowerCase()})'}',
-                    border: OutlineInputBorder(),
+                  TextFormField(
+                    textCapitalization: TextCapitalization.words,
+                    initialValue: quote.author,
+                    decoration: InputDecoration(
+                      labelText:
+                          '${AppLocalizations.of(context).translate('who_said_it')} ${'(${AppLocalizations.of(context).translate('optional').toLowerCase()})'}',
+                      border: OutlineInputBorder(),
+                    ),
+                    onChanged: (text) {
+                      quote.author = (text != '') ? text.trim() : null;
+                    },
+                    onEditingComplete: () {
+                      node.nextFocus();
+                    },
                   ),
-                  onChanged: (text) {
-                    quote.author = (text != '') ? text.trim() : null;
-                  },
-                  onEditingComplete: () {
-                    node.nextFocus();
-                  },
-                ),
-                TextFormField(
-                  textCapitalization: TextCapitalization.sentences,
-                  initialValue: quote.source,
-                  decoration: InputDecoration(
-                    labelText:
-                        '${AppLocalizations.of(context).translate('where_did_you_find_it')} ${'(${AppLocalizations.of(context).translate('optional').toLowerCase()})'}',
-                    border: OutlineInputBorder(),
+                  TextFormField(
+                    textCapitalization: TextCapitalization.sentences,
+                    initialValue: quote.source,
+                    decoration: InputDecoration(
+                      labelText:
+                          '${AppLocalizations.of(context).translate('where_did_you_find_it')} ${'(${AppLocalizations.of(context).translate('optional').toLowerCase()})'}',
+                      border: OutlineInputBorder(),
+                    ),
+                    onChanged: (text) {
+                      quote.source = (text != '') ? text.trim() : null;
+                    },
+                    onEditingComplete: () {
+                      node.unfocus();
+                      if (_formKey.currentState.validate()) _addQuote();
+                    },
                   ),
-                  onChanged: (text) {
-                    quote.source = (text != '') ? text.trim() : null;
-                  },
-                  onEditingComplete: () {
-                    node.unfocus();
-                    (isQuoteContentEmpty) ? null : _addQuote();
-                  },
-                ),
-                Container(
-                  child: RaisedButton(
+                  RaisedButton(
                     elevation: 6,
                     color: myTheme.accentColor,
                     child: Text(
                       AppLocalizations.of(context).translate('save'),
                     ),
-                    onPressed: (isQuoteContentEmpty) ? null : _addQuote,
-                  ),
-                )
-              ],
+                    onPressed: () {
+                      if (_formKey.currentState.validate()) _addQuote();
+                    },
+                  )
+                ],
+              ),
             ),
           ),
         ),
