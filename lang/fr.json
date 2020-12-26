@@ -20,5 +20,7 @@
   "anonymous": "Anonyme",
   "copied_to_clipboard": "Copié dans le presse-papier",
   "quote_removed": "Citation supprimée",
-  "undo": "Annuler"
+  "undo": "Annuler",
+  "help": "Aide",
+  "we_cannot_save_quote": "Nous ne pouvons pas enregistrer une citation vide"
 }

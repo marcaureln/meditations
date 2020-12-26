@@ -59,7 +59,7 @@ class _AddQuoteState extends State<AddQuote> {
                     ),
                     validator: (text) {
                       if (text.isEmpty) {
-                        return 'We cannot save an empty quote.';
+                        return AppLocalizations.of(context).translate('we_cannot_save_quote');
                       }
                       return null;
                     },

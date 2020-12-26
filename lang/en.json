@@ -20,5 +20,7 @@
   "anonymous": "Anonymous",
   "copied_to_clipboard": "Copied to clipboard",
   "quote_removed": "Quote removed",
-  "undo": "Undo"
+  "undo": "Undo",
+  "help": "Help",
+  "we_cannot_save_quote": "We cannot save an empty quote"
 }

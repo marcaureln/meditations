@@ -203,7 +203,7 @@ class _BookmarksState extends State<Bookmarks> {
                   OutlineButton.icon(
                     onPressed: null,
                     icon: Icon(Icons.help),
-                    label: Text('Help'),
+                    label: Text(AppLocalizations.of(context).translate('help')),
                   )
                 ],
               )),
