@@ -149,12 +149,18 @@ class _BookmarksState extends State<Bookmarks> {
     });
   }
 
-  _openAddQuotePage() async {
-    var returnedQuote = await Navigator.pushNamed(context, '/add_quote');
+  _openAddQuotePage({Quote quote}) async {
+    var returnedQuote = await Navigator.pushNamed(context, '/add_quote', arguments: quote);
     if (returnedQuote != null) {
-      setState(() {
-        quotes.add(returnedQuote);
-      });
+      if (quote != null) {
+        setState(() {
+          quote = returnedQuote;
+        });
+      } else {
+        setState(() {
+          quotes.add(returnedQuote);
+        });
+      }
     }
   }
 
@@ -175,7 +181,7 @@ class _BookmarksState extends State<Bookmarks> {
                         icon: Icon(Icons.mode_edit),
                         onPressed: () {
                           Navigator.pop(context);
-                          _openAddQuotePage();
+                          _openAddQuotePage(quote: quote);
                         },
                       ),
                       IconButton(

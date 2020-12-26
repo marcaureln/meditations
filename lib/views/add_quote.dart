@@ -11,17 +11,18 @@ class AddQuote extends StatefulWidget {
 }
 
 class _AddQuoteState extends State<AddQuote> {
-  Quote _quote;
+  Quote quote = Quote('');
   bool isQuoteContentEmpty = true;
-
-  void initState() {
-    super.initState();
-    _quote = Quote('');
-  }
 
   @override
   Widget build(BuildContext context) {
     final FocusScopeNode node = FocusScope.of(context);
+    final Quote sendedQuote = ModalRoute.of(context).settings.arguments;
+
+    if (sendedQuote != null) {
+      quote = sendedQuote;
+      isQuoteContentEmpty = false;
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -47,15 +48,16 @@ class _AddQuoteState extends State<AddQuote> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                TextField(
+                TextFormField(
+                  textCapitalization: TextCapitalization.sentences,
+                  initialValue: quote.content,
                   autofocus: true,
                   decoration: InputDecoration(
-                    labelText: AppLocalizations.of(context)
-                        .translate('what_does_it_say'),
+                    labelText: AppLocalizations.of(context).translate('what_does_it_say'),
                     border: OutlineInputBorder(),
                   ),
                   onChanged: (text) {
-                    _quote.content = text.trim();
+                    quote.content = text.trim();
                     setState(() {
                       isQuoteContentEmpty = (text.isNotEmpty) ? false : true;
                     });
@@ -64,27 +66,31 @@ class _AddQuoteState extends State<AddQuote> {
                     node.nextFocus();
                   },
                 ),
-                TextField(
+                TextFormField(
+                  textCapitalization: TextCapitalization.words,
+                  initialValue: quote.author,
                   decoration: InputDecoration(
                     labelText:
                         '${AppLocalizations.of(context).translate('who_said_it')} ${'(${AppLocalizations.of(context).translate('optional').toLowerCase()})'}',
                     border: OutlineInputBorder(),
                   ),
                   onChanged: (text) {
-                    _quote.author = (text != '') ? text.trim() : null;
+                    quote.author = (text != '') ? text.trim() : null;
                   },
                   onEditingComplete: () {
                     node.nextFocus();
                   },
                 ),
-                TextField(
+                TextFormField(
+                  textCapitalization: TextCapitalization.sentences,
+                  initialValue: quote.source,
                   decoration: InputDecoration(
                     labelText:
                         '${AppLocalizations.of(context).translate('where_did_you_find_it')} ${'(${AppLocalizations.of(context).translate('optional').toLowerCase()})'}',
                     border: OutlineInputBorder(),
                   ),
                   onChanged: (text) {
-                    _quote.source = (text != '') ? text.trim() : null;
+                    quote.source = (text != '') ? text.trim() : null;
                   },
                   onEditingComplete: () {
                     node.unfocus();
@@ -110,8 +116,12 @@ class _AddQuoteState extends State<AddQuote> {
   }
 
   void _addQuote() async {
-    var _quoteId = await AppDatabase.insert('quotes', _quote.toMap());
-    _quote.id = _quoteId;
-    Navigator.pop(context, _quote);
+    if (quote.id != null) {
+      await AppDatabase.update('quotes', quote.id, quote.toMap());
+    } else {
+      var quoteId = await AppDatabase.insert('quotes', quote.toMap());
+      quote.id = quoteId;
+    }
+    Navigator.pop(context, quote);
   }
 }
