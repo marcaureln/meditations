@@ -6,6 +6,7 @@ import 'package:stoic/db/database.dart';
 import 'package:stoic/theme/theme.dart';
 import 'package:stoic/theme/app_localizations.dart';
 import 'package:stoic/models/quote.dart';
+import 'package:stoic/views/webview.dart';
 import 'package:stoic/widgets/no_data.dart';
 
 class Bookmarks extends StatefulWidget {
@@ -201,15 +202,22 @@ class _BookmarksState extends State<Bookmarks> {
                     ],
                   ),
                   OutlineButton.icon(
-                    onPressed: null,
                     icon: Icon(Icons.help),
                     label: Text(AppLocalizations.of(context).translate('help')),
+                    onPressed: () {
+                      Navigator.pop(context);
+                      _openWebView('https://marcaureln.com');
+                    },
                   )
                 ],
               )),
             ],
           );
         });
+  }
+
+  _openWebView(url) {
+    Navigator.pushNamed(context, '/web_view', arguments: url);
   }
 
   _saveToClipboard(Quote quote) {

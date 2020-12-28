@@ -5,6 +5,7 @@ import 'package:stoic/views/home.dart';
 import 'package:stoic/views/add_quote.dart';
 import 'package:stoic/theme/theme.dart';
 import 'package:stoic/theme/app_localizations.dart';
+import 'package:stoic/views/webview.dart';
 
 class MyApp extends StatelessWidget {
   @override
@@ -16,6 +17,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) => MyHome(),
         '/add_quote': (context) => AddQuote(),
+        '/web_view': (context) => MyWebView(),
       },
       theme: myTheme,
       // locale: Locale('en'),
