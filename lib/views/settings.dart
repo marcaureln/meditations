@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:stoic/widgets/appbar.dart';
 
 import 'package:url_launcher/url_launcher.dart';
 
-import 'package:stoic/theme/theme.dart';
 import 'package:stoic/theme/app_localizations.dart';
 
 class Settings extends StatefulWidget {
@@ -15,12 +15,7 @@ class _SettingsState extends State<Settings> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: myTheme.scaffoldBackgroundColor,
-        title: Text(AppLocalizations.of(context).translate('settings_appbar_title')),
-        centerTitle: true,
-      ),
+      appBar: MyAppBar(AppLocalizations.of(context).translate('settings_appbar_title')),
       body: SingleChildScrollView(
         child: Container(
           padding: EdgeInsets.all(8),

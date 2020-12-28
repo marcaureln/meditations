@@ -4,6 +4,7 @@ import 'package:stoic/db/database.dart';
 import 'package:stoic/theme/app_localizations.dart';
 import 'package:stoic/theme/theme.dart';
 import 'package:stoic/models/quote.dart';
+import 'package:stoic/widgets/appbar.dart';
 
 class AddQuote extends StatefulWidget {
   @override
@@ -24,16 +25,8 @@ class _AddQuoteState extends State<AddQuote> {
     }
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(AppLocalizations.of(context).translate('add_quote')),
-        backgroundColor: myTheme.scaffoldBackgroundColor,
-        centerTitle: true,
-        elevation: 0,
-        leading: IconButton(
-            icon: Icon(Icons.arrow_back),
-            onPressed: () {
-              Navigator.pop(context, null);
-            }),
+      appBar: MyAppBar(
+        AppLocalizations.of(context).translate('add_quote'),
       ),
       body: GestureDetector(
         onTap: () {

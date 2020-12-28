@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:stoic/theme/app_localizations.dart';
+import 'package:stoic/widgets/appbar.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class MyWebView extends StatefulWidget {
@@ -22,7 +24,7 @@ class MyWebViewState extends State<MyWebView> {
   Widget build(BuildContext context) {
     final url = ModalRoute.of(context).settings.arguments;
     return Scaffold(
-      appBar: AppBar(),
+      appBar: MyAppBar(AppLocalizations.of(context).translate('help')),
       body: WebView(
         initialUrl: (url != null) ? url : defaultUrl,
       ),
