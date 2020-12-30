@@ -170,51 +170,35 @@ class _BookmarksState extends State<Bookmarks> {
             contentPadding: EdgeInsets.all(8),
             children: [
               Center(
-                  child: Column(
+                  child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      IconButton(
-                        icon: Icon(Icons.mode_edit),
-                        onPressed: () {
-                          Navigator.pop(context);
-                          _openAddQuotePage(quote: quote);
-                        },
-                      ),
-                      IconButton(
-                        icon: Icon(Icons.delete),
-                        onPressed: () {
-                          Navigator.pop(context);
-                          _removeQuote(quote);
-                        },
-                      ),
-                      IconButton(
-                        icon: Icon(Icons.content_copy),
-                        onPressed: () {
-                          Navigator.pop(context);
-                          _saveToClipboard(quote);
-                        },
-                      ),
-                    ],
-                  ),
-                  OutlineButton.icon(
-                    icon: Icon(Icons.help),
-                    label: Text(AppLocalizations.of(context).translate('help')),
+                  IconButton(
+                    icon: Icon(Icons.mode_edit),
                     onPressed: () {
                       Navigator.pop(context);
-                      _openWebView('https://marcaureln.com');
+                      _openAddQuotePage(quote: quote);
                     },
-                  )
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.delete),
+                    onPressed: () {
+                      Navigator.pop(context);
+                      _removeQuote(quote);
+                    },
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.content_copy),
+                    onPressed: () {
+                      Navigator.pop(context);
+                      _saveToClipboard(quote);
+                    },
+                  ),
                 ],
               )),
             ],
           );
         });
-  }
-
-  _openWebView(url) {
-    Navigator.pushNamed(context, '/web_view', arguments: url);
   }
 
   _saveToClipboard(Quote quote) {
