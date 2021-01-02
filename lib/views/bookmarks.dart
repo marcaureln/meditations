@@ -28,7 +28,7 @@ class _BookmarksState extends State<Bookmarks> {
       ),
       body: (quotes.isEmpty)
           ? NoData()
-          : ListView.builder(
+          : ListView.separated(
               padding: EdgeInsets.all(8),
               itemCount: quotes.length,
               itemBuilder: (context, index) {
@@ -53,7 +53,7 @@ class _BookmarksState extends State<Bookmarks> {
                       ],
                     ),
                   ),
-                  child: Card(
+                  child: Container(
                     child: InkWell(
                       onTap: () {
                         _showActions(quote);
@@ -93,6 +93,7 @@ class _BookmarksState extends State<Bookmarks> {
                   ),
                 );
               },
+              separatorBuilder: (context, _) => const Divider(),
             ),
       floatingActionButton: FloatingActionButton(
         child: Icon(
