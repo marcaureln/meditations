@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:stoic/theme/colors.dart';
 
 import 'package:stoic/theme/text.dart';
 
 ThemeData myTheme = ThemeData(
-  primaryColor: Color(0xff4ecdc4),
-  accentColor: Color(0xff4ecdc4),
-  scaffoldBackgroundColor: Color(0xffffffff),
-  buttonColor: Color(0xff555b69),
+  primaryColor: MyColors.black,
+  accentColor: MyColors.darkCharcoal,
+  scaffoldBackgroundColor: MyColors.white,
   textTheme: myTextTheme,
 );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:stoic/theme/colors.dart';
 import 'package:stoic/theme/theme.dart';
 
 class MyAppBar extends AppBar {
@@ -8,7 +9,10 @@ class MyAppBar extends AppBar {
       : super(
           elevation: 0,
           backgroundColor: myTheme.scaffoldBackgroundColor,
-          title: Text(titleText),
+          title: Text(
+            titleText,
+            style: TextStyle(color: MyColors.black),
+          ),
           centerTitle: true,
         );
 }
