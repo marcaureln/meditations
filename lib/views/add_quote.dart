@@ -98,8 +98,6 @@ class _AddQuoteState extends State<AddQuote> {
                   ),
                   const SizedBox(height: 20),
                   RaisedButton(
-                    elevation: 6,
-                    color: myTheme.accentColor,
                     child: Text(
                       AppLocalizations.of(context).translate('save'),
                     ),

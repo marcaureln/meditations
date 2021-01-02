@@ -14,5 +14,6 @@ class MyAppBar extends AppBar {
             style: TextStyle(color: MyColors.black),
           ),
           centerTitle: true,
+          iconTheme: IconThemeData(color: MyColors.black),
         );
 }
