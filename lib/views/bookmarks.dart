@@ -93,7 +93,7 @@ class _BookmarksState extends State<Bookmarks> {
                   ),
                 );
               },
-              separatorBuilder: (context, _) => const Divider(),
+              separatorBuilder: (context, _) => const Divider(height: 12),
             ),
       floatingActionButton: FloatingActionButton(
         child: Icon(

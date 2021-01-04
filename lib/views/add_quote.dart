@@ -102,8 +102,10 @@ class _AddQuoteState extends State<AddQuote> {
                     },
                   ),
                   const SizedBox(height: 20),
-                  RaisedButton(
-                    child: Text(
+                  OutlineButton.icon(
+                    highlightedBorderColor: MyColors.black,
+                    icon: Icon(Icons.save),
+                    label: Text(
                       AppLocalizations.of(context).translate('save'),
                     ),
                     onPressed: () {
