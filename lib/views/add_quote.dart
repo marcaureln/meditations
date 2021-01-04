@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:stoic/db/database.dart';
 
 import 'package:stoic/theme/app_localizations.dart';
+import 'package:stoic/theme/colors.dart';
 import 'package:stoic/theme/theme.dart';
 import 'package:stoic/models/quote.dart';
 import 'package:stoic/widgets/appbar.dart';
@@ -41,6 +42,10 @@ class _AddQuoteState extends State<AddQuote> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
+                  IconButton(
+                    icon: Icon(Icons.add_a_photo),
+                    onPressed: () {},
+                  ),
                   const SizedBox(height: 20),
                   TextFormField(
                     textCapitalization: TextCapitalization.sentences,
