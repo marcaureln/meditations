@@ -22,5 +22,8 @@
   "quote_removed": "Citation supprimée",
   "undo": "Annuler",
   "help": "Aide",
-  "we_cannot_save_quote": "Nous ne pouvons pas enregistrer une citation vide"
+  "we_cannot_save_quote": "Nous ne pouvons pas enregistrer une citation vide",
+  "modify": "Modifier",
+  "remove": "Supprimer",
+  "copy": "Copier"
 }

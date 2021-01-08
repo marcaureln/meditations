@@ -96,6 +96,7 @@ class _BookmarksState extends State<Bookmarks> {
               separatorBuilder: (context, _) => const Divider(height: 12),
             ),
       floatingActionButton: FloatingActionButton(
+        tooltip: AppLocalizations.of(context).translate('add_quote'),
         child: Icon(
           Icons.add,
           color: myTheme.scaffoldBackgroundColor,
@@ -168,7 +169,7 @@ class _BookmarksState extends State<Bookmarks> {
         context: context,
         builder: (context) {
           return SimpleDialog(
-            contentPadding: EdgeInsets.all(8),
+            contentPadding: EdgeInsets.symmetric(vertical: 16, horizontal: 8),
             children: [
               Center(
                   child: Row(
@@ -176,6 +177,7 @@ class _BookmarksState extends State<Bookmarks> {
                 children: [
                   IconButton(
                     icon: Icon(Icons.mode_edit),
+                    tooltip: AppLocalizations.of(context).translate('modify'),
                     onPressed: () {
                       Navigator.pop(context);
                       _openAddQuotePage(quote: quote);
@@ -183,6 +185,7 @@ class _BookmarksState extends State<Bookmarks> {
                   ),
                   IconButton(
                     icon: Icon(Icons.delete),
+                    tooltip: AppLocalizations.of(context).translate('remove'),
                     onPressed: () {
                       Navigator.pop(context);
                       _removeQuote(quote);
@@ -190,6 +193,7 @@ class _BookmarksState extends State<Bookmarks> {
                   ),
                   IconButton(
                     icon: Icon(Icons.content_copy),
+                    tooltip: AppLocalizations.of(context).translate('copy'),
                     onPressed: () {
                       Navigator.pop(context);
                       _saveToClipboard(quote);

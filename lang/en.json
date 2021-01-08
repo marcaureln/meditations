@@ -22,5 +22,8 @@
   "quote_removed": "Quote removed",
   "undo": "Undo",
   "help": "Help",
-  "we_cannot_save_quote": "We cannot save an empty quote"
+  "we_cannot_save_quote": "We cannot save an empty quote",
+  "modify": "Modify",
+  "remove": "Remove",
+  "copy": "Copy"
 }
