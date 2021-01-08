@@ -21,46 +21,31 @@ class _SettingsState extends State<Settings> {
           padding: EdgeInsets.all(8),
           child: Column(
             children: [
-              // Feedback
-              Container(
-                child: Center(
-                  child: ListTile(
-                    leading: Container(
-                      height: double.infinity,
-                      child: Icon(Icons.feedback),
-                    ),
-                    title: Text(AppLocalizations.of(context).translate('settings_feedback')),
-                    subtitle: Text(AppLocalizations.of(context).translate('settings_feedback_sub')),
-                    onTap: _sendFeedback,
-                  ),
+              ListTile(
+                leading: Container(
+                  height: double.infinity,
+                  child: Icon(Icons.feedback),
                 ),
+                title: Text(AppLocalizations.of(context).translate('settings_feedback')),
+                subtitle: Text(AppLocalizations.of(context).translate('settings_feedback_sub')),
+                onTap: _sendFeedback,
               ),
-              // Share
-              Container(
-                child: Center(
-                  child: ListTile(
-                    leading: Container(
-                      height: double.infinity,
-                      child: Icon(Icons.share),
-                    ),
-                    title: Text(AppLocalizations.of(context).translate('settings_share')),
-                    subtitle: Text(AppLocalizations.of(context).translate('settings_share_sub')),
-                    onTap: _share,
-                  ),
+              ListTile(
+                leading: Container(
+                  height: double.infinity,
+                  child: Icon(Icons.share),
                 ),
+                title: Text(AppLocalizations.of(context).translate('settings_share')),
+                subtitle: Text(AppLocalizations.of(context).translate('settings_share_sub')),
+                onTap: _share,
               ),
-              // About
-              Container(
-                child: Center(
-                  child: ListTile(
-                    leading: Container(
-                      height: double.infinity,
-                      child: Icon(Icons.info),
-                    ),
-                    title: Text(AppLocalizations.of(context).translate('settings_about')),
-                    subtitle: Text('${AppLocalizations.of(context).translate('version')}: $_currentVersion'),
-                  ),
+              ListTile(
+                leading: Container(
+                  height: double.infinity,
+                  child: Icon(Icons.info),
                 ),
+                title: Text(AppLocalizations.of(context).translate('settings_about')),
+                subtitle: Text('${AppLocalizations.of(context).translate('version')}: $_currentVersion'),
               ),
             ],
           ),
