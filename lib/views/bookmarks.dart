@@ -15,6 +15,14 @@ class Bookmarks extends StatefulWidget {
 
 class _BookmarksState extends State<Bookmarks> {
   List<Quote> quotes;
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  bool _isFabVisible;
+
+  @override
+  void initState() {
+    super.initState();
+    _isFabVisible = true;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,6 +31,7 @@ class _BookmarksState extends State<Bookmarks> {
       return Center(child: CircularProgressIndicator());
     }
     return Scaffold(
+      key: _scaffoldKey,
       appBar: MyAppBar(
         AppLocalizations.of(context).translate('bookmarks_appbar_title'),
       ),
@@ -95,13 +104,16 @@ class _BookmarksState extends State<Bookmarks> {
               },
               separatorBuilder: (context, _) => const Divider(height: 12),
             ),
-      floatingActionButton: FloatingActionButton(
-        tooltip: AppLocalizations.of(context).translate('add_quote'),
-        child: Icon(
-          Icons.add,
-          color: myTheme.scaffoldBackgroundColor,
+      floatingActionButton: Visibility(
+        visible: _isFabVisible,
+        child: FloatingActionButton(
+          tooltip: AppLocalizations.of(context).translate('add_quote'),
+          child: Icon(
+            Icons.add,
+            color: myTheme.scaffoldBackgroundColor,
+          ),
+          onPressed: _openAddQuotePage,
         ),
-        onPressed: _openAddQuotePage,
       ),
     );
   }
@@ -123,9 +135,10 @@ class _BookmarksState extends State<Bookmarks> {
     final index = quotes.indexOf(quote);
 
     setState(() {
+      _isFabVisible = false;
       quotes.remove(quote);
     });
-    Scaffold.of(context)
+    _scaffoldKey.currentState
         .showSnackBar(
           SnackBar(
             duration: Duration(seconds: 2),
@@ -143,6 +156,9 @@ class _BookmarksState extends State<Bookmarks> {
         )
         .closed
         .then((reason) {
+      setState(() {
+        _isFabVisible = true;
+      });
       if (reason != SnackBarClosedReason.action) {
         AppDatabase.delete('quotes', quote.id);
       }
@@ -172,48 +188,59 @@ class _BookmarksState extends State<Bookmarks> {
             contentPadding: EdgeInsets.symmetric(vertical: 16, horizontal: 8),
             children: [
               Center(
-                  child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  IconButton(
-                    icon: Icon(Icons.mode_edit),
-                    tooltip: AppLocalizations.of(context).translate('modify'),
-                    onPressed: () {
-                      Navigator.pop(context);
-                      _openAddQuotePage(quote: quote);
-                    },
-                  ),
-                  IconButton(
-                    icon: Icon(Icons.delete),
-                    tooltip: AppLocalizations.of(context).translate('remove'),
-                    onPressed: () {
-                      Navigator.pop(context);
-                      _removeQuote(quote);
-                    },
-                  ),
-                  IconButton(
-                    icon: Icon(Icons.content_copy),
-                    tooltip: AppLocalizations.of(context).translate('copy'),
-                    onPressed: () {
-                      Navigator.pop(context);
-                      _saveToClipboard(quote);
-                    },
-                  ),
-                ],
-              )),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    IconButton(
+                      icon: Icon(Icons.mode_edit),
+                      tooltip: AppLocalizations.of(context).translate('modify'),
+                      onPressed: () {
+                        Navigator.pop(context);
+                        _openAddQuotePage(quote: quote);
+                      },
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.delete),
+                      tooltip: AppLocalizations.of(context).translate('remove'),
+                      onPressed: () {
+                        Navigator.pop(context);
+                        _removeQuote(quote);
+                      },
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.content_copy),
+                      tooltip: AppLocalizations.of(context).translate('copy'),
+                      onPressed: () {
+                        Navigator.pop(context);
+                        _saveToClipboard(quote);
+                      },
+                    ),
+                  ],
+                ),
+              ),
             ],
           );
         });
   }
 
   _saveToClipboard(Quote quote) {
+    setState(() {
+      _isFabVisible = false;
+    });
     FlutterClipboard.copy(quote.toString()).then((_) {
-      Scaffold.of(context).showSnackBar(
-        SnackBar(
-          content: Text(AppLocalizations.of(context).translate('copied_to_clipboard')),
-          behavior: SnackBarBehavior.floating,
-        ),
-      );
+      _scaffoldKey.currentState
+          .showSnackBar(
+            SnackBar(
+              content: Text(AppLocalizations.of(context).translate('copied_to_clipboard')),
+              behavior: SnackBarBehavior.floating,
+            ),
+          )
+          .closed
+          .then((_) {
+        setState(() {
+          _isFabVisible = true;
+        });
+      });
     });
   }
 }
