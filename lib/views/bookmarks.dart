@@ -207,18 +207,7 @@ class _BookmarksState extends State<Bookmarks> {
   }
 
   _saveToClipboard(Quote quote) {
-    var text = '"${quote.content}"';
-
-    if (quote.source != null) {
-      text += ' ${quote.source}';
-      if (quote.author != null) {
-        text += ', ${quote.author}';
-      }
-    } else if (quote.author != null) {
-      text += ' ${quote.author}';
-    }
-
-    FlutterClipboard.copy(text).then((_) {
+    FlutterClipboard.copy(quote.toString()).then((_) {
       Scaffold.of(context).showSnackBar(
         SnackBar(
           content: Text(AppLocalizations.of(context).translate('copied_to_clipboard')),

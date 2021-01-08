@@ -22,6 +22,15 @@ class Quote {
 
   @override
   String toString() {
-    return 'Quote<id:$id, content:$content, author:$author, source:$source>';
+    String text = '"$content"';
+
+    if (source != null) {
+      text += ' $source';
+      if (author != null) text += ', $author';
+    } else if (author != null) {
+      text += ' $author';
+    }
+
+    return text;
   }
 }
