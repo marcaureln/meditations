@@ -132,12 +132,13 @@ class _BookmarksState extends State<Bookmarks> {
   }
 
   _removeQuote(Quote quote) {
-    final index = quotes.indexOf(quote);
+    AppDatabase.delete('quotes', quote.id);
 
     setState(() {
       _isFabVisible = false;
       quotes.remove(quote);
     });
+
     _scaffoldKey.currentState
         .showSnackBar(
           SnackBar(
@@ -146,8 +147,9 @@ class _BookmarksState extends State<Bookmarks> {
             action: SnackBarAction(
               label: AppLocalizations.of(context).translate('undo'),
               onPressed: () {
+                AppDatabase.insert('quotes', quote.toMap());
                 setState(() {
-                  quotes.insert(index, quote);
+                  quotes.add(quote);
                 });
               },
             ),
@@ -155,13 +157,10 @@ class _BookmarksState extends State<Bookmarks> {
           ),
         )
         .closed
-        .then((reason) {
+        .then((_) {
       setState(() {
         _isFabVisible = true;
       });
-      if (reason != SnackBarClosedReason.action) {
-        AppDatabase.delete('quotes', quote.id);
-      }
     });
   }
 
