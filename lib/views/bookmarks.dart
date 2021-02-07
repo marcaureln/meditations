@@ -38,7 +38,7 @@ class _BookmarksState extends State<Bookmarks> {
       body: (quotes.isEmpty)
           ? NoData()
           : ListView.separated(
-              padding: EdgeInsets.all(8),
+              padding: EdgeInsets.only(left: 8, right: 8, top: 8, bottom: 64),
               itemCount: quotes.length,
               itemBuilder: (context, index) {
                 Quote quote = quotes[index];
