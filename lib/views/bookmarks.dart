@@ -30,7 +30,7 @@ class _BookmarksState extends State<Bookmarks> {
   Widget build(BuildContext context) {
     if (quotes == null) {
       _fetchQuotes();
-      return Center(child: CircularProgressIndicator());
+      return Center(child: CircularProgressIndicator(strokeWidth: 2.0));
     }
     return Scaffold(
       key: _scaffoldKey,
@@ -41,7 +41,7 @@ class _BookmarksState extends State<Bookmarks> {
           ? NoData()
           : NotificationListener<ScrollNotification>(
               child: ListView.separated(
-                padding: EdgeInsets.only(left: 8, right: 8, top: 8, bottom: 64),
+                padding: EdgeInsets.only(left: 8, right: 8, top: 8, bottom: 128),
                 itemCount: quotes.length,
                 controller: _scrollController,
                 itemBuilder: (context, index) {

@@ -46,6 +46,8 @@ class _AddQuoteState extends State<AddQuote> {
                     textCapitalization: TextCapitalization.sentences,
                     initialValue: quote.content,
                     autofocus: true,
+                    minLines: 2,
+                    maxLines: 4,
                     decoration: InputDecoration(
                       labelText: AppLocalizations.of(context).translate('what_does_it_say'),
                       border: OutlineInputBorder(),
@@ -97,9 +99,15 @@ class _AddQuoteState extends State<AddQuote> {
                     },
                   ),
                   const SizedBox(height: 20),
-                  OutlineButton.icon(
-                    highlightedBorderColor: MyColors.black,
-                    icon: Icon(Icons.save),
+                  RaisedButton.icon(
+                    icon: Icon(
+                      Icons.save,
+                      color: MyColors.white,
+                    ),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+                    padding: EdgeInsets.all(12.0),
+                    color: MyColors.black,
+                    textColor: MyColors.white,
                     label: Text(
                       AppLocalizations.of(context).translate('save'),
                     ),
