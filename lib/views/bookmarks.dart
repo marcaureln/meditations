@@ -16,8 +16,7 @@ class Bookmarks extends StatefulWidget {
 
 class _BookmarksState extends State<Bookmarks> {
   List<Quote> quotes;
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  final ScrollController _scrollController = ScrollController();
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
   bool _isFabVisible;
 
   @override
@@ -39,90 +38,72 @@ class _BookmarksState extends State<Bookmarks> {
       ),
       body: (quotes.isEmpty)
           ? NoData()
-          : NotificationListener<ScrollNotification>(
-              child: ListView.separated(
-                padding: EdgeInsets.only(left: 8, right: 8, top: 8, bottom: 128),
-                itemCount: quotes.length,
-                controller: _scrollController,
-                itemBuilder: (context, index) {
-                  Quote quote = quotes[index];
+          : ListView.separated(
+              padding: EdgeInsets.only(left: 8, right: 8, top: 8, bottom: 128),
+              itemCount: quotes.length,
+              itemBuilder: (context, index) {
+                Quote quote = quotes[index];
 
-                  return Dismissible(
-                    key: ValueKey(quote.id),
-                    direction: DismissDirection.endToStart,
-                    onDismissed: (_) {
-                      _removeQuote(quote);
-                    },
-                    background: Card(
-                      color: Color(0xffd72323),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Icon(
-                            Icons.delete,
-                            color: myTheme.scaffoldBackgroundColor,
-                          ),
-                          Container(width: 8),
-                        ],
-                      ),
+                return Dismissible(
+                  key: ValueKey(quote.id),
+                  direction: DismissDirection.endToStart,
+                  onDismissed: (_) {
+                    _removeQuote(quote);
+                  },
+                  background: Card(
+                    color: Color(0xffd72323),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Icon(
+                          Icons.delete,
+                          color: myTheme.scaffoldBackgroundColor,
+                        ),
+                        Container(width: 8),
+                      ],
                     ),
-                    child: Container(
-                      child: InkWell(
-                        onTap: () {
-                          _showActions(quote);
-                        },
-                        onLongPress: () {
-                          _saveToClipboard(quote);
-                        },
-                        child: Container(
-                          padding: EdgeInsets.all(8),
-                          child: Column(
-                            children: [
+                  ),
+                  child: Container(
+                    child: InkWell(
+                      onTap: () {
+                        _showActions(quote);
+                      },
+                      onLongPress: () {
+                        _saveToClipboard(quote);
+                      },
+                      child: Container(
+                        padding: EdgeInsets.all(8),
+                        child: Column(
+                          children: [
+                            Container(
+                              width: double.infinity,
+                              child: Text(
+                                '"${quote.content}"',
+                                style: myTheme.textTheme.subtitle1,
+                              ),
+                            ),
+                            Container(
+                              width: double.infinity,
+                              child: Text(
+                                (quote.author != null)
+                                    ? quote.author
+                                    : AppLocalizations.of(context).translate('anonymous'),
+                                style: myTheme.textTheme.subtitle2,
+                              ),
+                            ),
+                            if (quote.source != null)
                               Container(
                                 width: double.infinity,
-                                child: Text(
-                                  '"${quote.content}"',
-                                  style: myTheme.textTheme.subtitle1,
-                                ),
+                                child: Text(quote.source),
                               ),
-                              Container(
-                                width: double.infinity,
-                                child: Text(
-                                  (quote.author != null)
-                                      ? quote.author
-                                      : AppLocalizations.of(context).translate('anonymous'),
-                                  style: myTheme.textTheme.subtitle2,
-                                ),
-                              ),
-                              if (quote.source != null)
-                                Container(
-                                  width: double.infinity,
-                                  child: Text(quote.source),
-                                ),
-                            ],
-                          ),
+                          ],
                         ),
                       ),
                     ),
-                  );
-                },
-                separatorBuilder: (context, _) => const Divider(height: 12),
-              ),
-              onNotification: (_) {
-                if (_scrollController.position.userScrollDirection == ScrollDirection.reverse &&
-                    _isFabVisible == true) {
-                  setState(() {
-                    _isFabVisible = false;
-                  });
-                }
-                if (_scrollController.position.userScrollDirection == ScrollDirection.forward &&
-                    _isFabVisible == false) {
-                  setState(() {
-                    _isFabVisible = true;
-                  });
-                }
-                return true;
+                  ),
+                );
               },
+              separatorBuilder: (context, _) => const Divider(height: 12),
             ),
       floatingActionButton: Visibility(
         visible: _isFabVisible,
