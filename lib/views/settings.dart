@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:package_info/package_info.dart';
 import 'package:stoic/widgets/appbar.dart';
 
 import 'package:url_launcher/url_launcher.dart';
@@ -10,11 +11,19 @@ class Settings extends StatefulWidget {
 }
 
 class _SettingsState extends State<Settings> {
-  static const String _currentVersion = 'in development';
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+  String _currentVersion = 'fetching...';
+
+  @override
+  void initState() {
+    super.initState();
+    _getCurrentVersion();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       appBar: MyAppBar(AppLocalizations.of(context).translate('settings_appbar_title')),
       body: SingleChildScrollView(
         child: Container(
@@ -66,7 +75,24 @@ class _SettingsState extends State<Settings> {
     if (await canLaunch(url)) {
       await launch(url);
     } else {
-      throw 'Could not launch $url';
+      _scaffoldKey.currentState.showSnackBar(
+        SnackBar(
+          content: Text('Cannot launch $url'),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
     }
+  }
+
+  _getCurrentVersion() async {
+    PackageInfo.fromPlatform().then((packageInfo) {
+      setState(() {
+        _currentVersion = '${packageInfo.version} build ${packageInfo.buildNumber}';
+      });
+    }).catchError(() {
+      setState(() {
+        _currentVersion = 'unable to find app version';
+      });
+    });
   }
 }
