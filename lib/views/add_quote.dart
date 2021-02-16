@@ -33,13 +33,12 @@ class _AddQuoteState extends State<AddQuote> {
           node.requestFocus(FocusNode());
         },
         child: SingleChildScrollView(
-          physics: AlwaysScrollableScrollPhysics(),
           child: Container(
+            height: MediaQuery.of(context).size.height - 80,
             padding: EdgeInsets.all(16),
             child: Form(
               key: _formKey,
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   const SizedBox(height: 20),
                   TextFormField(
