@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:package_info/package_info.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
-
 import 'package:stoic/theme/app_localizations.dart';
 
 class Settings extends StatefulWidget {
@@ -12,10 +11,12 @@ class Settings extends StatefulWidget {
 class _SettingsState extends State<Settings> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   String _currentVersion = 'fetching...';
+  bool _autoPasteEnabled;
 
   @override
   void initState() {
     super.initState();
+    _getAutoPasteValue();
     _getCurrentVersion();
   }
 
@@ -29,6 +30,28 @@ class _SettingsState extends State<Settings> {
           padding: EdgeInsets.all(8),
           child: Column(
             children: [
+              ListTile(
+                leading: Container(
+                  height: double.infinity,
+                  child: Icon(Icons.paste),
+                ),
+                trailing: Container(
+                  height: double.infinity,
+                  child: Switch(
+                    value: _autoPasteEnabled,
+                    onChanged: (value) {
+                      SharedPreferences.getInstance().then((instance) {
+                        instance.setBool('autoPaste', _autoPasteEnabled);
+                      });
+                      setState(() {
+                        _autoPasteEnabled = value;
+                      });
+                    },
+                  ),
+                ),
+                title: Text('Activate Auto Paste'),
+                subtitle: Text('Automatically paste content of quote'),
+              ),
               ListTile(
                 leading: Container(
                   height: double.infinity,
@@ -93,5 +116,10 @@ class _SettingsState extends State<Settings> {
         _currentVersion = 'unable to find app version';
       });
     });
+  }
+
+  _getAutoPasteValue() async {
+    var prefs = await SharedPreferences.getInstance();
+    _autoPasteEnabled = prefs.getBool('autoPaste') ?? false;
   }
 }

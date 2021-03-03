@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:clipboard/clipboard.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stoic/db/database.dart';
 import 'package:stoic/theme/app_localizations.dart';
 import 'package:stoic/models/quote.dart';
@@ -12,7 +13,14 @@ class AddQuote extends StatefulWidget {
 class _AddQuoteState extends State<AddQuote> {
   final _formKey = GlobalKey<FormState>();
   final _quoteContentController = TextEditingController();
-  Quote quote = Quote('');
+  Quote _quote = Quote('');
+  bool _autoPasteEnabled;
+
+  @override
+  void initState() {
+    super.initState();
+    _getAutoPasteValue();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,8 +28,10 @@ class _AddQuoteState extends State<AddQuote> {
     final Quote sendedQuote = ModalRoute.of(context).settings.arguments;
 
     if (sendedQuote != null) {
-      quote = sendedQuote;
-      _quoteContentController.text = quote.content;
+      _quote = sendedQuote;
+      _quoteContentController.text = _quote.content;
+    } else if (_autoPasteEnabled == true) {
+      _pasteFromClipboard();
     }
 
     return Scaffold(
@@ -47,6 +57,7 @@ class _AddQuoteState extends State<AddQuote> {
                     maxLines: 2,
                     decoration: InputDecoration(
                       labelText: AppLocalizations.of(context).translate('what_does_it_say'),
+                      helperText: (_autoPasteEnabled == true) ? 'Auto paste enabled' : null,
                       border: OutlineInputBorder(),
                       suffixIcon: IconButton(
                         icon: Icon(Icons.paste),
@@ -60,7 +71,7 @@ class _AddQuoteState extends State<AddQuote> {
                       return null;
                     },
                     onChanged: (text) {
-                      quote.content = text.trim();
+                      _quote.content = text.trim();
                     },
                     onEditingComplete: () {
                       node.nextFocus();
@@ -69,14 +80,14 @@ class _AddQuoteState extends State<AddQuote> {
                   const SizedBox(height: 20),
                   TextFormField(
                     textCapitalization: TextCapitalization.words,
-                    initialValue: quote.author,
+                    initialValue: _quote.author,
                     decoration: InputDecoration(
                       labelText:
                           '${AppLocalizations.of(context).translate('who_said_it')} ${'(${AppLocalizations.of(context).translate('optional').toLowerCase()})'}',
                       border: OutlineInputBorder(),
                     ),
                     onChanged: (text) {
-                      quote.author = (text != '') ? text.trim() : null;
+                      _quote.author = (text != '') ? text.trim() : null;
                     },
                     onEditingComplete: () {
                       node.nextFocus();
@@ -85,14 +96,14 @@ class _AddQuoteState extends State<AddQuote> {
                   const SizedBox(height: 20),
                   TextFormField(
                     textCapitalization: TextCapitalization.sentences,
-                    initialValue: quote.source,
+                    initialValue: _quote.source,
                     decoration: InputDecoration(
                       labelText:
                           '${AppLocalizations.of(context).translate('where_did_you_find_it')} ${'(${AppLocalizations.of(context).translate('optional').toLowerCase()})'}',
                       border: OutlineInputBorder(),
                     ),
                     onChanged: (text) {
-                      quote.source = (text != '') ? text.trim() : null;
+                      _quote.source = (text != '') ? text.trim() : null;
                     },
                     onEditingComplete: () {
                       node.unfocus();
@@ -121,21 +132,24 @@ class _AddQuoteState extends State<AddQuote> {
   }
 
   void _addQuote() async {
-    if (quote.id != null) {
-      await AppDatabase.update('quotes', quote.id, quote.toMap());
+    if (_quote.id != null) {
+      await AppDatabase.update('quotes', _quote.id, _quote.toMap());
     } else {
-      var quoteId = await AppDatabase.insert('quotes', quote.toMap());
-      quote.id = quoteId;
+      var quoteId = await AppDatabase.insert('quotes', _quote.toMap());
+      _quote.id = quoteId;
     }
-    Navigator.pop(context, quote);
+    Navigator.pop(context, _quote);
   }
 
   void _pasteFromClipboard() {
     FlutterClipboard.paste().then((value) {
-      quote.content = value.trim();
-      setState(() {
-        _quoteContentController.text = value;
-      });
+      _quote.content = value.trim();
+      _quoteContentController.text = value;
     });
+  }
+
+  void _getAutoPasteValue() async {
+    var prefs = await SharedPreferences.getInstance();
+    _autoPasteEnabled = prefs.getBool('autoPaste');
   }
 }
