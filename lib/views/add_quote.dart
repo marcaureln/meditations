@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:clipboard/clipboard.dart';
 import 'package:stoic/db/database.dart';
 import 'package:stoic/theme/app_localizations.dart';
 import 'package:stoic/models/quote.dart';
@@ -10,6 +11,7 @@ class AddQuote extends StatefulWidget {
 
 class _AddQuoteState extends State<AddQuote> {
   final _formKey = GlobalKey<FormState>();
+  final _quoteContentController = TextEditingController();
   Quote quote = Quote('');
 
   @override
@@ -19,6 +21,7 @@ class _AddQuoteState extends State<AddQuote> {
 
     if (sendedQuote != null) {
       quote = sendedQuote;
+      _quoteContentController.text = quote.content;
     }
 
     return Scaffold(
@@ -37,14 +40,18 @@ class _AddQuoteState extends State<AddQuote> {
                 children: [
                   const SizedBox(height: 20),
                   TextFormField(
+                    controller: _quoteContentController,
                     textCapitalization: TextCapitalization.sentences,
-                    initialValue: quote.content,
                     autofocus: true,
-                    minLines: 2,
-                    maxLines: 4,
+                    minLines: 1,
+                    maxLines: 2,
                     decoration: InputDecoration(
                       labelText: AppLocalizations.of(context).translate('what_does_it_say'),
                       border: OutlineInputBorder(),
+                      suffixIcon: IconButton(
+                        icon: Icon(Icons.paste),
+                        onPressed: _pasteFromClipboard,
+                      ),
                     ),
                     validator: (text) {
                       if (text.isEmpty) {
@@ -121,5 +128,14 @@ class _AddQuoteState extends State<AddQuote> {
       quote.id = quoteId;
     }
     Navigator.pop(context, quote);
+  }
+
+  void _pasteFromClipboard() {
+    FlutterClipboard.paste().then((value) {
+      quote.content = value.trim();
+      setState(() {
+        _quoteContentController.text = value;
+      });
+    });
   }
 }
