@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:package_info/package_info.dart';
-import 'package:stoic/widgets/appbar.dart';
 
 import 'package:url_launcher/url_launcher.dart';
 
@@ -24,7 +23,7 @@ class _SettingsState extends State<Settings> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      appBar: MyAppBar(AppLocalizations.of(context).translate('settings_appbar_title')),
+      appBar: AppBar(title: Text(AppLocalizations.of(context).translate('settings_appbar_title'))),
       body: SingleChildScrollView(
         child: Container(
           padding: EdgeInsets.all(8),

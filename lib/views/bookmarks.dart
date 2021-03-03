@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
-
 import 'package:clipboard/clipboard.dart';
-import 'package:flutter/rendering.dart';
 import 'package:stoic/db/database.dart';
-
+import 'package:stoic/models/quote.dart';
 import 'package:stoic/theme/theme.dart';
 import 'package:stoic/theme/app_localizations.dart';
-import 'package:stoic/models/quote.dart';
-import 'package:stoic/widgets/appbar.dart';
 import 'package:stoic/widgets/no_data.dart';
 
 class Bookmarks extends StatefulWidget {
@@ -33,8 +29,8 @@ class _BookmarksState extends State<Bookmarks> {
     }
     return Scaffold(
       key: _scaffoldKey,
-      appBar: MyAppBar(
-        AppLocalizations.of(context).translate('bookmarks_appbar_title'),
+      appBar: AppBar(
+        title: Text(AppLocalizations.of(context).translate('bookmarks_appbar_title')),
       ),
       body: (quotes.isEmpty)
           ? NoData()
@@ -232,7 +228,6 @@ class _BookmarksState extends State<Bookmarks> {
           .showSnackBar(
             SnackBar(
               content: Text(AppLocalizations.of(context).translate('copied_to_clipboard')),
-              behavior: SnackBarBehavior.floating,
             ),
           )
           .closed

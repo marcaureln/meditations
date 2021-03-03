@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:stoic/db/database.dart';
-
 import 'package:stoic/theme/app_localizations.dart';
-import 'package:stoic/theme/colors.dart';
 import 'package:stoic/models/quote.dart';
-import 'package:stoic/widgets/appbar.dart';
 
 class AddQuote extends StatefulWidget {
   @override
@@ -25,9 +22,7 @@ class _AddQuoteState extends State<AddQuote> {
     }
 
     return Scaffold(
-      appBar: MyAppBar(
-        AppLocalizations.of(context).translate('add_quote'),
-      ),
+      appBar: AppBar(title: Text(AppLocalizations.of(context).translate('add_quote'))),
       body: GestureDetector(
         onTap: () {
           node.requestFocus(FocusNode());
@@ -98,21 +93,16 @@ class _AddQuoteState extends State<AddQuote> {
                     },
                   ),
                   const SizedBox(height: 20),
-                  RaisedButton.icon(
-                    icon: Icon(
-                      Icons.save,
-                      color: MyColors.white,
+                  Container(
+                    width: double.infinity,
+                    child: RaisedButton.icon(
+                      icon: Icon(Icons.save),
+                      padding: EdgeInsets.symmetric(vertical: 16),
+                      label: Text(AppLocalizations.of(context).translate('save')),
+                      onPressed: () {
+                        if (_formKey.currentState.validate()) _addQuote();
+                      },
                     ),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-                    padding: EdgeInsets.all(12.0),
-                    color: MyColors.black,
-                    textColor: MyColors.white,
-                    label: Text(
-                      AppLocalizations.of(context).translate('save'),
-                    ),
-                    onPressed: () {
-                      if (_formKey.currentState.validate()) _addQuote();
-                    },
                   )
                 ],
               ),
