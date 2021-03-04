@@ -69,6 +69,21 @@ class _SettingsState extends State<Settings> {
           ListTile(
             leading: Container(
               height: double.infinity,
+              child: Icon(Icons.article),
+            ),
+            title: Text('Licenses'),
+            subtitle: Text('Show Open Source licenses'),
+            onTap: () {
+              showLicensePage(
+                context: context,
+                applicationName: 'Meditations',
+                applicationVersion: _currentVersion,
+              );
+            },
+          ),
+          ListTile(
+            leading: Container(
+              height: double.infinity,
               child: Icon(Icons.info),
             ),
             title: Text(AppLocalizations.of(context).translate('settings_about')),
