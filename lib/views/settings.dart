@@ -11,7 +11,7 @@ class Settings extends StatefulWidget {
 class _SettingsState extends State<Settings> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   String _currentVersion = 'fetching...';
-  bool _autoPasteEnabled;
+  bool _autoPasteEnabled = false;
 
   @override
   void initState() {
@@ -25,62 +25,55 @@ class _SettingsState extends State<Settings> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(title: Text(AppLocalizations.of(context).translate('settings_appbar_title'))),
-      body: SingleChildScrollView(
-        child: Container(
-          padding: EdgeInsets.all(8),
-          child: Column(
-            children: [
-              ListTile(
-                leading: Container(
-                  height: double.infinity,
-                  child: Icon(Icons.paste),
-                ),
-                trailing: Container(
-                  height: double.infinity,
-                  child: Switch(
-                    value: _autoPasteEnabled,
-                    onChanged: (value) {
-                      SharedPreferences.getInstance().then((instance) {
-                        instance.setBool('autoPaste', _autoPasteEnabled);
-                      });
-                      setState(() {
-                        _autoPasteEnabled = value;
-                      });
-                    },
-                  ),
-                ),
-                title: Text('Activate Auto Paste'),
-                subtitle: Text('Automatically paste content of quote'),
-              ),
-              ListTile(
-                leading: Container(
-                  height: double.infinity,
-                  child: Icon(Icons.feedback),
-                ),
-                title: Text(AppLocalizations.of(context).translate('settings_feedback')),
-                subtitle: Text(AppLocalizations.of(context).translate('settings_feedback_sub')),
-                onTap: _sendFeedback,
-              ),
-              ListTile(
-                leading: Container(
-                  height: double.infinity,
-                  child: Icon(Icons.share),
-                ),
-                title: Text(AppLocalizations.of(context).translate('settings_share')),
-                subtitle: Text(AppLocalizations.of(context).translate('settings_share_sub')),
-                onTap: _share,
-              ),
-              ListTile(
-                leading: Container(
-                  height: double.infinity,
-                  child: Icon(Icons.info),
-                ),
-                title: Text(AppLocalizations.of(context).translate('settings_about')),
-                subtitle: Text('${AppLocalizations.of(context).translate('version')}: $_currentVersion'),
-              ),
-            ],
+      body: ListView(
+        padding: EdgeInsets.all(8),
+        children: [
+          ListTile(
+            leading: Container(
+              height: double.infinity,
+              child: Icon(Icons.paste),
+            ),
+            trailing: Switch(
+              value: _autoPasteEnabled,
+              onChanged: (value) {
+                SharedPreferences.getInstance().then((prefs) {
+                  prefs.setBool('autoPaste', value);
+                });
+                setState(() {
+                  _autoPasteEnabled = value;
+                });
+              },
+            ),
+            title: Text('Enable Auto Paste'),
+            subtitle: Text('Automatically paste content of quote'),
           ),
-        ),
+          ListTile(
+            leading: Container(
+              height: double.infinity,
+              child: Icon(Icons.feedback),
+            ),
+            title: Text(AppLocalizations.of(context).translate('settings_feedback')),
+            subtitle: Text(AppLocalizations.of(context).translate('settings_feedback_sub')),
+            onTap: _sendFeedback,
+          ),
+          ListTile(
+            leading: Container(
+              height: double.infinity,
+              child: Icon(Icons.share),
+            ),
+            title: Text(AppLocalizations.of(context).translate('settings_share')),
+            subtitle: Text(AppLocalizations.of(context).translate('settings_share_sub')),
+            onTap: _share,
+          ),
+          ListTile(
+            leading: Container(
+              height: double.infinity,
+              child: Icon(Icons.info),
+            ),
+            title: Text(AppLocalizations.of(context).translate('settings_about')),
+            subtitle: Text('${AppLocalizations.of(context).translate('version')}: $_currentVersion'),
+          ),
+        ],
       ),
     );
   }
@@ -93,33 +86,33 @@ class _SettingsState extends State<Settings> {
     _launchURL("https://github.com/marcaureln");
   }
 
-  _launchURL(String url) async {
+  void _launchURL(String url) async {
     if (await canLaunch(url)) {
       await launch(url);
     } else {
       _scaffoldKey.currentState.showSnackBar(
         SnackBar(
           content: Text('Cannot launch $url'),
-          behavior: SnackBarBehavior.floating,
         ),
       );
     }
   }
 
-  _getCurrentVersion() async {
+  void _getCurrentVersion() {
     PackageInfo.fromPlatform().then((packageInfo) {
       setState(() {
         _currentVersion = '${packageInfo.version} build ${packageInfo.buildNumber}';
       });
-    }).catchError(() {
+    }).catchError((_) {
       setState(() {
         _currentVersion = 'unable to find app version';
       });
     });
   }
 
-  _getAutoPasteValue() async {
-    var prefs = await SharedPreferences.getInstance();
-    _autoPasteEnabled = prefs.getBool('autoPaste') ?? false;
+  void _getAutoPasteValue() {
+    SharedPreferences.getInstance().then((prefs) {
+      _autoPasteEnabled = prefs.getBool('autoPaste') ?? false;
+    });
   }
 }
