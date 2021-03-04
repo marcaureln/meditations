@@ -119,9 +119,8 @@ class _AddQuoteState extends State<AddQuote> {
                   const SizedBox(height: 20),
                   Container(
                     width: double.infinity,
-                    child: RaisedButton.icon(
+                    child: ElevatedButton.icon(
                       icon: Icon(Icons.save),
-                      padding: EdgeInsets.symmetric(vertical: 16),
                       label: Text(AppLocalizations.of(context).translate('save')),
                       onPressed: () {
                         if (_formKey.currentState.validate()) _addQuote();

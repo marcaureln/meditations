@@ -136,8 +136,7 @@ class _BookmarksState extends State<Bookmarks> {
       _isFabVisible = false;
       quotes.remove(quote);
     });
-
-    _scaffoldKey.currentState
+    ScaffoldMessenger.of(context)
         .showSnackBar(
           SnackBar(
             duration: Duration(seconds: 2),
@@ -233,10 +232,11 @@ class _BookmarksState extends State<Bookmarks> {
       _isFabVisible = false;
     });
     FlutterClipboard.copy(quote.toString()).then((_) {
-      _scaffoldKey.currentState
+      ScaffoldMessenger.of(context)
           .showSnackBar(
             SnackBar(
               content: Text(AppLocalizations.of(context).translate('copied_to_clipboard')),
+              duration: Duration(seconds: 2),
             ),
           )
           .closed
