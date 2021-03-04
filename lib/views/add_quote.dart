@@ -15,11 +15,13 @@ class _AddQuoteState extends State<AddQuote> {
   final _quoteContentController = TextEditingController();
   Quote _quote = Quote('');
   bool _autoPasteEnabled;
+  bool _alreadyPasted;
 
   @override
   void initState() {
     super.initState();
     _getAutoPasteValue();
+    _alreadyPasted = false;
   }
 
   @override
@@ -30,8 +32,9 @@ class _AddQuoteState extends State<AddQuote> {
     if (sendedQuote != null) {
       _quote = sendedQuote;
       _quoteContentController.text = _quote.content;
-    } else if (_autoPasteEnabled == true) {
+    } else if (_autoPasteEnabled == true && _alreadyPasted == false) {
       _pasteFromClipboard();
+      _alreadyPasted = true;
     }
 
     return Scaffold(
@@ -56,7 +59,8 @@ class _AddQuoteState extends State<AddQuote> {
                     minLines: 1,
                     maxLines: 2,
                     decoration: InputDecoration(
-                      labelText: AppLocalizations.of(context).translate('what_does_it_say'),
+                      labelText: 'Quote',
+                      hintText: AppLocalizations.of(context).translate('what_does_it_say'),
                       helperText: (_autoPasteEnabled == true) ? 'Auto paste enabled' : null,
                       border: OutlineInputBorder(),
                       suffixIcon: IconButton(
@@ -82,7 +86,8 @@ class _AddQuoteState extends State<AddQuote> {
                     textCapitalization: TextCapitalization.words,
                     initialValue: _quote.author,
                     decoration: InputDecoration(
-                      labelText:
+                      labelText: 'Author',
+                      hintText:
                           '${AppLocalizations.of(context).translate('who_said_it')} ${'(${AppLocalizations.of(context).translate('optional').toLowerCase()})'}',
                       border: OutlineInputBorder(),
                     ),
@@ -98,7 +103,8 @@ class _AddQuoteState extends State<AddQuote> {
                     textCapitalization: TextCapitalization.sentences,
                     initialValue: _quote.source,
                     decoration: InputDecoration(
-                      labelText:
+                      labelText: 'Source',
+                      hintText:
                           '${AppLocalizations.of(context).translate('where_did_you_find_it')} ${'(${AppLocalizations.of(context).translate('optional').toLowerCase()})'}',
                       border: OutlineInputBorder(),
                     ),
@@ -148,8 +154,9 @@ class _AddQuoteState extends State<AddQuote> {
     });
   }
 
-  void _getAutoPasteValue() async {
-    var prefs = await SharedPreferences.getInstance();
-    _autoPasteEnabled = prefs.getBool('autoPaste');
+  void _getAutoPasteValue() {
+    SharedPreferences.getInstance().then((prefs) {
+      _autoPasteEnabled = prefs.getBool('autoPaste');
+    });
   }
 }
