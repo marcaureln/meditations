@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:clipboard/clipboard.dart';
+import 'package:share/share.dart';
 import 'package:stoic/db/database.dart';
 import 'package:stoic/models/quote.dart';
 import 'package:stoic/theme/theme.dart';
@@ -209,6 +210,14 @@ class _BookmarksState extends State<Bookmarks> {
                       onPressed: () {
                         Navigator.pop(context);
                         _saveToClipboard(quote);
+                      },
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.share),
+                      tooltip: 'Share',
+                      onPressed: () {
+                        Navigator.pop(context);
+                        Share.share(quote.toString());
                       },
                     ),
                   ],

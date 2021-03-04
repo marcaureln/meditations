@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:package_info/package_info.dart';
+import 'package:share/share.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:stoic/theme/app_localizations.dart';
@@ -83,7 +84,7 @@ class _SettingsState extends State<Settings> {
   }
 
   void _share() {
-    _launchURL("https://github.com/marcaureln");
+    Share.share("https://github.com/marcaureln/stoic");
   }
 
   void _launchURL(String url) async {
