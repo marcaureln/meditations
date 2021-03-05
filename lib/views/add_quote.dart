@@ -12,16 +12,19 @@ class AddQuote extends StatefulWidget {
 
 class _AddQuoteState extends State<AddQuote> {
   final _formKey = GlobalKey<FormState>();
-  final _quoteContentController = TextEditingController();
+  final _contentController = TextEditingController();
   Quote _quote = Quote('');
   bool _autoPasteEnabled;
   bool _alreadyPasted;
+  bool _isContentEmpty;
 
   @override
   void initState() {
     super.initState();
     _getAutoPasteValue();
     _alreadyPasted = false;
+    _isContentEmpty = true;
+    _contentController.addListener(_contentListener);
   }
 
   @override
@@ -29,11 +32,13 @@ class _AddQuoteState extends State<AddQuote> {
     final FocusScopeNode node = FocusScope.of(context);
     final Quote sendedQuote = ModalRoute.of(context).settings.arguments;
 
-    if (sendedQuote != null) {
-      _quote = sendedQuote;
-      _quoteContentController.text = _quote.content;
-    } else if (_autoPasteEnabled == true && _alreadyPasted == false) {
-      _pasteFromClipboard();
+    if (_alreadyPasted == false) {
+      if (sendedQuote != null) {
+        _quote = sendedQuote;
+        _contentController.text = _quote.content;
+      } else if (_autoPasteEnabled == true) {
+        _pasteContentFromClipboard();
+      }
       _alreadyPasted = true;
     }
 
@@ -53,7 +58,7 @@ class _AddQuoteState extends State<AddQuote> {
                 children: [
                   const SizedBox(height: 20),
                   TextFormField(
-                    controller: _quoteContentController,
+                    controller: _contentController,
                     textCapitalization: TextCapitalization.sentences,
                     autofocus: true,
                     minLines: 1,
@@ -63,10 +68,15 @@ class _AddQuoteState extends State<AddQuote> {
                       hintText: AppLocalizations.of(context).translate('what_does_it_say'),
                       helperText: (_autoPasteEnabled == true) ? 'Auto paste enabled' : null,
                       border: OutlineInputBorder(),
-                      suffixIcon: IconButton(
-                        icon: Icon(Icons.paste),
-                        onPressed: _pasteFromClipboard,
-                      ),
+                      suffixIcon: (_isContentEmpty == true)
+                          ? IconButton(
+                              icon: Icon(Icons.paste),
+                              onPressed: _pasteContentFromClipboard,
+                            )
+                          : IconButton(
+                              icon: Icon(Icons.clear),
+                              onPressed: _clearContent,
+                            ),
                     ),
                     validator: (text) {
                       if (text.isEmpty) {
@@ -146,10 +156,10 @@ class _AddQuoteState extends State<AddQuote> {
     Navigator.pop(context, _quote);
   }
 
-  void _pasteFromClipboard() {
+  void _pasteContentFromClipboard() {
     FlutterClipboard.paste().then((value) {
       _quote.content = value.trim();
-      _quoteContentController.text = value;
+      _contentController.text = value;
     });
   }
 
@@ -157,5 +167,22 @@ class _AddQuoteState extends State<AddQuote> {
     SharedPreferences.getInstance().then((prefs) {
       _autoPasteEnabled = prefs.getBool('autoPaste');
     });
+  }
+
+  void _clearContent() {
+    _contentController.clear();
+    _quote.content = '';
+  }
+
+  void _contentListener() {
+    if (_contentController.text != '') {
+      setState(() {
+        _isContentEmpty = false;
+      });
+    } else if (_isContentEmpty == false) {
+      setState(() {
+        _isContentEmpty = true;
+      });
+    }
   }
 }
