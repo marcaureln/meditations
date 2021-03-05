@@ -40,6 +40,7 @@ class _BookmarksState extends State<Bookmarks> {
               controller: _scrollController,
               padding: EdgeInsets.only(left: 8, right: 8, top: 8, bottom: 8),
               keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+              physics: BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
               itemCount: quotes.length + 1,
               itemBuilder: (context, index) {
                 if (index == quotes.length) {
