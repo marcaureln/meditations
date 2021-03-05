@@ -76,7 +76,6 @@ class _SettingsState extends State<Settings> {
             onTap: () {
               showLicensePage(
                 context: context,
-                applicationName: 'Meditations',
                 applicationVersion: _currentVersion,
               );
             },
