@@ -14,6 +14,7 @@ class Bookmarks extends StatefulWidget {
 class _BookmarksState extends State<Bookmarks> {
   List<Quote> quotes;
   final _scaffoldKey = GlobalKey<ScaffoldState>();
+  final _scrollController = ScrollController();
   bool _isFabVisible;
 
   @override
@@ -36,9 +37,24 @@ class _BookmarksState extends State<Bookmarks> {
       body: (quotes.isEmpty)
           ? NoData()
           : ListView.separated(
-              padding: EdgeInsets.only(left: 8, right: 8, top: 8, bottom: 128),
-              itemCount: quotes.length,
+              controller: _scrollController,
+              padding: EdgeInsets.only(left: 8, right: 8, top: 8, bottom: 8),
+              keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+              itemCount: quotes.length + 1,
               itemBuilder: (context, index) {
+                if (index == quotes.length) {
+                  return Column(
+                    children: [
+                      const SizedBox(height: 64),
+                      TextButton.icon(
+                        icon: Icon(Icons.arrow_upward),
+                        label: Text('Move Top'),
+                        onPressed: _moveTop,
+                      ),
+                    ],
+                  );
+                }
+
                 Quote quote = quotes[index];
 
                 return Dismissible(
@@ -246,5 +262,9 @@ class _BookmarksState extends State<Bookmarks> {
         });
       });
     });
+  }
+
+  _moveTop() {
+    _scrollController.animateTo(0, duration: Duration(seconds: 2), curve: Curves.ease);
   }
 }

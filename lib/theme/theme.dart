@@ -18,6 +18,11 @@ ThemeData myTheme = ThemeData(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
     ),
   ),
+  textButtonTheme: TextButtonThemeData(
+    style: TextButton.styleFrom(
+      primary: Colors.black,
+    ),
+  ),
   snackBarTheme: SnackBarThemeData(
     backgroundColor: Colors.black,
     actionTextColor: Colors.white,
