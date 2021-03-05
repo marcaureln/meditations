@@ -49,7 +49,7 @@ class _BookmarksState extends State<Bookmarks> {
                       const SizedBox(height: 64),
                       TextButton.icon(
                         icon: Icon(Icons.arrow_upward),
-                        label: Text('Move Top'),
+                        label: Text(AppLocalizations.of(context).translate('move_top')),
                         onPressed: _moveTop,
                       ),
                     ],
@@ -230,7 +230,7 @@ class _BookmarksState extends State<Bookmarks> {
                     ),
                     IconButton(
                       icon: Icon(Icons.share),
-                      tooltip: 'Share',
+                      tooltip: AppLocalizations.of(context).translate('share'),
                       onPressed: () {
                         Navigator.pop(context);
                         Share.share(quote.toString());

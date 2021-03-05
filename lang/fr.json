@@ -25,5 +25,17 @@
   "we_cannot_save_quote": "Nous ne pouvons pas enregistrer une citation vide",
   "modify": "Modifier",
   "remove": "Supprimer",
-  "copy": "Copier"
+  "copy": "Copier",
+  "share": "Partager",
+  "move_top": "Aller au début",
+  "settings_auto_paste" : "Activer le collage automatique",
+  "settings_auto_paste_sub" : "Colle automatiquement la citation depuis le presse-papier",
+  "settings_licenses": "Licences",
+  "settings_licenses_sub": "Afficher les licences open source",
+  "error_launch_url": "Nous ne pouvons pas ouvrir ce lien.",
+  "error_version": "Nous n'arrivons pas à obtenir la version de l'application",
+  "auto_paste_enabled": "Collage automatique activé",
+  "quote": "Citation",
+  "author" : "Auteur",
+  "source" : "Source"
 }

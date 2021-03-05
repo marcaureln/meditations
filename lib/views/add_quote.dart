@@ -64,9 +64,11 @@ class _AddQuoteState extends State<AddQuote> {
                     minLines: 1,
                     maxLines: 2,
                     decoration: InputDecoration(
-                      labelText: 'Quote',
+                      labelText: AppLocalizations.of(context).translate('quote'),
                       hintText: AppLocalizations.of(context).translate('what_does_it_say'),
-                      helperText: (_autoPasteEnabled == true) ? 'Auto paste enabled' : null,
+                      helperText: (_autoPasteEnabled == true)
+                          ? AppLocalizations.of(context).translate('auto_paste_enabled')
+                          : null,
                       border: OutlineInputBorder(),
                       suffixIcon: (_isContentEmpty == true)
                           ? IconButton(
@@ -96,7 +98,7 @@ class _AddQuoteState extends State<AddQuote> {
                     textCapitalization: TextCapitalization.words,
                     initialValue: _quote.author,
                     decoration: InputDecoration(
-                      labelText: 'Author',
+                      labelText: AppLocalizations.of(context).translate('author'),
                       hintText:
                           '${AppLocalizations.of(context).translate('who_said_it')} ${'(${AppLocalizations.of(context).translate('optional').toLowerCase()})'}',
                       border: OutlineInputBorder(),
@@ -113,7 +115,7 @@ class _AddQuoteState extends State<AddQuote> {
                     textCapitalization: TextCapitalization.sentences,
                     initialValue: _quote.source,
                     decoration: InputDecoration(
-                      labelText: 'Source',
+                      labelText: AppLocalizations.of(context).translate('source'),
                       hintText:
                           '${AppLocalizations.of(context).translate('where_did_you_find_it')} ${'(${AppLocalizations.of(context).translate('optional').toLowerCase()})'}',
                       border: OutlineInputBorder(),

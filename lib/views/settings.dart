@@ -11,7 +11,7 @@ class Settings extends StatefulWidget {
 
 class _SettingsState extends State<Settings> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
-  String _currentVersion = 'fetching...';
+  String _currentVersion = '...';
   bool _autoPasteEnabled = false;
 
   @override
@@ -45,8 +45,8 @@ class _SettingsState extends State<Settings> {
                 });
               },
             ),
-            title: Text('Enable Auto Paste'),
-            subtitle: Text('Automatically paste content of quote'),
+            title: Text(AppLocalizations.of(context).translate('settings_auto_paste')),
+            subtitle: Text(AppLocalizations.of(context).translate('settings_auto_paste_sub')),
           ),
           ListTile(
             leading: Container(
@@ -71,8 +71,8 @@ class _SettingsState extends State<Settings> {
               height: double.infinity,
               child: Icon(Icons.article),
             ),
-            title: Text('Licenses'),
-            subtitle: Text('Show Open Source licenses'),
+            title: Text(AppLocalizations.of(context).translate('settings_licenses')),
+            subtitle: Text(AppLocalizations.of(context).translate('settings_licenses_sub')),
             onTap: () {
               showLicensePage(
                 context: context,
@@ -107,7 +107,7 @@ class _SettingsState extends State<Settings> {
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Cannot launch $url'),
+          content: Text(AppLocalizations.of(context).translate('error_launch_url')),
         ),
       );
     }
@@ -120,7 +120,7 @@ class _SettingsState extends State<Settings> {
       });
     }).catchError((_) {
       setState(() {
-        _currentVersion = 'unable to find app version';
+        _currentVersion = AppLocalizations.of(context).translate('error_version');
       });
     });
   }

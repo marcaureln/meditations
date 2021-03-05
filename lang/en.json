@@ -25,5 +25,17 @@
   "we_cannot_save_quote": "We cannot save an empty quote",
   "modify": "Modify",
   "remove": "Remove",
-  "copy": "Copy"
+  "copy": "Copy",
+  "share": "Share",
+  "move_top": "Move top",
+  "settings_auto_paste" : "Enable auto paste",
+  "settings_auto_paste_sub" : "Automatically paste the quote from clipboard",
+  "settings_licenses": "Licenses",
+  "settings_licenses_sub": "Show open source licenses",
+  "error_launch_url": "We cannot launch this URL",
+  "error_version": "We are unable to find the app version",
+  "auto_paste_enabled": "Auto paste enabled",
+  "quote": "Quote",
+  "author" : "Author",
+  "source" : "Source"
 }
