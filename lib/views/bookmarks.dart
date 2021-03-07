@@ -170,7 +170,6 @@ class _BookmarksState extends State<Bookmarks> {
                 });
               },
             ),
-            behavior: SnackBarBehavior.floating,
           ),
         )
         .closed
