@@ -41,15 +41,11 @@ class _BookmarksState extends State<Bookmarks> {
           ? NoData()
           : ListView.separated(
               controller: _scrollController,
-              padding: EdgeInsets.only(left: 8, right: 8, top: 8, bottom: 8),
+              padding: EdgeInsets.only(left: 8, right: 8, top: 8, bottom: 128),
               keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
               physics: BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-              itemCount: quotes.length + 1,
+              itemCount: quotes.length,
               itemBuilder: (context, index) {
-                if (index == quotes.length) {
-                  return const SizedBox(height: 64);
-                }
-
                 Quote quote = quotes[index];
 
                 return Dismissible(
@@ -273,9 +269,11 @@ class _BookmarksState extends State<Bookmarks> {
 
   _scrollListener() {
     if (_scrollController.offset >= _scrollController.position.maxScrollExtent) {
-      setState(() {
-        _bottomReached = true;
-      });
+      if (_bottomReached == false) {
+        setState(() {
+          _bottomReached = true;
+        });
+      }
     } else if (_bottomReached == true) {
       setState(() {
         _bottomReached = false;
