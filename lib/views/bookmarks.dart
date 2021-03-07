@@ -16,11 +16,14 @@ class _BookmarksState extends State<Bookmarks> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   final _scrollController = ScrollController();
   bool _isFabVisible;
+  bool _bottomReached;
 
   @override
   void initState() {
     super.initState();
     _isFabVisible = true;
+    _bottomReached = false;
+    _scrollController.addListener(_scrollListener);
   }
 
   @override
@@ -44,16 +47,7 @@ class _BookmarksState extends State<Bookmarks> {
               itemCount: quotes.length + 1,
               itemBuilder: (context, index) {
                 if (index == quotes.length) {
-                  return Column(
-                    children: [
-                      const SizedBox(height: 64),
-                      TextButton.icon(
-                        icon: Icon(Icons.arrow_upward),
-                        label: Text(AppLocalizations.of(context).translate('move_top')),
-                        onPressed: _moveTop,
-                      ),
-                    ],
-                  );
+                  return const SizedBox(height: 64);
                 }
 
                 Quote quote = quotes[index];
@@ -121,14 +115,23 @@ class _BookmarksState extends State<Bookmarks> {
             ),
       floatingActionButton: Visibility(
         visible: _isFabVisible,
-        child: FloatingActionButton(
-          tooltip: AppLocalizations.of(context).translate('add_quote'),
-          child: Icon(
-            Icons.add,
-            color: myTheme.scaffoldBackgroundColor,
-          ),
-          onPressed: _openAddQuotePage,
-        ),
+        child: (_bottomReached == false)
+            ? FloatingActionButton(
+                tooltip: AppLocalizations.of(context).translate('add_quote'),
+                child: Icon(
+                  Icons.add,
+                  color: Theme.of(context).scaffoldBackgroundColor,
+                ),
+                onPressed: _openAddQuotePage,
+              )
+            : FloatingActionButton(
+                tooltip: AppLocalizations.of(context).translate('move_top'),
+                child: Icon(
+                  Icons.arrow_upward,
+                  color: Theme.of(context).scaffoldBackgroundColor,
+                ),
+                onPressed: _moveTop,
+              ),
       ),
     );
   }
@@ -267,5 +270,17 @@ class _BookmarksState extends State<Bookmarks> {
 
   _moveTop() {
     _scrollController.animateTo(0, duration: Duration(seconds: 2), curve: Curves.ease);
+  }
+
+  _scrollListener() {
+    if (_scrollController.offset >= _scrollController.position.maxScrollExtent) {
+      setState(() {
+        _bottomReached = true;
+      });
+    } else if (_bottomReached == true) {
+      setState(() {
+        _bottomReached = false;
+      });
+    }
   }
 }
