@@ -32,11 +32,12 @@ class _AddQuoteState extends State<AddQuote> {
     final FocusScopeNode node = FocusScope.of(context);
     final Quote sendedQuote = ModalRoute.of(context).settings.arguments;
 
-    if (_alreadyPasted == false) {
+    if (_alreadyPasted == false && (sendedQuote != null || _autoPasteEnabled != null)) {
       if (sendedQuote != null) {
         _quote = sendedQuote;
         _contentController.text = _quote.content;
-      } else if (_autoPasteEnabled == true) {
+      }
+      if (_autoPasteEnabled == true) {
         _pasteContentFromClipboard();
       }
       _alreadyPasted = true;
@@ -161,7 +162,9 @@ class _AddQuoteState extends State<AddQuote> {
   void _pasteContentFromClipboard() {
     FlutterClipboard.paste().then((value) {
       _quote.content = value.trim();
-      _contentController.text = value;
+      _contentController
+        ..text = value
+        ..selection = TextSelection.collapsed(offset: _contentController.text.length);
     });
   }
 
