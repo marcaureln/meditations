@@ -180,13 +180,13 @@ class _AddQuoteState extends State<AddQuote> {
   }
 
   void _contentListener() {
-    if (_contentController.text != '') {
-      setState(() {
-        _isContentEmpty = false;
-      });
-    } else if (_isContentEmpty == false) {
+    if (_contentController.text.isEmpty) {
       setState(() {
         _isContentEmpty = true;
+      });
+    } else if (_isContentEmpty == true) {
+      setState(() {
+        _isContentEmpty = false;
       });
     }
   }
