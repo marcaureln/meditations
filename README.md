@@ -1,16 +1,27 @@
-# stoic
+# Meditations
 
-A new Flutter project.
+## About
+
+The idea of making this application came to me while I was reading the meditations of Marcus Aurelius. I have the habit (like many readers) of underlining the passages that impressed me during the reading of a book. But with this one I wanted to have these passages at hand. I didn't want to take the book out of my library and rummage through it to find a particular passage. That's why I decided to make a quote notebook for myself.
+
+Stay tuned for upcoming features like dark theme.
+
+The application is fully available in both French and English.
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+For help getting started with Flutter, view our online [documentation](https://flutter.dev/).
 
-A few resources to get you started if this is your first Flutter project:
+## Contributing
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+You can contribute by implementing a new feature or fixing a bug.
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+1. Fork the project
+2. Create your branch and make your changes
+3. Commit your changes
+4. Push the branch
+5. Open a pull request
+
+## License
+
+Distributed under the MIT License. See `LICENSE` for more information.
