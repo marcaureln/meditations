@@ -23,8 +23,7 @@ class _MyHomeState extends State<MyHome> {
   @override
   void initState() {
     super.initState();
-    SystemChrome.setPreferredOrientations(
-        [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   }
 
   @override
@@ -32,15 +31,19 @@ class _MyHomeState extends State<MyHome> {
     return Scaffold(
       body: _views[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
+        showSelectedLabels: false,
+        showUnselectedLabels: false,
+        elevation: 4.0,
+        iconSize: 20,
         items: [
           BottomNavigationBarItem(
-              icon: Icon(Icons.bookmark),
-              label: AppLocalizations.of(context)
-                  .translate('bottomnavbar_bookmarks')),
+            icon: Icon(Icons.bookmark),
+            label: AppLocalizations.of(context).translate('bottomnavbar_bookmarks'),
+          ),
           BottomNavigationBarItem(
-              icon: Icon(Icons.settings),
-              label: AppLocalizations.of(context)
-                  .translate('bottomnavbar_settings')),
+            icon: Icon(Icons.settings),
+            label: AppLocalizations.of(context).translate('bottomnavbar_settings'),
+          ),
         ],
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
