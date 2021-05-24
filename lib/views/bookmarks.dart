@@ -43,7 +43,7 @@ class _BookmarksState extends State<Bookmarks> {
             onSelected: (sortOrder) {
               _saveSortOrder(sortOrder);
               setState(() {
-                quotes = _sort(quotes, sortOrder);
+                _sort(quotes, sortOrder);
               });
             },
             itemBuilder: (context) => [
@@ -319,14 +319,17 @@ class _BookmarksState extends State<Bookmarks> {
   _sort(List<Quote> quotes, SortBy sortOrder) {
     switch (sortOrder) {
       case SortBy.author:
-        return quotes.sort((a, b) => (a.author ?? '').compareTo(b.author ?? ''));
+        quotes.sort((a, b) => (a.author ?? '').compareTo(b.author ?? ''));
+        break;
       case SortBy.source:
-        return quotes.sort((a, b) => (a.source ?? '').compareTo(b.source ?? ''));
+        quotes.sort((a, b) => (a.source ?? '').compareTo(b.source ?? ''));
+        break;
       case SortBy.newest:
-        return quotes.sort((a, b) => b.id - a.id);
+        quotes.sort((a, b) => b.id - a.id);
         break;
       case SortBy.none:
-        return quotes.sort((a, b) => a.id - b.id);
+        quotes.sort((a, b) => a.id - b.id);
+        break;
       default:
     }
   }
