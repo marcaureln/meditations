@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:clipboard/clipboard.dart';
 import 'package:share/share.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stoic/db/database.dart';
 import 'package:stoic/models/quote.dart';
 import 'package:stoic/theme/theme.dart';
@@ -15,6 +16,7 @@ class _BookmarksState extends State<Bookmarks> {
   List<Quote> quotes;
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   final _scrollController = ScrollController();
+  SortBy _sortOrder;
   bool _isFabVisible;
   bool _bottomReached;
 
@@ -36,6 +38,36 @@ class _BookmarksState extends State<Bookmarks> {
       key: _scaffoldKey,
       appBar: AppBar(
         title: Text(AppLocalizations.of(context).translate('bookmarks_appbar_title')),
+        actions: [
+          PopupMenuButton<SortBy>(
+            icon: Icon(Icons.import_export),
+            initialValue: _sortOrder,
+            onSelected: (sortOrder) {
+              _saveSortOrder(sortOrder);
+              setState(() {
+                quotes = _sort(quotes, sortOrder);
+              });
+            },
+            itemBuilder: (context) => [
+              PopupMenuItem(
+                value: SortBy.author,
+                child: Text('A-Z (author)'),
+              ),
+              PopupMenuItem(
+                value: SortBy.source,
+                child: Text('A-Z (source)'),
+              ),
+              PopupMenuItem(
+                value: SortBy.newest,
+                child: Text('Newest'),
+              ),
+              PopupMenuItem(
+                value: SortBy.none,
+                child: Text('Default'),
+              ),
+            ],
+          ),
+        ],
       ),
       body: (quotes.isEmpty)
           ? NoData()
@@ -140,7 +172,11 @@ class _BookmarksState extends State<Bookmarks> {
       }
     });
 
+    SortBy sortOrder = await _getSortOrder();
+    _sort(records, sortOrder);
+
     setState(() {
+      _sortOrder = sortOrder;
       quotes = records;
     });
   }
@@ -263,6 +299,40 @@ class _BookmarksState extends State<Bookmarks> {
     });
   }
 
+  Future<SortBy> _getSortOrder() async {
+    var sortOrder;
+    var prefs = await SharedPreferences.getInstance();
+    var saved = prefs.getString('sortorder');
+    for (SortBy element in SortBy.values) {
+      if (element.toString() == saved) {
+        sortOrder = element;
+        break;
+      }
+    }
+    return sortOrder ?? SortBy.none;
+  }
+
+  _saveSortOrder(SortBy sortOrder) async {
+    var prefs = await SharedPreferences.getInstance();
+    prefs.setString('sortorder', sortOrder.toString());
+    _sortOrder = sortOrder;
+  }
+
+  _sort(List<Quote> quotes, SortBy sortOrder) {
+    switch (sortOrder) {
+      case SortBy.author:
+        return quotes.sort((a, b) => (a.author ?? '').compareTo(b.author ?? ''));
+      case SortBy.source:
+        return quotes.sort((a, b) => (a.source ?? '').compareTo(b.source ?? ''));
+      case SortBy.newest:
+        return quotes.sort((a, b) => b.id - a.id);
+        break;
+      case SortBy.none:
+        return quotes.sort((a, b) => a.id - b.id);
+      default:
+    }
+  }
+
   _moveTop() {
     _scrollController.animateTo(0, duration: Duration(seconds: 2), curve: Curves.ease);
   }
@@ -281,3 +351,5 @@ class _BookmarksState extends State<Bookmarks> {
     }
   }
 }
+
+enum SortBy { author, source, newest, none }
