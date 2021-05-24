@@ -6,6 +6,8 @@ import 'package:sembast/sembast.dart';
 import 'package:sembast/sembast_io.dart';
 
 class AppDatabase {
+  static const String quoteStore = 'quotes';
+
   AppDatabase._();
 
   static final AppDatabase _instance = AppDatabase._();
@@ -34,8 +36,7 @@ class AppDatabase {
   static Future update(String storeName, int id, Map newMap) async {
     final store = intMapStoreFactory.store(storeName);
     final finder = Finder(filter: Filter.byKey(id));
-    await store.update(await AppDatabase.instance.database, newMap,
-        finder: finder);
+    await store.update(await AppDatabase.instance.database, newMap, finder: finder);
   }
 
   static Future<Map> select(String storeName, int id) async {

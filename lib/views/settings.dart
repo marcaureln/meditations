@@ -1,7 +1,13 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:package_info/package_info.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:path/path.dart' as path;
 import 'package:share/share.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:stoic/db/database.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:stoic/theme/app_localizations.dart';
 
@@ -47,6 +53,15 @@ class _SettingsState extends State<Settings> {
             ),
             title: Text(AppLocalizations.of(context).translate('settings_auto_paste')),
             subtitle: Text(AppLocalizations.of(context).translate('settings_auto_paste_sub')),
+          ),
+          ListTile(
+            leading: Container(
+              height: double.infinity,
+              child: Icon(Icons.download),
+            ),
+            title: Text('Save'),
+            subtitle: Text('Save and import later'),
+            onTap: _export,
           ),
           ListTile(
             leading: Container(
@@ -111,6 +126,18 @@ class _SettingsState extends State<Settings> {
         ),
       );
     }
+  }
+
+  void _export() async {
+    final directory = await getExternalStorageDirectory();
+    final file = File(path.join(directory.path, 'export ${DateTime.now()}.json'));
+    final records = await AppDatabase.selectAll(AppDatabase.quoteStore);
+    final quotes = records.map((snapshot) => snapshot.value).toList();
+    file.writeAsString(jsonEncode(quotes)).then((file) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('File save as ${file.path}')));
+    }).onError((error, stackTrace) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(error.message)));
+    });
   }
 
   void _getCurrentVersion() {
