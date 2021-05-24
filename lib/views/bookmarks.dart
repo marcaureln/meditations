@@ -14,7 +14,6 @@ class Bookmarks extends StatefulWidget {
 
 class _BookmarksState extends State<Bookmarks> {
   List<Quote> quotes;
-  final _scaffoldKey = GlobalKey<ScaffoldState>();
   final _scrollController = ScrollController();
   SortBy _sortOrder;
   bool _isFabVisible;
@@ -35,7 +34,6 @@ class _BookmarksState extends State<Bookmarks> {
       return Center(child: CircularProgressIndicator(strokeWidth: 2.0));
     }
     return Scaffold(
-      key: _scaffoldKey,
       appBar: AppBar(
         title: Text(AppLocalizations.of(context).translate('bookmarks_appbar_title')),
         actions: [
