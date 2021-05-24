@@ -220,6 +220,7 @@ class _BookmarksState extends State<Bookmarks> {
       } else {
         setState(() {
           quotes.add(returnedQuote);
+          _sort(quotes, _sortOrder);
         });
       }
     }
