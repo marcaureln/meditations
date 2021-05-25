@@ -15,13 +15,18 @@ class Bookmarks extends StatefulWidget {
 class _BookmarksState extends State<Bookmarks> {
   List<Quote> quotes;
   final _scrollController = ScrollController();
+  final _searchFieldController = TextEditingController();
+  final _searchFieldFocusNode = FocusNode();
   SortBy _sortOrder;
   bool _isFabVisible;
   bool _bottomReached;
+  bool _searching;
+  List<Quote> _searchResults;
 
   @override
   void initState() {
     super.initState();
+    _searching = false;
     _isFabVisible = true;
     _bottomReached = false;
     _scrollController.addListener(_scrollListener);
@@ -33,131 +38,175 @@ class _BookmarksState extends State<Bookmarks> {
       _fetchQuotes();
       return Center(child: CircularProgressIndicator(strokeWidth: 2.0));
     }
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(AppLocalizations.of(context).translate('bookmarks_appbar_title')),
-        actions: [
-          PopupMenuButton<SortBy>(
-            icon: Icon(Icons.import_export),
-            initialValue: _sortOrder,
-            onSelected: (sortOrder) {
-              _saveSortOrder(sortOrder);
-              setState(() {
-                _sort(quotes, sortOrder);
-              });
-            },
-            itemBuilder: (context) => [
-              PopupMenuItem(
-                value: SortBy.author,
-                child: Text('A-Z (author)'),
-              ),
-              PopupMenuItem(
-                value: SortBy.source,
-                child: Text('A-Z (source)'),
-              ),
-              PopupMenuItem(
-                value: SortBy.newest,
-                child: Text('Newest'),
-              ),
-              PopupMenuItem(
-                value: SortBy.none,
-                child: Text('Default'),
-              ),
-            ],
-          ),
-        ],
-      ),
-      body: (quotes.isEmpty)
-          ? NoData()
-          : ListView.separated(
-              controller: _scrollController,
-              padding: EdgeInsets.only(left: 8, right: 8, top: 8, bottom: 128),
-              keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-              physics: BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-              itemCount: quotes.length,
-              itemBuilder: (context, index) {
-                Quote quote = quotes[index];
-
-                return Dismissible(
-                  key: ValueKey(quote.id),
-                  direction: DismissDirection.endToStart,
-                  onDismissed: (_) {
-                    _removeQuote(quote);
-                  },
-                  background: Card(
-                    color: Color(0xffd72323),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Icon(
-                          Icons.delete,
-                          color: myTheme.scaffoldBackgroundColor,
-                        ),
-                        Container(width: 8),
-                      ],
-                    ),
+    return WillPopScope(
+      onWillPop: () async {
+        if (_searching) {
+          setState(_closeSearch);
+          return false;
+        }
+        return true;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(AppLocalizations.of(context).translate('bookmarks_appbar_title')),
+          actions: [
+            _searching
+                ? IconButton(onPressed: _closeSearch, icon: Icon(Icons.search_off))
+                : IconButton(onPressed: _openSearch, icon: Icon(Icons.search)),
+            if (!_searching)
+              PopupMenuButton<SortBy>(
+                icon: Icon(Icons.import_export),
+                initialValue: _sortOrder,
+                onSelected: (sortOrder) {
+                  _saveSortOrder(sortOrder);
+                  setState(() {
+                    _sort(quotes, sortOrder);
+                  });
+                },
+                itemBuilder: (context) => [
+                  PopupMenuItem(
+                    value: SortBy.author,
+                    child: Text('A-Z (author)'),
                   ),
-                  child: Container(
-                    child: InkWell(
-                      onTap: () {
-                        _showActions(quote);
-                      },
-                      onLongPress: () {
-                        _saveToClipboard(quote);
-                      },
-                      child: Container(
-                        padding: EdgeInsets.all(8),
-                        child: Column(
-                          children: [
-                            Container(
-                              width: double.infinity,
-                              child: Text(
-                                '"${quote.content}"',
-                                style: myTheme.textTheme.subtitle1,
-                              ),
-                            ),
-                            Container(
-                              width: double.infinity,
-                              child: Text(
-                                (quote.author != null)
-                                    ? quote.author
-                                    : AppLocalizations.of(context).translate('anonymous'),
-                                style: myTheme.textTheme.subtitle2,
-                              ),
-                            ),
-                            if (quote.source != null)
+                  PopupMenuItem(
+                    value: SortBy.source,
+                    child: Text('A-Z (source)'),
+                  ),
+                  PopupMenuItem(
+                    value: SortBy.newest,
+                    child: Text('Newest'),
+                  ),
+                  PopupMenuItem(
+                    value: SortBy.none,
+                    child: Text('Default'),
+                  ),
+                ],
+              ),
+          ],
+        ),
+        body: (quotes.isEmpty)
+            ? NoData()
+            : ListView.separated(
+                controller: _scrollController,
+                padding: EdgeInsets.only(left: 8, right: 8, top: 8, bottom: 128),
+                keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+                physics: BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+                itemCount: _searching ? _searchResults.length + 1 : quotes.length,
+                itemBuilder: (context, index) {
+                  if (_searching && index == 0) {
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextField(
+                        focusNode: _searchFieldFocusNode,
+                        controller: _searchFieldController,
+                        decoration: InputDecoration(
+                          prefixIcon: Icon(Icons.search),
+                          suffixIcon: _searchFieldController.text.isNotEmpty
+                              ? IconButton(
+                                  icon: Icon(Icons.clear),
+                                  onPressed: () {
+                                    _searchFieldController.clear();
+                                    setState(() {
+                                      _searchResults = quotes;
+                                    });
+                                  },
+                                )
+                              : null,
+                          border: OutlineInputBorder(),
+                          hintText: 'Search...',
+                        ),
+                        onChanged: (value) {
+                          setState(() {
+                            _searchResults = _search(value.trim().toLowerCase(), quotes);
+                          });
+                        },
+                      ),
+                    );
+                  }
+
+                  Quote quote = _searching ? _searchResults[index - 1] : quotes[index];
+
+                  return Dismissible(
+                    key: ValueKey(quote.id),
+                    direction: DismissDirection.endToStart,
+                    onDismissed: (_) {
+                      _removeQuote(quote);
+                    },
+                    background: Card(
+                      color: Color(0xffd72323),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Icon(
+                            Icons.delete,
+                            color: myTheme.scaffoldBackgroundColor,
+                          ),
+                          Container(width: 8),
+                        ],
+                      ),
+                    ),
+                    child: Container(
+                      child: InkWell(
+                        onTap: () {
+                          _showActions(quote);
+                        },
+                        onLongPress: () {
+                          _saveToClipboard(quote);
+                        },
+                        child: Container(
+                          padding: EdgeInsets.all(8),
+                          child: Column(
+                            children: [
                               Container(
                                 width: double.infinity,
-                                child: Text(quote.source),
+                                child: Text(
+                                  '"${quote.content}"',
+                                  style: myTheme.textTheme.subtitle1,
+                                ),
                               ),
-                          ],
+                              Container(
+                                width: double.infinity,
+                                child: Text(
+                                  (quote.author != null)
+                                      ? quote.author
+                                      : AppLocalizations.of(context).translate('anonymous'),
+                                  style: myTheme.textTheme.subtitle2,
+                                ),
+                              ),
+                              if (quote.source != null)
+                                Container(
+                                  width: double.infinity,
+                                  child: Text(quote.source),
+                                ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                );
-              },
-              separatorBuilder: (context, _) => const Divider(height: 12),
-            ),
-      floatingActionButton: Visibility(
-        visible: _isFabVisible,
-        child: (_bottomReached == false)
-            ? FloatingActionButton(
-                tooltip: AppLocalizations.of(context).translate('add_quote'),
-                child: Icon(
-                  Icons.add,
-                  color: Theme.of(context).scaffoldBackgroundColor,
-                ),
-                onPressed: _openAddQuotePage,
-              )
-            : FloatingActionButton(
-                tooltip: AppLocalizations.of(context).translate('move_top'),
-                child: Icon(
-                  Icons.arrow_upward,
-                  color: Theme.of(context).scaffoldBackgroundColor,
-                ),
-                onPressed: _moveTop,
+                  );
+                },
+                separatorBuilder: (context, _) => const Divider(height: 12),
               ),
+        floatingActionButton: Visibility(
+          visible: _isFabVisible,
+          child: (_bottomReached == false)
+              ? FloatingActionButton(
+                  tooltip: AppLocalizations.of(context).translate('add_quote'),
+                  child: Icon(
+                    Icons.add,
+                    color: Theme.of(context).scaffoldBackgroundColor,
+                  ),
+                  onPressed: _openAddQuotePage,
+                )
+              : FloatingActionButton(
+                  tooltip: AppLocalizations.of(context).translate('move_top'),
+                  child: Icon(
+                    Icons.arrow_upward,
+                    color: Theme.of(context).scaffoldBackgroundColor,
+                  ),
+                  onPressed: _moveTop,
+                ),
+        ),
       ),
     );
   }
@@ -333,6 +382,34 @@ class _BookmarksState extends State<Bookmarks> {
         break;
       default:
     }
+  }
+
+  _openSearch() {
+    _moveTop();
+    setState(() {
+      _searchResults = quotes;
+      _isFabVisible = false;
+      _searching = true;
+      _searchFieldFocusNode.requestFocus();
+    });
+  }
+
+  _closeSearch() {
+    setState(() {
+      _searchFieldController.clear();
+      _bottomReached = false;
+      _isFabVisible = true;
+      _searching = false;
+    });
+  }
+
+  List<Quote> _search(String terms, List<Quote> list) {
+    return list
+        .where((quote) =>
+            quote.content.toLowerCase().contains(terms) ||
+            (quote.author?.toLowerCase()?.contains(terms) ?? false) ||
+            (quote.source?.toLowerCase()?.contains(terms) ?? false))
+        .toList();
   }
 
   _moveTop() {
