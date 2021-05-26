@@ -13,6 +13,7 @@ class AddQuote extends StatefulWidget {
 class _AddQuoteState extends State<AddQuote> {
   final _formKey = GlobalKey<FormState>();
   final _contentController = TextEditingController();
+  final _authorFieldFocusNode = FocusNode();
   Quote _quote = Quote('');
   bool _autoPasteEnabled;
   bool _alreadyPasted;
@@ -90,14 +91,12 @@ class _AddQuoteState extends State<AddQuote> {
                     onChanged: (text) {
                       _quote.content = text.trim();
                     },
-                    onEditingComplete: () {
-                      node.nextFocus();
-                    },
                   ),
                   const SizedBox(height: 20),
                   TextFormField(
                     textCapitalization: TextCapitalization.words,
                     initialValue: _quote.author,
+                    focusNode: _authorFieldFocusNode,
                     decoration: InputDecoration(
                       labelText: AppLocalizations.of(context).translate('author'),
                       hintText:
@@ -180,6 +179,10 @@ class _AddQuoteState extends State<AddQuote> {
   }
 
   void _contentListener() {
+    if (_contentController.text.endsWith('\n\n')) {
+      _authorFieldFocusNode.requestFocus();
+      _contentController.text = _contentController.text.trim();
+    }
     if (_contentController.text.isEmpty) {
       setState(() {
         _isContentEmpty = true;
