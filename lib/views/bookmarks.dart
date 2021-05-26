@@ -4,7 +4,6 @@ import 'package:share/share.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stoic/db/database.dart';
 import 'package:stoic/models/quote.dart';
-import 'package:stoic/theme/theme.dart';
 import 'package:stoic/theme/app_localizations.dart';
 import 'package:stoic/widgets/no_data.dart';
 
@@ -34,6 +33,8 @@ class _BookmarksState extends State<Bookmarks> {
 
   @override
   Widget build(BuildContext context) {
+    ThemeData theme = Theme.of(context);
+
     if (quotes == null) {
       _fetchQuotes();
       return Center(child: CircularProgressIndicator(strokeWidth: 2.0));
@@ -139,7 +140,7 @@ class _BookmarksState extends State<Bookmarks> {
                         children: [
                           Icon(
                             Icons.delete,
-                            color: myTheme.scaffoldBackgroundColor,
+                            color: theme.scaffoldBackgroundColor,
                           ),
                           Container(width: 8),
                         ],
@@ -161,7 +162,7 @@ class _BookmarksState extends State<Bookmarks> {
                                 width: double.infinity,
                                 child: Text(
                                   '"${quote.content}"',
-                                  style: myTheme.textTheme.subtitle1,
+                                  style: theme.textTheme.subtitle1,
                                 ),
                               ),
                               Container(
@@ -170,7 +171,7 @@ class _BookmarksState extends State<Bookmarks> {
                                   (quote.author != null)
                                       ? quote.author
                                       : AppLocalizations.of(context).translate('anonymous'),
-                                  style: myTheme.textTheme.subtitle2,
+                                  style: theme.textTheme.subtitle2,
                                 ),
                               ),
                               if (quote.source != null)
@@ -276,6 +277,8 @@ class _BookmarksState extends State<Bookmarks> {
   }
 
   _showActions(Quote quote) {
+    ThemeData theme = Theme.of(context);
+
     showModalBottomSheet(
       elevation: 8.0,
       context: context,
@@ -291,7 +294,7 @@ class _BookmarksState extends State<Bookmarks> {
             leading: Icon(Icons.share),
             title: Text(
               AppLocalizations.of(context).translate('share'),
-              style: myTheme.textTheme.bodyText1,
+              style: theme.textTheme.bodyText1,
             ),
             onTap: () {
               Navigator.pop(context);
@@ -303,7 +306,7 @@ class _BookmarksState extends State<Bookmarks> {
             leading: Icon(Icons.content_copy),
             title: Text(
               AppLocalizations.of(context).translate('copy'),
-              style: myTheme.textTheme.bodyText1,
+              style: theme.textTheme.bodyText1,
             ),
             onTap: () {
               Navigator.pop(context);
@@ -315,7 +318,7 @@ class _BookmarksState extends State<Bookmarks> {
             leading: Icon(Icons.mode_edit),
             title: Text(
               AppLocalizations.of(context).translate('modify'),
-              style: myTheme.textTheme.bodyText1,
+              style: theme.textTheme.bodyText1,
             ),
             onTap: () {
               Navigator.pop(context);
@@ -327,7 +330,7 @@ class _BookmarksState extends State<Bookmarks> {
             leading: Icon(Icons.delete),
             title: Text(
               AppLocalizations.of(context).translate('remove'),
-              style: myTheme.textTheme.bodyText1,
+              style: theme.textTheme.bodyText1,
             ),
             onTap: () {
               Navigator.pop(context);
