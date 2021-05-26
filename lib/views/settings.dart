@@ -33,6 +33,7 @@ class _SettingsState extends State<Settings> {
       key: _scaffoldKey,
       appBar: AppBar(title: Text(AppLocalizations.of(context).translate('settings_appbar_title'))),
       body: ListView(
+        physics: ClampingScrollPhysics(),
         padding: EdgeInsets.all(8),
         children: [
           ListTile(
