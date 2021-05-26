@@ -426,7 +426,7 @@ class _BookmarksState extends State<Bookmarks> {
   }
 
   _moveTop() {
-    _scrollController.animateTo(0, duration: Duration(seconds: 2), curve: Curves.ease);
+    _scrollController.animateTo(0, duration: Duration(seconds: 1), curve: Curves.ease);
   }
 
   _scrollListener() {
