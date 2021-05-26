@@ -276,54 +276,67 @@ class _BookmarksState extends State<Bookmarks> {
   }
 
   _showActions(Quote quote) {
-    showDialog(
-        context: context,
-        builder: (context) {
-          return SimpleDialog(
-            contentPadding: EdgeInsets.symmetric(vertical: 16, horizontal: 8),
-            children: [
-              Center(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    IconButton(
-                      icon: Icon(Icons.mode_edit),
-                      tooltip: AppLocalizations.of(context).translate('modify'),
-                      onPressed: () {
-                        Navigator.pop(context);
-                        _openAddQuotePage(quote: quote);
-                      },
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.delete),
-                      tooltip: AppLocalizations.of(context).translate('remove'),
-                      onPressed: () {
-                        Navigator.pop(context);
-                        _removeQuote(quote);
-                      },
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.content_copy),
-                      tooltip: AppLocalizations.of(context).translate('copy'),
-                      onPressed: () {
-                        Navigator.pop(context);
-                        _saveToClipboard(quote);
-                      },
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.share),
-                      tooltip: AppLocalizations.of(context).translate('share'),
-                      onPressed: () {
-                        Navigator.pop(context);
-                        Share.share(quote.toString());
-                      },
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          );
-        });
+    showModalBottomSheet(
+      elevation: 8.0,
+      context: context,
+      builder: (context) => Wrap(
+        children: [
+          ListTile(
+            contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            title: Text(quote.toString()),
+          ),
+          const Divider(),
+          ListTile(
+            dense: true,
+            leading: Icon(Icons.share),
+            title: Text(
+              AppLocalizations.of(context).translate('share'),
+              style: myTheme.textTheme.bodyText1,
+            ),
+            onTap: () {
+              Navigator.pop(context);
+              Share.share(quote.toString());
+            },
+          ),
+          ListTile(
+            dense: true,
+            leading: Icon(Icons.content_copy),
+            title: Text(
+              AppLocalizations.of(context).translate('copy'),
+              style: myTheme.textTheme.bodyText1,
+            ),
+            onTap: () {
+              Navigator.pop(context);
+              _saveToClipboard(quote);
+            },
+          ),
+          ListTile(
+            dense: true,
+            leading: Icon(Icons.mode_edit),
+            title: Text(
+              AppLocalizations.of(context).translate('modify'),
+              style: myTheme.textTheme.bodyText1,
+            ),
+            onTap: () {
+              Navigator.pop(context);
+              _openAddQuotePage(quote: quote);
+            },
+          ),
+          ListTile(
+            dense: true,
+            leading: Icon(Icons.delete),
+            title: Text(
+              AppLocalizations.of(context).translate('remove'),
+              style: myTheme.textTheme.bodyText1,
+            ),
+            onTap: () {
+              Navigator.pop(context);
+              _removeQuote(quote);
+            },
+          ),
+        ],
+      ),
+    );
   }
 
   _saveToClipboard(Quote quote) {
