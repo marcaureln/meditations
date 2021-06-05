@@ -327,8 +327,11 @@ class _BookmarksState extends State<Bookmarks> {
     }
   }
 
-  _search() {
-    showSearch(context: context, delegate: QuoteSearchDelegate(quotes));
+  _search() async {
+    var result = await showSearch<Quote>(context: context, delegate: QuoteSearchDelegate(quotes));
+    if (result != null) {
+      _showActions(result);
+    }
   }
 
   _moveTop() {

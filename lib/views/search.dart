@@ -41,7 +41,16 @@ class QuoteSearchDelegate extends SearchDelegate<Quote> {
     return ListView.separated(
       padding: EdgeInsets.only(left: 8, right: 8, top: 8, bottom: 128),
       itemCount: searchResults.length,
-      itemBuilder: (context, index) => QuoteTile(context: context, quote: searchResults[index]),
+      itemBuilder: (context, index) {
+        Quote quote = searchResults[index];
+        return QuoteTile(
+          context: context,
+          quote: quote,
+          onTap: () {
+            close(context, quote);
+          },
+        );
+      },
       separatorBuilder: (context, _) => const Divider(height: 12),
     );
   }
@@ -53,7 +62,16 @@ class QuoteSearchDelegate extends SearchDelegate<Quote> {
     return ListView.separated(
       padding: EdgeInsets.only(left: 8, right: 8, top: 8, bottom: 128),
       itemCount: searchResults.length,
-      itemBuilder: (context, index) => QuoteTile(context: context, quote: searchResults[index]),
+      itemBuilder: (context, index) {
+        Quote quote = searchResults[index];
+        return QuoteTile(
+          context: context,
+          quote: quote,
+          onTap: () {
+            close(context, quote);
+          },
+        );
+      },
       separatorBuilder: (context, _) => const Divider(height: 12),
     );
   }
