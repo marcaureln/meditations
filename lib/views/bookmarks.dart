@@ -74,47 +74,52 @@ class _BookmarksState extends State<Bookmarks> {
       ),
       body: (quotes.isEmpty)
           ? NoData()
-          : ListView.separated(
+          : Scrollbar(
               controller: _scrollController,
-              padding: EdgeInsets.only(left: 8, right: 8, top: 8, bottom: 128),
-              keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-              physics: BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-              itemCount: quotes.length,
-              itemBuilder: (context, index) {
-                Quote quote = quotes[index];
+              interactive: true,
+              radius: Radius.circular(24),
+              child: ListView.separated(
+                controller: _scrollController,
+                padding: EdgeInsets.only(left: 8, right: 8, top: 8, bottom: 128),
+                keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+                physics: BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+                itemCount: quotes.length,
+                itemBuilder: (context, index) {
+                  Quote quote = quotes[index];
 
-                return Dismissible(
-                  key: ValueKey(quote.id),
-                  direction: DismissDirection.endToStart,
-                  onDismissed: (_) {
-                    _removeQuote(quote);
-                  },
-                  background: Card(
-                    color: Color(0xffd72323),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Icon(
-                          Icons.delete,
-                          color: theme.scaffoldBackgroundColor,
-                        ),
-                        const SizedBox(width: 8),
-                      ],
+                  return Dismissible(
+                    key: ValueKey(quote.id),
+                    direction: DismissDirection.endToStart,
+                    onDismissed: (_) {
+                      _removeQuote(quote);
+                    },
+                    background: Card(
+                      color: Color(0xffd72323),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Icon(
+                            Icons.delete,
+                            color: theme.scaffoldBackgroundColor,
+                          ),
+                          const SizedBox(width: 8),
+                        ],
+                      ),
                     ),
-                  ),
-                  child: QuoteTile(
-                    context: context,
-                    quote: quote,
-                    onTap: () {
-                      _showActions(quote);
-                    },
-                    onLongPress: () {
-                      _saveToClipboard(quote);
-                    },
-                  ),
-                );
-              },
-              separatorBuilder: (context, _) => const Divider(height: 12),
+                    child: QuoteTile(
+                      context: context,
+                      quote: quote,
+                      onTap: () {
+                        _showActions(quote);
+                      },
+                      onLongPress: () {
+                        _saveToClipboard(quote);
+                      },
+                    ),
+                  );
+                },
+                separatorBuilder: (context, _) => const Divider(height: 12),
+              ),
             ),
       floatingActionButton: Visibility(
         visible: _isFabVisible,
