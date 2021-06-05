@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:clipboard/clipboard.dart';
 import 'package:share/share.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:stoic/db/database.dart';
+import 'package:stoic/db/quote_dao.dart';
 import 'package:stoic/models/quote.dart';
 import 'package:stoic/theme/app_localizations.dart';
 import 'package:stoic/views/search.dart';
@@ -15,6 +15,7 @@ class Bookmarks extends StatefulWidget {
 
 class _BookmarksState extends State<Bookmarks> {
   List<Quote> quotes;
+  final _quoteDao = QuoteDAO();
   final _scrollController = ScrollController();
   SortBy _sortOrder;
   bool _isFabVisible;
@@ -139,12 +140,7 @@ class _BookmarksState extends State<Bookmarks> {
   }
 
   _fetchQuotes() async {
-    List<Quote> records = [];
-    await AppDatabase.selectAll('quotes').then((data) {
-      for (var snapshot in data) {
-        records.add(Quote.fromMap(snapshot.key, snapshot.value));
-      }
-    });
+    List<Quote> records = await _quoteDao.selectAll();
 
     SortBy sortOrder = await _getSortOrder();
     _sort(records, sortOrder);
@@ -156,7 +152,7 @@ class _BookmarksState extends State<Bookmarks> {
   }
 
   _removeQuote(Quote quote) {
-    AppDatabase.delete('quotes', quote.id);
+    _quoteDao.delete(quote);
 
     setState(() {
       _isFabVisible = false;
@@ -170,7 +166,7 @@ class _BookmarksState extends State<Bookmarks> {
             action: SnackBarAction(
               label: AppLocalizations.of(context).translate('undo'),
               onPressed: () {
-                AppDatabase.insert('quotes', quote.toMap());
+                _quoteDao.insert(quote);
                 setState(() {
                   quotes.add(quote);
                 });

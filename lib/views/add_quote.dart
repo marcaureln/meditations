@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:clipboard/clipboard.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:stoic/db/database.dart';
+import 'package:stoic/db/quote_dao.dart';
 import 'package:stoic/theme/app_localizations.dart';
 import 'package:stoic/models/quote.dart';
 
@@ -149,11 +149,11 @@ class _AddQuoteState extends State<AddQuote> {
   }
 
   void _addQuote() async {
+    final quoteDao = QuoteDAO();
     if (_quote.id != null) {
-      await AppDatabase.update('quotes', _quote.id, _quote.toMap());
+      await quoteDao.update(_quote);
     } else {
-      var quoteId = await AppDatabase.insert('quotes', _quote.toMap());
-      _quote.id = quoteId;
+      _quote.id = await quoteDao.insert(_quote);
     }
     Navigator.pop(context, _quote);
   }
