@@ -7,6 +7,7 @@ import 'package:stoic/models/quote.dart';
 import 'package:stoic/theme/app_localizations.dart';
 import 'package:stoic/views/search.dart';
 import 'package:stoic/widgets/no_data.dart';
+import 'package:stoic/widgets/quote_tile.dart';
 
 class Bookmarks extends StatefulWidget {
   _BookmarksState createState() => _BookmarksState();
@@ -96,47 +97,19 @@ class _BookmarksState extends State<Bookmarks> {
                           Icons.delete,
                           color: theme.scaffoldBackgroundColor,
                         ),
-                        Container(width: 8),
+                        const SizedBox(width: 8),
                       ],
                     ),
                   ),
-                  child: Container(
-                    child: InkWell(
-                      onTap: () {
-                        _showActions(quote);
-                      },
-                      onLongPress: () {
-                        _saveToClipboard(quote);
-                      },
-                      child: Container(
-                        padding: EdgeInsets.all(8),
-                        child: Column(
-                          children: [
-                            Container(
-                              width: double.infinity,
-                              child: Text(
-                                '"${quote.content}"',
-                                style: theme.textTheme.subtitle1,
-                              ),
-                            ),
-                            Container(
-                              width: double.infinity,
-                              child: Text(
-                                (quote.author != null)
-                                    ? quote.author
-                                    : AppLocalizations.of(context).translate('anonymous'),
-                                style: theme.textTheme.subtitle2,
-                              ),
-                            ),
-                            if (quote.source != null)
-                              Container(
-                                width: double.infinity,
-                                child: Text(quote.source),
-                              ),
-                          ],
-                        ),
-                      ),
-                    ),
+                  child: QuoteTile(
+                    context: context,
+                    quote: quote,
+                    onTap: () {
+                      _showActions(quote);
+                    },
+                    onLongPress: () {
+                      _saveToClipboard(quote);
+                    },
                   ),
                 );
               },

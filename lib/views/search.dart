@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:stoic/models/quote.dart';
 import 'package:stoic/theme/text.dart';
+import 'package:stoic/widgets/quote_tile.dart';
 
 class QuoteSearchDelegate extends SearchDelegate<Quote> {
   final List<Quote> quotes;
@@ -40,20 +41,7 @@ class QuoteSearchDelegate extends SearchDelegate<Quote> {
     return ListView.separated(
       padding: EdgeInsets.only(left: 8, right: 8, top: 8, bottom: 128),
       itemCount: searchResults.length,
-      itemBuilder: (context, index) {
-        Quote quote = searchResults[index];
-
-        return Container(
-          padding: EdgeInsets.all(8),
-          child: Column(
-            children: [
-              Container(width: double.infinity, child: Text('"${quote.content}"')),
-              Container(width: double.infinity, child: Text((quote.author != null) ? quote.author : 'anonymous')),
-              if (quote.source != null) Container(width: double.infinity, child: Text(quote.source)),
-            ],
-          ),
-        );
-      },
+      itemBuilder: (context, index) => QuoteTile(context: context, quote: searchResults[index]),
       separatorBuilder: (context, _) => const Divider(height: 12),
     );
   }
@@ -65,20 +53,7 @@ class QuoteSearchDelegate extends SearchDelegate<Quote> {
     return ListView.separated(
       padding: EdgeInsets.only(left: 8, right: 8, top: 8, bottom: 128),
       itemCount: searchResults.length,
-      itemBuilder: (context, index) {
-        Quote quote = searchResults[index];
-
-        return Container(
-          padding: EdgeInsets.all(8),
-          child: Column(
-            children: [
-              Container(width: double.infinity, child: Text('"${quote.content}"')),
-              Container(width: double.infinity, child: Text((quote.author != null) ? quote.author : 'anonymous')),
-              if (quote.source != null) Container(width: double.infinity, child: Text(quote.source)),
-            ],
-          ),
-        );
-      },
+      itemBuilder: (context, index) => QuoteTile(context: context, quote: searchResults[index]),
       separatorBuilder: (context, _) => const Divider(height: 12),
     );
   }
