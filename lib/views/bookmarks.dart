@@ -21,6 +21,13 @@ class _BookmarksState extends State<Bookmarks> {
   bool _isFabVisible;
   bool _bottomReached;
 
+  final Map<SortBy, String> _sortOptions = {
+    SortBy.author: 'A-Z (author)',
+    SortBy.source: 'A-Z (source)',
+    SortBy.newest: 'Recently added',
+    SortBy.none: 'Default',
+  };
+
   @override
   void initState() {
     super.initState();
@@ -42,34 +49,6 @@ class _BookmarksState extends State<Bookmarks> {
         title: Text(AppLocalizations.of(context).translate('bookmarks_appbar_title')),
         actions: [
           IconButton(onPressed: _search, icon: Icon(Icons.search)),
-          PopupMenuButton<SortBy>(
-            icon: Icon(Icons.import_export),
-            initialValue: _sortOrder,
-            onSelected: (sortOrder) {
-              _saveSortOrder(sortOrder);
-              setState(() {
-                _sort(quotes, sortOrder);
-              });
-            },
-            itemBuilder: (context) => [
-              PopupMenuItem(
-                value: SortBy.author,
-                child: Text('A-Z (author)'),
-              ),
-              PopupMenuItem(
-                value: SortBy.source,
-                child: Text('A-Z (source)'),
-              ),
-              PopupMenuItem(
-                value: SortBy.newest,
-                child: Text('Newest'),
-              ),
-              PopupMenuItem(
-                value: SortBy.none,
-                child: Text('Default'),
-              ),
-            ],
-          ),
         ],
       ),
       body: (quotes.isEmpty)
@@ -80,12 +59,25 @@ class _BookmarksState extends State<Bookmarks> {
               radius: Radius.circular(24),
               child: ListView.separated(
                 controller: _scrollController,
-                padding: EdgeInsets.only(left: 8, right: 8, top: 8, bottom: 128),
+                padding: EdgeInsets.only(left: 8, right: 8, top: 2, bottom: 128),
                 keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
                 physics: BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-                itemCount: quotes.length,
+                itemCount: quotes.length + 1,
                 itemBuilder: (context, index) {
-                  Quote quote = quotes[index];
+                  if (index == 0) {
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        TextButton.icon(
+                          onPressed: _selectSortOrder,
+                          icon: Icon(Icons.import_export),
+                          label: Text(_sortOptions[_sortOrder]),
+                        )
+                      ],
+                    );
+                  }
+
+                  Quote quote = quotes[index - 1];
 
                   return Dismissible(
                     key: ValueKey(quote.id),
@@ -118,7 +110,10 @@ class _BookmarksState extends State<Bookmarks> {
                     ),
                   );
                 },
-                separatorBuilder: (context, _) => const Divider(height: 12),
+                separatorBuilder: (context, index) {
+                  if (index == 0) return Container();
+                  return const Divider(height: 12);
+                },
               ),
             ),
       floatingActionButton: Visibility(
@@ -307,6 +302,33 @@ class _BookmarksState extends State<Bookmarks> {
     var prefs = await SharedPreferences.getInstance();
     prefs.setString('sortorder', sortOrder.toString());
     _sortOrder = sortOrder;
+  }
+
+  void _selectSortOrder() {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return ListView.builder(
+          shrinkWrap: true,
+          itemCount: _sortOptions.length,
+          itemBuilder: (context, index) {
+            var option = _sortOptions.keys.toList()[index];
+
+            return ListTile(
+              onTap: () {
+                _saveSortOrder(option);
+                setState(() {
+                  _sort(quotes, option);
+                });
+                Navigator.pop(context);
+              },
+              title: Text(_sortOptions[option]),
+              trailing: option == _sortOrder ? Icon(Icons.check) : null,
+            );
+          },
+        );
+      },
+    );
   }
 
   _sort(List<Quote> quotes, SortBy sortOrder) {
