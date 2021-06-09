@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:clipboard/clipboard.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:hive/hive.dart';
 import 'package:stoic/db/quote_dao.dart';
 import 'package:stoic/theme/app_localizations.dart';
 import 'package:stoic/models/quote.dart';
@@ -167,10 +167,9 @@ class _AddQuoteState extends State<AddQuote> {
     });
   }
 
-  void _getAutoPasteValue() {
-    SharedPreferences.getInstance().then((prefs) {
-      _autoPasteEnabled = prefs.getBool('autoPaste');
-    });
+  void _getAutoPasteValue() async {
+    var box = await Hive.openBox('preferences');
+    _autoPasteEnabled = box.get('autopaste', defaultValue: false);
   }
 
   void _clearContent() {

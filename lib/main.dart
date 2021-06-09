@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/foundation.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 import 'package:stoic/widgets/app.dart';
 
-void main() {
+void main() async {
+  await Hive.initFlutter();
+
   LicenseRegistry.addLicense(() async* {
     final ptSerifLicense = await rootBundle.loadString('assets/google_fonts/OFL.txt');
     yield LicenseEntryWithLineBreaks(['google_fonts'], ptSerifLicense);

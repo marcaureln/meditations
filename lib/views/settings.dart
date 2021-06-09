@@ -6,7 +6,7 @@ import 'package:package_info/package_info.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
 import 'package:share/share.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:hive/hive.dart';
 import 'package:stoic/db/quote_dao.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:stoic/theme/app_localizations.dart';
@@ -43,14 +43,7 @@ class _SettingsState extends State<Settings> {
             ),
             trailing: Switch(
               value: _autoPasteEnabled,
-              onChanged: (value) {
-                SharedPreferences.getInstance().then((prefs) {
-                  prefs.setBool('autoPaste', value);
-                });
-                setState(() {
-                  _autoPasteEnabled = value;
-                });
-              },
+              onChanged: _setAutoPasteValue,
             ),
             title: Text(AppLocalizations.of(context).translate('settings_auto_paste')),
             subtitle: Text(AppLocalizations.of(context).translate('settings_auto_paste_sub')),
@@ -154,9 +147,16 @@ class _SettingsState extends State<Settings> {
     });
   }
 
-  void _getAutoPasteValue() {
-    SharedPreferences.getInstance().then((prefs) {
-      _autoPasteEnabled = prefs.getBool('autoPaste') ?? false;
+  void _getAutoPasteValue() async {
+    var box = await Hive.openBox('preferences');
+    _autoPasteEnabled = box.get('autopaste', defaultValue: false);
+  }
+
+  void _setAutoPasteValue(value) async {
+    var box = await Hive.openBox('preferences');
+    await box.put('autopaste', value);
+    setState(() {
+      _autoPasteEnabled = value;
     });
   }
 }

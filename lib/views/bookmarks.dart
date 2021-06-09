@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:clipboard/clipboard.dart';
 import 'package:share/share.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:hive/hive.dart';
 import 'package:stoic/db/quote_dao.dart';
 import 'package:stoic/models/quote.dart';
 import 'package:stoic/theme/app_localizations.dart';
@@ -286,21 +286,14 @@ class _BookmarksState extends State<Bookmarks> {
   }
 
   Future<SortBy> _getSortOrder() async {
-    var sortOrder;
-    var prefs = await SharedPreferences.getInstance();
-    var saved = prefs.getString('sortorder');
-    for (SortBy element in SortBy.values) {
-      if (element.toString() == saved) {
-        sortOrder = element;
-        break;
-      }
-    }
-    return sortOrder ?? SortBy.none;
+    var box = await Hive.openBox('preferences');
+    var saved = box.get('sortorder');
+    return SortBy.values.firstWhere((element) => element.toString() == saved, orElse: () => SortBy.none);
   }
 
-  _saveSortOrder(SortBy sortOrder) async {
-    var prefs = await SharedPreferences.getInstance();
-    prefs.setString('sortorder', sortOrder.toString());
+  void _saveSortOrder(SortBy sortOrder) async {
+    var box = await Hive.openBox('preferences');
+    box.put('sortorder', sortOrder.toString());
     _sortOrder = sortOrder;
   }
 
