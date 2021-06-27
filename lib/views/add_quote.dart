@@ -13,19 +13,22 @@ class AddQuote extends StatefulWidget {
 class _AddQuoteState extends State<AddQuote> {
   final _formKey = GlobalKey<FormState>();
   final _contentController = TextEditingController();
-  final _authorFieldFocusNode = FocusNode();
+  FocusNode _authorFieldFocusNode;
   Quote _quote = Quote('');
   bool _autoPasteEnabled;
   bool _alreadyPasted;
   bool _isContentEmpty;
 
+  List<Quote> _quotes;
+
   @override
   void initState() {
     super.initState();
+    _getQuotes();
     _getAutoPasteValue();
     _alreadyPasted = false;
     _isContentEmpty = true;
-    _contentController.addListener(_contentListener);
+    _contentController.addListener(_contentFieldListener);
   }
 
   @override
@@ -93,40 +96,76 @@ class _AddQuoteState extends State<AddQuote> {
                     },
                   ),
                   const SizedBox(height: 20),
-                  TextFormField(
-                    textCapitalization: TextCapitalization.words,
-                    initialValue: _quote.author,
-                    focusNode: _authorFieldFocusNode,
-                    decoration: InputDecoration(
-                      labelText: AppLocalizations.of(context).translate('author'),
-                      hintText:
-                          '${AppLocalizations.of(context).translate('who_said_it')} ${'(${AppLocalizations.of(context).translate('optional').toLowerCase()})'}',
-                      border: OutlineInputBorder(),
-                    ),
-                    onChanged: (text) {
-                      _quote.author = (text != '') ? text.trim() : null;
+                  Autocomplete<String>(
+                    optionsBuilder: (textEditingValue) {
+                      if (textEditingValue.text.trim().isEmpty) {
+                        return List<String>.empty();
+                      }
+                      return _quotes
+                          .map((quote) => quote.author)
+                          .where((author) =>
+                              author != null &&
+                              author.toLowerCase().contains(textEditingValue.text.trim().toLowerCase()))
+                          .toSet()
+                          .toList();
                     },
-                    onEditingComplete: () {
-                      node.nextFocus();
+                    fieldViewBuilder: (context, controller, focusNode, onFieldSubmitted) {
+                      _authorFieldFocusNode = focusNode;
+                      controller.text = _quote.author;
+
+                      return TextFormField(
+                        textCapitalization: TextCapitalization.words,
+                        controller: controller,
+                        focusNode: focusNode,
+                        decoration: InputDecoration(
+                          labelText: AppLocalizations.of(context).translate('author'),
+                          hintText:
+                              '${AppLocalizations.of(context).translate('who_said_it')} ${'(${AppLocalizations.of(context).translate('optional').toLowerCase()})'}',
+                          border: OutlineInputBorder(),
+                        ),
+                        onChanged: _saveAuthor,
+                        onEditingComplete: () {
+                          node.nextFocus();
+                        },
+                      );
                     },
+                    onSelected: _saveAuthor,
                   ),
                   const SizedBox(height: 20),
-                  TextFormField(
-                    textCapitalization: TextCapitalization.sentences,
-                    initialValue: _quote.source,
-                    decoration: InputDecoration(
-                      labelText: AppLocalizations.of(context).translate('source'),
-                      hintText:
-                          '${AppLocalizations.of(context).translate('where_did_you_find_it')} ${'(${AppLocalizations.of(context).translate('optional').toLowerCase()})'}',
-                      border: OutlineInputBorder(),
-                    ),
-                    onChanged: (text) {
-                      _quote.source = (text != '') ? text.trim() : null;
+                  Autocomplete<String>(
+                    optionsBuilder: (textEditingValue) {
+                      if (textEditingValue.text.trim().isEmpty) {
+                        return List<String>.empty();
+                      }
+                      return _quotes
+                          .map((quote) => quote.source)
+                          .where((source) =>
+                              source != null &&
+                              source.toLowerCase().contains(textEditingValue.text.trim().toLowerCase()))
+                          .toSet()
+                          .toList();
                     },
-                    onEditingComplete: () {
-                      node.unfocus();
-                      if (_formKey.currentState.validate()) _addQuote();
+                    fieldViewBuilder: (context, controller, focusNode, onFieldSubmitted) {
+                      return TextFormField(
+                        controller: controller..text = _quote.source,
+                        focusNode: focusNode,
+                        textCapitalization: TextCapitalization.sentences,
+                        decoration: InputDecoration(
+                          labelText: AppLocalizations.of(context).translate('source'),
+                          hintText:
+                              '${AppLocalizations.of(context).translate('where_did_you_find_it')} ${'(${AppLocalizations.of(context).translate('optional').toLowerCase()})'}',
+                          border: OutlineInputBorder(),
+                        ),
+                        onChanged: _saveSource,
+                        onEditingComplete: () {
+                          node.unfocus();
+                          if (_formKey.currentState.validate()) {
+                            _addQuote();
+                          }
+                        },
+                      );
                     },
+                    onSelected: _saveSource,
                   ),
                   const SizedBox(height: 20),
                   Container(
@@ -172,12 +211,26 @@ class _AddQuoteState extends State<AddQuote> {
     _autoPasteEnabled = box.get('autopaste', defaultValue: false);
   }
 
+  void _getQuotes() async {
+    final quoteDao = QuoteDAO();
+    List<Quote> records = await quoteDao.selectAll();
+    _quotes = records;
+  }
+
+  void _saveAuthor(String text) {
+    _quote.author = (text.trim().isNotEmpty) ? text.trim() : null;
+  }
+
+  void _saveSource(String text) {
+    _quote.source = (text.trim().isNotEmpty) ? text.trim() : null;
+  }
+
   void _clearContent() {
     _contentController.clear();
     _quote.content = '';
   }
 
-  void _contentListener() {
+  void _contentFieldListener() {
     if (_contentController.text.endsWith('\n\n')) {
       _authorFieldFocusNode.requestFocus();
       _contentController.text = _contentController.text.trim();
