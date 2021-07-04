@@ -5,6 +5,7 @@ import 'package:hive/hive.dart';
 import 'package:stoic/db/quote_dao.dart';
 import 'package:stoic/models/quote.dart';
 import 'package:stoic/theme/app_localizations.dart';
+import 'package:stoic/views/add_quote.dart';
 import 'package:stoic/views/search.dart';
 import 'package:stoic/widgets/no_data.dart';
 import 'package:stoic/widgets/quote_tile.dart';
@@ -183,18 +184,19 @@ class _BookmarksState extends State<Bookmarks> {
   }
 
   _openAddQuotePage({Quote quote}) async {
-    var returnedQuote = await Navigator.pushNamed(context, '/add_quote', arguments: quote);
+    var returnedQuote = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => AddQuote(quote: quote)),
+    );
     if (returnedQuote != null) {
-      if (quote != null) {
-        setState(() {
+      setState(() {
+        if (quote != null) {
           quote = returnedQuote;
-        });
-      } else {
-        setState(() {
+        } else {
           quotes.add(returnedQuote);
           _sort(quotes, _sortOrder);
-        });
-      }
+        }
+      });
     }
   }
 

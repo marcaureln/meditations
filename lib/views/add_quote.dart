@@ -5,7 +5,12 @@ import 'package:stoic/db/quote_dao.dart';
 import 'package:stoic/theme/app_localizations.dart';
 import 'package:stoic/models/quote.dart';
 
+// ignore: must_be_immutable
 class AddQuote extends StatefulWidget {
+  Quote quote;
+
+  AddQuote({this.quote});
+
   @override
   _AddQuoteState createState() => _AddQuoteState();
 }
@@ -13,8 +18,9 @@ class AddQuote extends StatefulWidget {
 class _AddQuoteState extends State<AddQuote> {
   final _formKey = GlobalKey<FormState>();
   final _contentController = TextEditingController();
+  TextEditingController _authorController;
+  TextEditingController _sourceController;
   FocusNode _authorFieldFocusNode;
-  Quote _quote = Quote('');
   bool _autoPasteEnabled;
   bool _alreadyPasted;
   bool _isContentEmpty;
@@ -24,8 +30,13 @@ class _AddQuoteState extends State<AddQuote> {
   @override
   void initState() {
     super.initState();
+    if (widget.quote == null) {
+      widget.quote = Quote('');
+    } else {
+      _contentController.text = widget.quote.content;
+    }
     _getQuotes();
-    _getAutoPasteValue();
+    _runAutoPaste();
     _alreadyPasted = false;
     _isContentEmpty = true;
     _contentController.addListener(_contentFieldListener);
@@ -34,18 +45,6 @@ class _AddQuoteState extends State<AddQuote> {
   @override
   Widget build(BuildContext context) {
     final FocusScopeNode node = FocusScope.of(context);
-    final Quote sendedQuote = ModalRoute.of(context).settings.arguments;
-
-    if (_alreadyPasted == false && (sendedQuote != null || _autoPasteEnabled != null)) {
-      if (sendedQuote != null) {
-        _quote = sendedQuote;
-        _contentController.text = _quote.content;
-      }
-      if (_autoPasteEnabled == true) {
-        _pasteContentFromClipboard();
-      }
-      _alreadyPasted = true;
-    }
 
     return Scaffold(
       appBar: AppBar(title: Text(AppLocalizations.of(context).translate('add_quote'))),
@@ -91,9 +90,6 @@ class _AddQuoteState extends State<AddQuote> {
                       }
                       return null;
                     },
-                    onChanged: (text) {
-                      _quote.content = text.trim();
-                    },
                   ),
                   const SizedBox(height: 20),
                   Autocomplete<String>(
@@ -102,16 +98,17 @@ class _AddQuoteState extends State<AddQuote> {
                         return List<String>.empty();
                       }
                       return _quotes
-                          .map((quote) => quote.author)
-                          .where((author) =>
+                          ?.map((quote) => quote.author)
+                          ?.where((author) =>
                               author != null &&
                               author.toLowerCase().contains(textEditingValue.text.trim().toLowerCase()))
-                          .toSet()
-                          .toList();
+                          ?.toSet()
+                          ?.toList();
                     },
                     fieldViewBuilder: (context, controller, focusNode, onFieldSubmitted) {
                       _authorFieldFocusNode = focusNode;
-                      controller.text = _quote.author;
+                      _authorController = controller;
+                      controller.text = widget.quote.author;
 
                       return TextFormField(
                         textCapitalization: TextCapitalization.words,
@@ -123,13 +120,11 @@ class _AddQuoteState extends State<AddQuote> {
                               '${AppLocalizations.of(context).translate('who_said_it')} ${'(${AppLocalizations.of(context).translate('optional').toLowerCase()})'}',
                           border: OutlineInputBorder(),
                         ),
-                        onChanged: _saveAuthor,
                         onEditingComplete: () {
                           node.nextFocus();
                         },
                       );
                     },
-                    onSelected: _saveAuthor,
                   ),
                   const SizedBox(height: 20),
                   Autocomplete<String>(
@@ -138,16 +133,19 @@ class _AddQuoteState extends State<AddQuote> {
                         return List<String>.empty();
                       }
                       return _quotes
-                          .map((quote) => quote.source)
-                          .where((source) =>
+                          ?.map((quote) => quote.source)
+                          ?.where((source) =>
                               source != null &&
                               source.toLowerCase().contains(textEditingValue.text.trim().toLowerCase()))
-                          .toSet()
-                          .toList();
+                          ?.toSet()
+                          ?.toList();
                     },
                     fieldViewBuilder: (context, controller, focusNode, onFieldSubmitted) {
+                      _sourceController = controller;
+                      controller.text = widget.quote.source;
+
                       return TextFormField(
-                        controller: controller..text = _quote.source,
+                        controller: controller,
                         focusNode: focusNode,
                         textCapitalization: TextCapitalization.sentences,
                         decoration: InputDecoration(
@@ -156,16 +154,12 @@ class _AddQuoteState extends State<AddQuote> {
                               '${AppLocalizations.of(context).translate('where_did_you_find_it')} ${'(${AppLocalizations.of(context).translate('optional').toLowerCase()})'}',
                           border: OutlineInputBorder(),
                         ),
-                        onChanged: _saveSource,
                         onEditingComplete: () {
                           node.unfocus();
-                          if (_formKey.currentState.validate()) {
-                            _addQuote();
-                          }
+                          _addQuote();
                         },
                       );
                     },
-                    onSelected: _saveSource,
                   ),
                   const SizedBox(height: 20),
                   Container(
@@ -173,9 +167,7 @@ class _AddQuoteState extends State<AddQuote> {
                     child: ElevatedButton.icon(
                       icon: Icon(Icons.save),
                       label: Text(AppLocalizations.of(context).translate('save')),
-                      onPressed: () {
-                        if (_formKey.currentState.validate()) _addQuote();
-                      },
+                      onPressed: _addQuote,
                     ),
                   )
                 ],
@@ -188,27 +180,38 @@ class _AddQuoteState extends State<AddQuote> {
   }
 
   void _addQuote() async {
-    final quoteDao = QuoteDAO();
-    if (_quote.id != null) {
-      await quoteDao.update(_quote);
-    } else {
-      _quote.id = await quoteDao.insert(_quote);
+    if (_formKey.currentState.validate()) {
+      widget.quote.content = _contentController.text.trim();
+      widget.quote.author = _authorController.text.trim().isNotEmpty ? _authorController.text.trim() : null;
+      widget.quote.source = _sourceController.text.trim().isNotEmpty ? _sourceController.text.trim() : null;
+
+      final quoteDao = QuoteDAO();
+
+      if (widget.quote.id != null) {
+        await quoteDao.update(widget.quote);
+      } else {
+        widget.quote.id = await quoteDao.insert(widget.quote);
+      }
+
+      Navigator.pop(context, widget.quote);
     }
-    Navigator.pop(context, _quote);
   }
 
   void _pasteContentFromClipboard() {
     FlutterClipboard.paste().then((value) {
-      _quote.content = value.trim();
       _contentController
         ..text = value
         ..selection = TextSelection.collapsed(offset: _contentController.text.length);
     });
   }
 
-  void _getAutoPasteValue() async {
+  void _runAutoPaste() async {
     var box = await Hive.openBox('preferences');
     _autoPasteEnabled = box.get('autopaste', defaultValue: false);
+    if (_autoPasteEnabled && _alreadyPasted == false) {
+      _pasteContentFromClipboard();
+      _alreadyPasted = true;
+    }
   }
 
   void _getQuotes() async {
@@ -217,17 +220,8 @@ class _AddQuoteState extends State<AddQuote> {
     _quotes = records;
   }
 
-  void _saveAuthor(String text) {
-    _quote.author = (text.trim().isNotEmpty) ? text.trim() : null;
-  }
-
-  void _saveSource(String text) {
-    _quote.source = (text.trim().isNotEmpty) ? text.trim() : null;
-  }
-
   void _clearContent() {
     _contentController.clear();
-    _quote.content = '';
   }
 
   void _contentFieldListener() {
