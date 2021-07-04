@@ -3,13 +3,14 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:package_info/package_info.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
 import 'package:share/share.dart';
 import 'package:hive/hive.dart';
 import 'package:stoic/db/quote_dao.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:stoic/theme/app_localizations.dart';
+import 'package:filesystem_picker/filesystem_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class Settings extends StatefulWidget {
   _SettingsState createState() => _SettingsState();
@@ -123,16 +124,28 @@ class _SettingsState extends State<Settings> {
   }
 
   void _export() async {
-    final directory = await getExternalStorageDirectory();
-    final file = File(path.join(directory.path, 'export ${DateTime.now()}.json'));
-    final quoteDao = QuoteDAO();
-    final quotes = await quoteDao.selectAll();
-    final records = quotes.map((e) => e.toMap()).toList();
-    file.writeAsString(jsonEncode(records)).then((file) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('File save as ${file.path}')));
-    }).onError((error, stackTrace) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(error.message)));
-    });
+    var dir = await FilesystemPicker.open(
+      title: 'Save to folder',
+      context: context,
+      rootDirectory: Directory('/storage/emulated/0/'),
+      fsType: FilesystemType.folder,
+      pickText: 'Save file here',
+      folderIconColor: Colors.black,
+      requestPermission:
+          !(Platform.isAndroid || Platform.isIOS) ? () async => await Permission.storage.request().isGranted : null,
+    );
+
+    if (dir != null) {
+      final file = File(path.join(dir, 'Meditations ${DateTime.now()}.json'));
+      final quoteDao = QuoteDAO();
+      final quotes = await quoteDao.selectAll();
+      final records = quotes.map((e) => e.toMap()).toList();
+      file.writeAsString(jsonEncode(records)).then((file) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('File save as ${file.path}')));
+      }).onError((error, stackTrace) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(error.message)));
+      });
+    }
   }
 
   void _getCurrentVersion() {
