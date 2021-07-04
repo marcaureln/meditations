@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:stoic/models/quote.dart';
-import 'package:stoic/theme/text.dart';
 import 'package:stoic/widgets/quote_tile.dart';
 
 class QuoteSearchDelegate extends SearchDelegate<Quote> {
@@ -9,7 +8,6 @@ class QuoteSearchDelegate extends SearchDelegate<Quote> {
   QuoteSearchDelegate(this.quotes)
       : super(
           searchFieldLabel: 'Search...',
-          searchFieldStyle: myTextTheme.bodyText1,
         );
 
   @override

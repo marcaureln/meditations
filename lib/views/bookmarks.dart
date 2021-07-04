@@ -39,8 +39,6 @@ class _BookmarksState extends State<Bookmarks> {
 
   @override
   Widget build(BuildContext context) {
-    ThemeData theme = Theme.of(context);
-
     if (quotes == null) {
       _fetchQuotes();
       return Center(child: CircularProgressIndicator(strokeWidth: 2.0));
@@ -93,7 +91,7 @@ class _BookmarksState extends State<Bookmarks> {
                         children: [
                           Icon(
                             Icons.delete,
-                            color: theme.scaffoldBackgroundColor,
+                            color: Theme.of(context).scaffoldBackgroundColor,
                           ),
                           const SizedBox(width: 8),
                         ],
@@ -201,16 +199,16 @@ class _BookmarksState extends State<Bookmarks> {
   }
 
   _showActions(Quote quote) {
-    ThemeData theme = Theme.of(context);
+    TextTheme textTheme = Theme.of(context).textTheme;
 
     showModalBottomSheet(
       elevation: 8.0,
       context: context,
       builder: (context) => Wrap(
         children: [
-          ListTile(
-            contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            title: Text(quote.toString()),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: QuoteTile(context: context, quote: quote),
           ),
           const Divider(),
           ListTile(
@@ -218,7 +216,7 @@ class _BookmarksState extends State<Bookmarks> {
             leading: Icon(Icons.share),
             title: Text(
               AppLocalizations.of(context).translate('share'),
-              style: theme.textTheme.bodyText1,
+              style: textTheme.bodyText1,
             ),
             onTap: () {
               Navigator.pop(context);
@@ -230,7 +228,7 @@ class _BookmarksState extends State<Bookmarks> {
             leading: Icon(Icons.content_copy),
             title: Text(
               AppLocalizations.of(context).translate('copy'),
-              style: theme.textTheme.bodyText1,
+              style: textTheme.bodyText1,
             ),
             onTap: () {
               Navigator.pop(context);
@@ -242,7 +240,7 @@ class _BookmarksState extends State<Bookmarks> {
             leading: Icon(Icons.mode_edit),
             title: Text(
               AppLocalizations.of(context).translate('modify'),
-              style: theme.textTheme.bodyText1,
+              style: textTheme.bodyText1,
             ),
             onTap: () {
               Navigator.pop(context);
@@ -254,7 +252,7 @@ class _BookmarksState extends State<Bookmarks> {
             leading: Icon(Icons.delete),
             title: Text(
               AppLocalizations.of(context).translate('remove'),
-              style: theme.textTheme.bodyText1,
+              style: textTheme.bodyText1,
             ),
             onTap: () {
               Navigator.pop(context);

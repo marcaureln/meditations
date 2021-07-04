@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:stoic/models/quote.dart';
 import 'package:stoic/theme/app_localizations.dart';
+import 'package:stoic/theme/text.dart';
 
 class QuoteTile extends InkWell {
   final Quote quote;
@@ -17,14 +18,14 @@ class QuoteTile extends InkWell {
                   width: double.infinity,
                   child: Text(
                     '"${quote.content}"',
-                    style: Theme.of(context).textTheme.subtitle1,
+                    style: ptSerif.bodyText1,
                   ),
                 ),
                 Container(
                   width: double.infinity,
                   child: Text(
                     (quote.author != null) ? quote.author : AppLocalizations.of(context).translate('anonymous'),
-                    style: Theme.of(context).textTheme.subtitle2,
+                    style: ptSerif.bodyText2,
                   ),
                 ),
                 if (quote.source != null)
