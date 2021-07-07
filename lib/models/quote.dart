@@ -33,4 +33,6 @@ class Quote {
 
     return text;
   }
+
+  bool equals(Quote other) => content == other.content && author == other.author && source == other.source;
 }

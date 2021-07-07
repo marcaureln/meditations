@@ -116,13 +116,31 @@ class _ImportState extends State<Import> {
   }
 
   Future<Map<Quote, bool>> _parseJson() async {
+    bool contains(List<Quote> list, Quote element) {
+      for (var e in list) {
+        if (e.equals(element)) return true;
+      }
+      return false;
+    }
+
+    final quoteDao = QuoteDAO();
+    List<Quote> localStore = await quoteDao.selectAll();
+
     final List json = jsonDecode(widget.raw);
     Map<Quote, bool> quotes = {};
     for (var record in json) {
       var map = Map<String, String>.from(record);
       var quote = Quote.fromMap(null, map);
-      quotes[quote] = true;
+      if (contains(localStore, quote)) {
+        quotes[quote] = false;
+        if (_selectAll) _selectAll = false;
+      } else {
+        quotes[quote] = true;
+      }
     }
+
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Duplicates are not checked')));
+
     return quotes;
   }
 
