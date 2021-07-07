@@ -7,6 +7,7 @@ import 'package:path/path.dart' as path;
 import 'package:share/share.dart';
 import 'package:hive/hive.dart';
 import 'package:stoic/db/quote_dao.dart';
+import 'package:stoic/views/import.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:stoic/theme/app_localizations.dart';
 import 'package:filesystem_picker/filesystem_picker.dart';
@@ -18,6 +19,7 @@ class Settings extends StatefulWidget {
 
 class _SettingsState extends State<Settings> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
+  final _rootPath = Directory('/storage/emulated/0/');
   String _currentVersion = '...';
   bool _autoPasteEnabled = false;
 
@@ -57,6 +59,15 @@ class _SettingsState extends State<Settings> {
             title: Text('Save'),
             subtitle: Text('Save and import later'),
             onTap: _export,
+          ),
+          ListTile(
+            leading: Container(
+              height: double.infinity,
+              child: Icon(Icons.upload),
+            ),
+            title: Text('Import'),
+            subtitle: Text('Recover saved quotes'),
+            onTap: _import,
           ),
           ListTile(
             leading: Container(
@@ -124,10 +135,10 @@ class _SettingsState extends State<Settings> {
   }
 
   void _export() async {
-    var dir = await FilesystemPicker.open(
+    final dir = await FilesystemPicker.open(
       title: 'Save to folder',
       context: context,
-      rootDirectory: Directory('/storage/emulated/0/'),
+      rootDirectory: _rootPath,
       fsType: FilesystemType.folder,
       pickText: 'Save file here',
       folderIconColor: Colors.black,
@@ -145,6 +156,26 @@ class _SettingsState extends State<Settings> {
       }).onError((error, stackTrace) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(error.message)));
       });
+    }
+  }
+
+  void _import() async {
+    final path = await FilesystemPicker.open(
+      title: 'Open file',
+      context: context,
+      rootDirectory: _rootPath,
+      fsType: FilesystemType.file,
+      folderIconColor: Colors.black,
+      allowedExtensions: ['.json'],
+      fileTileSelectMode: FileTileSelectMode.wholeTile,
+      requestPermission:
+          !(Platform.isAndroid || Platform.isIOS) ? () async => await Permission.storage.request().isGranted : null,
+    );
+
+    if (path != null) {
+      final file = File('$path');
+      final jsonRaw = await file.readAsString();
+      Navigator.push(context, MaterialPageRoute(builder: (context) => Import(raw: jsonRaw)));
     }
   }
 
