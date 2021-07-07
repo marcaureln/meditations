@@ -18,7 +18,6 @@ class Settings extends StatefulWidget {
 }
 
 class _SettingsState extends State<Settings> {
-  final _scaffoldKey = GlobalKey<ScaffoldState>();
   final _rootPath = Directory('/storage/emulated/0/');
   String _currentVersion = '...';
   bool _autoPasteEnabled = false;
@@ -33,7 +32,6 @@ class _SettingsState extends State<Settings> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: _scaffoldKey,
       appBar: AppBar(title: Text(AppLocalizations.of(context).translate('settings_appbar_title'))),
       body: ListView(
         physics: ClampingScrollPhysics(),
