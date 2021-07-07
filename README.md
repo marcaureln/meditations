@@ -1,28 +1,29 @@
 # Meditations
 
-<p align="center"><img src="assets/images/icon.png" width="100px"></p>
-
 ## About
 
-The idea of making this application came to me while I was reading the meditations of Marcus Aurelius. I have the habit (like many readers) of underlining the passages that impressed me during the reading of a book. But with this one I wanted to have these passages at hand. I didn't want to take the book out of my library and rummage through it to find a particular passage. That's why I decided to make a quote notebook for myself.
+The idea of making this application came to me while I was reading Marcus Aurelius's Meditations. Like many readers, I usually highlight passages that hit me. But, this time, I wanted to have these passages next to me. I didn't want to take the book out of my library and delve into it to find a particular passage. I used to use note-taking apps like Google Keep, but when you start collecting a lot of quotes, things begin being messy. Furthermore, I wanted special features that these apps don't provide. So, that's why I decided to build my quotepad.
 
-Stay tuned for upcoming features like dark theme.
+## Features
 
-The application is fully available in both French and English.
-
-## Getting Started
-
-For help getting started with Flutter, view our online [documentation](https://flutter.dev/).
+- Create, modify, delete and share quotes
+- Sort quotes by date added, author name and source
+- Search
+- Autocompletion for authors and sources
+- Autopaste, when enabled, paste clipboard content automatically during quote creation
+- Export and Import
+- Languages: French and English
 
 ## Contributing
 
-You can contribute by implementing a new feature or fixing a bug.
+If it happens to you to use the app and that you find a bug or want to implement a new feature, you are welcome. 
+Follow these steps to contribute to this repository:
 
-1. Fork the project
-2. Create your branch and make your changes
+1. Fork the repository
+2. Create a branch where you will make your changes
 3. Commit your changes
 4. Push the branch
-5. Open a pull request
+5. Open a pull request where you will explain changes being made
 
 ## License
 
