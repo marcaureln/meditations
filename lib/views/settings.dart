@@ -19,7 +19,7 @@ class Settings extends StatefulWidget {
 
 class _SettingsState extends State<Settings> {
   final _rootPath = Directory('/storage/emulated/0/');
-  String _currentVersion = '...';
+  String _currentVersion = '';
   bool _autoPasteEnabled = false;
 
   @override
@@ -52,20 +52,11 @@ class _SettingsState extends State<Settings> {
           ListTile(
             leading: Container(
               height: double.infinity,
-              child: Icon(Icons.download),
+              child: Icon(Icons.import_export),
             ),
-            title: Text('Save'),
-            subtitle: Text('Save and import later'),
-            onTap: _export,
-          ),
-          ListTile(
-            leading: Container(
-              height: double.infinity,
-              child: Icon(Icons.upload),
-            ),
-            title: Text('Import'),
-            subtitle: Text('Recover saved quotes'),
-            onTap: _import,
+            title: Text('Import/Export'),
+            subtitle: Text('Save or import quotes'),
+            onTap: _showImportExportDialog,
           ),
           ListTile(
             leading: Container(
@@ -121,6 +112,50 @@ class _SettingsState extends State<Settings> {
         ),
       );
     }
+  }
+
+  void _showImportExportDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => Dialog(
+        child: Container(
+          width: 150,
+          height: 100,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              TextButton(
+                onPressed: _export,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Icon(Icons.download),
+                    ),
+                    Text('Export'),
+                  ],
+                ),
+              ),
+              VerticalDivider(indent: 16, endIndent: 16),
+              TextButton(
+                onPressed: _import,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Icon(Icons.upload),
+                    ),
+                    Text('Import'),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   void _export() async {
