@@ -88,24 +88,15 @@ class _SettingsState extends State<Settings> {
           ListTile(
             leading: Container(
               height: double.infinity,
-              child: Icon(Icons.article),
+              child: Icon(Icons.info),
             ),
-            title: Text(AppLocalizations.of(context).translate('settings_licenses')),
-            subtitle: Text(AppLocalizations.of(context).translate('settings_licenses_sub')),
+            title: Text(AppLocalizations.of(context).translate('settings_about')),
             onTap: () {
               showLicensePage(
                 context: context,
                 applicationVersion: _currentVersion,
               );
             },
-          ),
-          ListTile(
-            leading: Container(
-              height: double.infinity,
-              child: Icon(Icons.info),
-            ),
-            title: Text(AppLocalizations.of(context).translate('settings_about')),
-            subtitle: Text('${AppLocalizations.of(context).translate('version')}: $_currentVersion'),
           ),
         ],
       ),
