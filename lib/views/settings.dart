@@ -1,17 +1,17 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:filesystem_picker/filesystem_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:package_info/package_info.dart';
 import 'package:path/path.dart' as path;
+import 'package:permission_handler/permission_handler.dart';
 import 'package:share/share.dart';
-import 'package:hive/hive.dart';
 import 'package:stoic/db/quote_dao.dart';
+import 'package:stoic/theme/app_localizations.dart';
 import 'package:stoic/views/import.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:stoic/theme/app_localizations.dart';
-import 'package:filesystem_picker/filesystem_picker.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 class Settings extends StatefulWidget {
   _SettingsState createState() => _SettingsState();

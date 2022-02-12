@@ -1,9 +1,9 @@
-import 'package:flutter/material.dart';
 import 'package:clipboard/clipboard.dart';
+import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:stoic/db/quote_dao.dart';
-import 'package:stoic/theme/app_localizations.dart';
 import 'package:stoic/models/quote.dart';
+import 'package:stoic/theme/app_localizations.dart';
 
 // ignore: must_be_immutable
 class AddQuote extends StatefulWidget {

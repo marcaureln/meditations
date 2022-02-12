@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-
-import 'package:stoic/views/home.dart';
-import 'package:stoic/views/add_quote.dart';
-import 'package:stoic/theme/theme.dart';
 import 'package:stoic/theme/app_localizations.dart';
+import 'package:stoic/theme/theme.dart';
+import 'package:stoic/views/add_quote.dart';
+import 'package:stoic/views/home.dart';
 
 class MyApp extends StatelessWidget {
   @override

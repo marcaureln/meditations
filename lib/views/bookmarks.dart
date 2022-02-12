@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
 import 'package:clipboard/clipboard.dart';
-import 'package:share/share.dart';
+import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:share/share.dart';
 import 'package:stoic/db/quote_dao.dart';
 import 'package:stoic/models/quote.dart';
 import 'package:stoic/theme/app_localizations.dart';
