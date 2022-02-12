@@ -11,6 +11,7 @@ import 'package:stoic/widgets/no_data.dart';
 import 'package:stoic/widgets/quote_tile.dart';
 
 class Bookmarks extends StatefulWidget {
+  @override
   _BookmarksState createState() => _BookmarksState();
 }
 
@@ -41,13 +42,13 @@ class _BookmarksState extends State<Bookmarks> {
   Widget build(BuildContext context) {
     if (quotes == null) {
       _fetchQuotes();
-      return Center(child: CircularProgressIndicator(strokeWidth: 2.0));
+      return const Center(child: CircularProgressIndicator(strokeWidth: 2.0));
     }
     return Scaffold(
       appBar: AppBar(
         title: Text(AppLocalizations.of(context).translate('bookmarks_appbar_title')),
         actions: [
-          IconButton(onPressed: _search, icon: Icon(Icons.search)),
+          IconButton(onPressed: _search, icon: const Icon(Icons.search)),
         ],
       ),
       body: (quotes.isEmpty)
@@ -55,12 +56,12 @@ class _BookmarksState extends State<Bookmarks> {
           : Scrollbar(
               controller: _scrollController,
               interactive: true,
-              radius: Radius.circular(24),
+              radius: const Radius.circular(24),
               child: ListView.separated(
                 controller: _scrollController,
-                padding: EdgeInsets.only(left: 8, right: 8, top: 2, bottom: 128),
+                padding: const EdgeInsets.only(left: 8, right: 8, top: 2, bottom: 128),
                 keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-                physics: BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+                physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
                 itemCount: quotes.length + 1,
                 itemBuilder: (context, index) {
                   if (index == 0) {
@@ -69,14 +70,14 @@ class _BookmarksState extends State<Bookmarks> {
                       children: [
                         TextButton.icon(
                           onPressed: _selectSortOrder,
-                          icon: Icon(Icons.import_export),
+                          icon: const Icon(Icons.import_export),
                           label: Text(_sortOptions[_sortOrder]),
                         )
                       ],
                     );
                   }
 
-                  Quote quote = quotes[index - 1];
+                  final Quote quote = quotes[index - 1];
 
                   return Dismissible(
                     key: ValueKey(quote.id),
@@ -85,7 +86,7 @@ class _BookmarksState extends State<Bookmarks> {
                       _removeQuote(quote);
                     },
                     background: Card(
-                      color: Color(0xffd72323),
+                      color: const Color(0xffd72323),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
@@ -120,28 +121,28 @@ class _BookmarksState extends State<Bookmarks> {
         child: (_bottomReached == false)
             ? FloatingActionButton(
                 tooltip: AppLocalizations.of(context).translate('add_quote'),
+                onPressed: _openAddQuotePage,
                 child: Icon(
                   Icons.add,
                   color: Theme.of(context).scaffoldBackgroundColor,
                 ),
-                onPressed: _openAddQuotePage,
               )
             : FloatingActionButton(
                 tooltip: AppLocalizations.of(context).translate('move_top'),
+                onPressed: _moveTop,
                 child: Icon(
                   Icons.arrow_upward,
                   color: Theme.of(context).scaffoldBackgroundColor,
                 ),
-                onPressed: _moveTop,
               ),
       ),
     );
   }
 
-  _fetchQuotes() async {
-    List<Quote> records = await _quoteDao.selectAll();
+  Future<void> _fetchQuotes() async {
+    final List<Quote> records = await _quoteDao.selectAll();
 
-    SortBy sortOrder = await _getSortOrder();
+    final SortBy sortOrder = await _getSortOrder();
     _sort(records, sortOrder);
 
     setState(() {
@@ -150,7 +151,7 @@ class _BookmarksState extends State<Bookmarks> {
     });
   }
 
-  _removeQuote(Quote quote) {
+  void _removeQuote(Quote quote) {
     _quoteDao.delete(quote);
 
     setState(() {
@@ -160,7 +161,7 @@ class _BookmarksState extends State<Bookmarks> {
     ScaffoldMessenger.of(context)
         .showSnackBar(
           SnackBar(
-            duration: Duration(seconds: 2),
+            duration: const Duration(seconds: 2),
             content: Text(AppLocalizations.of(context).translate('quote_removed')),
             action: SnackBarAction(
               label: AppLocalizations.of(context).translate('undo'),
@@ -181,14 +182,15 @@ class _BookmarksState extends State<Bookmarks> {
     });
   }
 
-  _openAddQuotePage({Quote quote}) async {
-    var returnedQuote = await Navigator.push(
+  Future<void> _openAddQuotePage({Quote quote}) async {
+    final Quote returnedQuote = await Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => AddQuote(quote: quote)),
     );
     if (returnedQuote != null) {
       setState(() {
         if (quote != null) {
+          // ignore: parameter_assignments
           quote = returnedQuote;
         } else {
           quotes.add(returnedQuote);
@@ -198,8 +200,8 @@ class _BookmarksState extends State<Bookmarks> {
     }
   }
 
-  _showActions(Quote quote) {
-    TextTheme textTheme = Theme.of(context).textTheme;
+  void _showActions(Quote quote) {
+    final TextTheme textTheme = Theme.of(context).textTheme;
 
     showModalBottomSheet(
       elevation: 8.0,
@@ -213,7 +215,7 @@ class _BookmarksState extends State<Bookmarks> {
           const Divider(),
           ListTile(
             dense: true,
-            leading: Icon(Icons.share),
+            leading: const Icon(Icons.share),
             title: Text(
               AppLocalizations.of(context).translate('share'),
               style: textTheme.bodyText1,
@@ -225,7 +227,7 @@ class _BookmarksState extends State<Bookmarks> {
           ),
           ListTile(
             dense: true,
-            leading: Icon(Icons.content_copy),
+            leading: const Icon(Icons.content_copy),
             title: Text(
               AppLocalizations.of(context).translate('copy'),
               style: textTheme.bodyText1,
@@ -237,7 +239,7 @@ class _BookmarksState extends State<Bookmarks> {
           ),
           ListTile(
             dense: true,
-            leading: Icon(Icons.mode_edit),
+            leading: const Icon(Icons.mode_edit),
             title: Text(
               AppLocalizations.of(context).translate('modify'),
               style: textTheme.bodyText1,
@@ -249,7 +251,7 @@ class _BookmarksState extends State<Bookmarks> {
           ),
           ListTile(
             dense: true,
-            leading: Icon(Icons.delete),
+            leading: const Icon(Icons.delete),
             title: Text(
               AppLocalizations.of(context).translate('remove'),
               style: textTheme.bodyText1,
@@ -264,7 +266,7 @@ class _BookmarksState extends State<Bookmarks> {
     );
   }
 
-  _saveToClipboard(Quote quote) {
+  void _saveToClipboard(Quote quote) {
     setState(() {
       _isFabVisible = false;
     });
@@ -273,7 +275,7 @@ class _BookmarksState extends State<Bookmarks> {
           .showSnackBar(
             SnackBar(
               content: Text(AppLocalizations.of(context).translate('copied_to_clipboard')),
-              duration: Duration(seconds: 2),
+              duration: const Duration(seconds: 2),
             ),
           )
           .closed
@@ -286,13 +288,13 @@ class _BookmarksState extends State<Bookmarks> {
   }
 
   Future<SortBy> _getSortOrder() async {
-    var box = await Hive.openBox('preferences');
-    var saved = box.get('sortorder');
+    final box = await Hive.openBox('preferences');
+    final saved = box.get('sortorder');
     return SortBy.values.firstWhere((element) => element.toString() == saved, orElse: () => SortBy.none);
   }
 
-  void _saveSortOrder(SortBy sortOrder) async {
-    var box = await Hive.openBox('preferences');
+  Future<void> _saveSortOrder(SortBy sortOrder) async {
+    final box = await Hive.openBox('preferences');
     box.put('sortorder', sortOrder.toString());
     _sortOrder = sortOrder;
   }
@@ -305,7 +307,7 @@ class _BookmarksState extends State<Bookmarks> {
           shrinkWrap: true,
           itemCount: _sortOptions.length,
           itemBuilder: (context, index) {
-            var option = _sortOptions.keys.toList()[index];
+            final option = _sortOptions.keys.toList()[index];
 
             return ListTile(
               onTap: () {
@@ -316,7 +318,7 @@ class _BookmarksState extends State<Bookmarks> {
                 Navigator.pop(context);
               },
               title: Text(_sortOptions[option]),
-              trailing: option == _sortOrder ? Icon(Icons.check) : null,
+              trailing: option == _sortOrder ? const Icon(Icons.check) : null,
             );
           },
         );
@@ -324,7 +326,7 @@ class _BookmarksState extends State<Bookmarks> {
     );
   }
 
-  _sort(List<Quote> quotes, SortBy sortOrder) {
+  void _sort(List<Quote> quotes, SortBy sortOrder) {
     switch (sortOrder) {
       case SortBy.author:
         quotes.sort((a, b) => (a.author ?? '').compareTo(b.author ?? ''));
@@ -342,18 +344,18 @@ class _BookmarksState extends State<Bookmarks> {
     }
   }
 
-  _search() async {
-    var result = await showSearch<Quote>(context: context, delegate: QuoteSearchDelegate(quotes));
+  Future<void> _search() async {
+    final result = await showSearch<Quote>(context: context, delegate: QuoteSearchDelegate(quotes));
     if (result != null) {
       _showActions(result);
     }
   }
 
-  _moveTop() {
-    _scrollController.animateTo(0, duration: Duration(seconds: 1), curve: Curves.ease);
+  void _moveTop() {
+    _scrollController.animateTo(0, duration: const Duration(seconds: 1), curve: Curves.ease);
   }
 
-  _scrollListener() {
+  void _scrollListener() {
     if (_scrollController.offset >= _scrollController.position.maxScrollExtent) {
       if (_bottomReached == false) {
         setState(() {

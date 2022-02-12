@@ -11,17 +11,17 @@ class QuoteTile extends InkWell {
           onTap: onTap,
           onLongPress: onLongPress,
           child: Container(
-            padding: EdgeInsets.all(8),
+            padding: const EdgeInsets.all(8),
             child: Column(
               children: [
-                Container(
+                SizedBox(
                   width: double.infinity,
                   child: Text(
                     '"${quote.content}"',
                     style: ptSerif.bodyText1,
                   ),
                 ),
-                Container(
+                SizedBox(
                   width: double.infinity,
                   child: Text(
                     (quote.author != null) ? quote.author : AppLocalizations.of(context).translate('anonymous'),
@@ -29,7 +29,7 @@ class QuoteTile extends InkWell {
                   ),
                 ),
                 if (quote.source != null)
-                  Container(
+                  SizedBox(
                     width: double.infinity,
                     child: Text(quote.source),
                   ),

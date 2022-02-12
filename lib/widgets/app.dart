@@ -18,13 +18,13 @@ class MyApp extends StatelessWidget {
       },
       theme: myTheme,
       // locale: Locale('en'),
-      localizationsDelegates: [
+      localizationsDelegates: const [
         AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      supportedLocales: [Locale('en', ''), Locale('fr', '')],
+      supportedLocales: const [Locale('en', ''), Locale('fr', '')],
     );
   }
 }

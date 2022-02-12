@@ -14,6 +14,7 @@ import 'package:stoic/views/import.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class Settings extends StatefulWidget {
+  @override
   _SettingsState createState() => _SettingsState();
 }
 
@@ -34,11 +35,11 @@ class _SettingsState extends State<Settings> {
     return Scaffold(
       appBar: AppBar(title: Text(AppLocalizations.of(context).translate('settings_appbar_title'))),
       body: ListView(
-        physics: ClampingScrollPhysics(),
-        padding: EdgeInsets.all(8),
+        physics: const ClampingScrollPhysics(),
+        padding: const EdgeInsets.all(8),
         children: [
           ListTile(
-            leading: Container(
+            leading: const SizedBox(
               height: double.infinity,
               child: Icon(Icons.paste),
             ),
@@ -50,16 +51,16 @@ class _SettingsState extends State<Settings> {
             subtitle: Text(AppLocalizations.of(context).translate('settings_auto_paste_sub')),
           ),
           ListTile(
-            leading: Container(
+            leading: const SizedBox(
               height: double.infinity,
               child: Icon(Icons.import_export),
             ),
-            title: Text('Import/Export'),
-            subtitle: Text('Save or import quotes'),
+            title: const Text('Import/Export'),
+            subtitle: const Text('Save or import quotes'),
             onTap: _showImportExportDialog,
           ),
           ListTile(
-            leading: Container(
+            leading: const SizedBox(
               height: double.infinity,
               child: Icon(Icons.feedback),
             ),
@@ -68,7 +69,7 @@ class _SettingsState extends State<Settings> {
             onTap: _sendFeedback,
           ),
           ListTile(
-            leading: Container(
+            leading: const SizedBox(
               height: double.infinity,
               child: Icon(Icons.share),
             ),
@@ -77,7 +78,7 @@ class _SettingsState extends State<Settings> {
             onTap: _share,
           ),
           ListTile(
-            leading: Container(
+            leading: const SizedBox(
               height: double.infinity,
               child: Icon(Icons.info),
             ),
@@ -94,15 +95,15 @@ class _SettingsState extends State<Settings> {
     );
   }
 
-  void _sendFeedback() async {
-    _launchURL("mailto:alexmarcaureln@gmail.com");
+  void _sendFeedback() {
+    _launchURL('mailto:alexmarcaureln@gmail.com');
   }
 
   void _share() {
-    Share.share("https://github.com/marcaureln/stoic");
+    Share.share('https://github.com/marcaureln/stoic');
   }
 
-  void _launchURL(String url) async {
+  Future<void> _launchURL(String url) async {
     if (await canLaunch(url)) {
       await launch(url);
     } else {
@@ -118,7 +119,7 @@ class _SettingsState extends State<Settings> {
     showDialog(
       context: context,
       builder: (context) => Dialog(
-        child: Container(
+        child: SizedBox(
           width: 150,
           height: 100,
           child: Row(
@@ -128,23 +129,23 @@ class _SettingsState extends State<Settings> {
                 onPressed: _export,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
+                  children: const [
                     Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: EdgeInsets.all(8.0),
                       child: Icon(Icons.download),
                     ),
                     Text('Export'),
                   ],
                 ),
               ),
-              VerticalDivider(indent: 16, endIndent: 16),
+              const VerticalDivider(indent: 16, endIndent: 16),
               TextButton(
                 onPressed: _import,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
+                  children: const [
                     Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: EdgeInsets.all(8.0),
                       child: Icon(Icons.upload),
                     ),
                     Text('Import'),
@@ -158,7 +159,7 @@ class _SettingsState extends State<Settings> {
     );
   }
 
-  void _export() async {
+  Future<void> _export() async {
     final dir = await FilesystemPicker.open(
       title: 'Save to folder',
       context: context,
@@ -167,7 +168,7 @@ class _SettingsState extends State<Settings> {
       pickText: 'Save file here',
       folderIconColor: Colors.black,
       requestPermission:
-          !(Platform.isAndroid || Platform.isIOS) ? () async => await Permission.storage.request().isGranted : null,
+          !(Platform.isAndroid || Platform.isIOS) ? () async => Permission.storage.request().isGranted : null,
     );
 
     if (dir != null) {
@@ -177,13 +178,13 @@ class _SettingsState extends State<Settings> {
       final records = quotes.map((e) => e.toMap()).toList();
       file.writeAsString(jsonEncode(records)).then((file) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('File save as ${file.path}')));
-      }).onError((error, stackTrace) {
+      }).onError((FileSystemException error, stackTrace) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(error.message)));
       });
     }
   }
 
-  void _import() async {
+  Future<void> _import() async {
     final path = await FilesystemPicker.open(
       title: 'Open file',
       context: context,
@@ -193,13 +194,15 @@ class _SettingsState extends State<Settings> {
       allowedExtensions: ['.json'],
       fileTileSelectMode: FileTileSelectMode.wholeTile,
       requestPermission:
-          !(Platform.isAndroid || Platform.isIOS) ? () async => await Permission.storage.request().isGranted : null,
+          !(Platform.isAndroid || Platform.isIOS) ? () async => Permission.storage.request().isGranted : null,
     );
 
     if (path != null) {
-      final file = File('$path');
+      final file = File(path);
       final jsonRaw = await file.readAsString();
-      Navigator.push(context, MaterialPageRoute(builder: (context) => Import(raw: jsonRaw)));
+      if (mounted) {
+        Navigator.push(context, MaterialPageRoute(builder: (context) => Import(raw: jsonRaw)));
+      }
     }
   }
 
@@ -215,16 +218,16 @@ class _SettingsState extends State<Settings> {
     });
   }
 
-  void _getAutoPasteValue() async {
-    var box = await Hive.openBox('preferences');
-    _autoPasteEnabled = box.get('autopaste', defaultValue: false);
+  Future<void> _getAutoPasteValue() async {
+    final box = await Hive.openBox('preferences');
+    _autoPasteEnabled = box.get('autopaste', defaultValue: false) as bool;
   }
 
-  void _setAutoPasteValue(value) async {
-    var box = await Hive.openBox('preferences');
+  Future<void> _setAutoPasteValue(value) async {
+    final box = await Hive.openBox('preferences');
     await box.put('autopaste', value);
     setState(() {
-      _autoPasteEnabled = value;
+      _autoPasteEnabled = value as bool;
     });
   }
 }

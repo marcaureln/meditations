@@ -6,6 +6,7 @@ import 'package:stoic/views/bookmarks.dart';
 import 'package:stoic/views/settings.dart';
 
 class MyHome extends StatefulWidget {
+  @override
   _MyHomeState createState() => _MyHomeState();
 }
 
@@ -37,11 +38,11 @@ class _MyHomeState extends State<MyHome> {
         iconSize: 20,
         items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.bookmark),
+            icon: const Icon(Icons.bookmark),
             label: AppLocalizations.of(context).translate('bottomnavbar_bookmarks'),
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
+            icon: const Icon(Icons.settings),
             label: AppLocalizations.of(context).translate('bottomnavbar_settings'),
           ),
         ],

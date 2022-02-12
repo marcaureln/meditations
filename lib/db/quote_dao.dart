@@ -7,10 +7,10 @@ class QuoteDAO {
 
   final _quoteStore = intMapStoreFactory.store(quoteStoreName);
 
-  Future<Database> get _db async => await AppDatabase.instance.database;
+  Future<Database> get _db async => AppDatabase.instance.database;
 
   Future<int> insert(Quote quote) async {
-    return await _quoteStore.add(await _db, quote.toMap());
+    return _quoteStore.add(await _db, quote.toMap());
   }
 
   Future delete(Quote quote) async {
@@ -31,9 +31,9 @@ class QuoteDAO {
 
   Future<List<Quote>> selectAll() async {
     final snapshot = await _quoteStore.find(await _db);
-    List<Quote> records = [];
+    final List<Quote> records = [];
 
-    for (var record in snapshot) {
+    for (final record in snapshot) {
       records.add(Quote.fromMap(record.key, record.value));
     }
 

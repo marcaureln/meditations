@@ -5,7 +5,7 @@ import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:stoic/widgets/app.dart';
 
-void main() async {
+Future<void> main() async {
   await Hive.initFlutter();
 
   LicenseRegistry.addLicense(() async* {

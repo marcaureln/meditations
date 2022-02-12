@@ -17,7 +17,7 @@ class QuoteSearchDelegate extends SearchDelegate<Quote> {
         onPressed: () {
           query = '';
         },
-        icon: Icon(Icons.clear),
+        icon: const Icon(Icons.clear),
       )
     ];
   }
@@ -28,19 +28,19 @@ class QuoteSearchDelegate extends SearchDelegate<Quote> {
       onPressed: () {
         close(context, null);
       },
-      icon: Icon(Icons.arrow_back),
+      icon: const Icon(Icons.arrow_back),
     );
   }
 
   @override
   Widget buildResults(BuildContext context) {
-    List<Quote> searchResults = _search(query, quotes);
+    final List<Quote> searchResults = _search(query, quotes);
 
     return ListView.separated(
-      padding: EdgeInsets.only(left: 8, right: 8, top: 8, bottom: 128),
+      padding: const EdgeInsets.only(left: 8, right: 8, top: 8, bottom: 128),
       itemCount: searchResults.length,
       itemBuilder: (context, index) {
-        Quote quote = searchResults[index];
+        final Quote quote = searchResults[index];
         return QuoteTile(
           context: context,
           quote: quote,
@@ -55,13 +55,13 @@ class QuoteSearchDelegate extends SearchDelegate<Quote> {
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    List<Quote> searchResults = _search(query, quotes);
+    final List<Quote> searchResults = _search(query, quotes);
 
     return ListView.separated(
-      padding: EdgeInsets.only(left: 8, right: 8, top: 8, bottom: 128),
+      padding: const EdgeInsets.only(left: 8, right: 8, top: 8, bottom: 128),
       itemCount: searchResults.length,
       itemBuilder: (context, index) {
-        Quote quote = searchResults[index];
+        final Quote quote = searchResults[index];
         return QuoteTile(
           context: context,
           quote: quote,
@@ -79,7 +79,7 @@ class QuoteSearchDelegate extends SearchDelegate<Quote> {
         .where((quote) =>
             quote.content.toLowerCase().contains(terms) ||
             (quote.author?.toLowerCase()?.contains(terms) ?? false) ||
-            (quote.source?.toLowerCase()?.contains(terms) ?? false))
+            (quote.source?.toLowerCase()?.contains(terms) ?? false),)
         .toList();
   }
 }

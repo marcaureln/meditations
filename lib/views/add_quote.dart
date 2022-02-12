@@ -55,7 +55,7 @@ class _AddQuoteState extends State<AddQuote> {
         child: SingleChildScrollView(
           child: Container(
             height: MediaQuery.of(context).size.height - 80,
-            padding: EdgeInsets.all(16),
+            padding: const EdgeInsets.all(16),
             child: Form(
               key: _formKey,
               child: Column(
@@ -73,14 +73,14 @@ class _AddQuoteState extends State<AddQuote> {
                       helperText: (_autoPasteEnabled == true)
                           ? AppLocalizations.of(context).translate('auto_paste_enabled')
                           : null,
-                      border: OutlineInputBorder(),
+                      border: const OutlineInputBorder(),
                       suffixIcon: (_isContentEmpty == true)
                           ? IconButton(
-                              icon: Icon(Icons.paste),
+                              icon: const Icon(Icons.paste),
                               onPressed: _pasteContentFromClipboard,
                             )
                           : IconButton(
-                              icon: Icon(Icons.clear),
+                              icon: const Icon(Icons.clear),
                               onPressed: _clearContent,
                             ),
                     ),
@@ -99,9 +99,11 @@ class _AddQuoteState extends State<AddQuote> {
                       }
                       return _quotes
                           ?.map((quote) => quote.author)
-                          ?.where((author) =>
-                              author != null &&
-                              author.toLowerCase().contains(textEditingValue.text.trim().toLowerCase()))
+                          ?.where(
+                            (author) =>
+                                author != null &&
+                                author.toLowerCase().contains(textEditingValue.text.trim().toLowerCase()),
+                          )
                           ?.toSet()
                           ?.toList();
                     },
@@ -118,7 +120,7 @@ class _AddQuoteState extends State<AddQuote> {
                           labelText: AppLocalizations.of(context).translate('author'),
                           hintText:
                               '${AppLocalizations.of(context).translate('who_said_it')} ${'(${AppLocalizations.of(context).translate('optional').toLowerCase()})'}',
-                          border: OutlineInputBorder(),
+                          border: const OutlineInputBorder(),
                         ),
                         onEditingComplete: () {
                           node.nextFocus();
@@ -134,9 +136,11 @@ class _AddQuoteState extends State<AddQuote> {
                       }
                       return _quotes
                           ?.map((quote) => quote.source)
-                          ?.where((source) =>
-                              source != null &&
-                              source.toLowerCase().contains(textEditingValue.text.trim().toLowerCase()))
+                          ?.where(
+                            (source) =>
+                                source != null &&
+                                source.toLowerCase().contains(textEditingValue.text.trim().toLowerCase()),
+                          )
                           ?.toSet()
                           ?.toList();
                     },
@@ -152,7 +156,7 @@ class _AddQuoteState extends State<AddQuote> {
                           labelText: AppLocalizations.of(context).translate('source'),
                           hintText:
                               '${AppLocalizations.of(context).translate('where_did_you_find_it')} ${'(${AppLocalizations.of(context).translate('optional').toLowerCase()})'}',
-                          border: OutlineInputBorder(),
+                          border: const OutlineInputBorder(),
                         ),
                         onEditingComplete: () {
                           node.unfocus();
@@ -162,10 +166,10 @@ class _AddQuoteState extends State<AddQuote> {
                     },
                   ),
                   const SizedBox(height: 20),
-                  Container(
+                  SizedBox(
                     width: double.infinity,
                     child: ElevatedButton.icon(
-                      icon: Icon(Icons.save),
+                      icon: const Icon(Icons.save),
                       label: Text(AppLocalizations.of(context).translate('save')),
                       onPressed: _addQuote,
                     ),
@@ -179,7 +183,7 @@ class _AddQuoteState extends State<AddQuote> {
     );
   }
 
-  void _addQuote() async {
+  Future<void> _addQuote() async {
     if (_formKey.currentState.validate()) {
       widget.quote.content = _contentController.text.trim();
       widget.quote.author = _authorController.text.trim().isNotEmpty ? _authorController.text.trim() : null;
@@ -193,7 +197,9 @@ class _AddQuoteState extends State<AddQuote> {
         widget.quote.id = await quoteDao.insert(widget.quote);
       }
 
-      Navigator.pop(context, widget.quote);
+      if (mounted) {
+        Navigator.pop(context, widget.quote);
+      }
     }
   }
 
@@ -205,18 +211,18 @@ class _AddQuoteState extends State<AddQuote> {
     });
   }
 
-  void _runAutoPaste() async {
-    var box = await Hive.openBox('preferences');
-    _autoPasteEnabled = box.get('autopaste', defaultValue: false);
+  Future<void> _runAutoPaste() async {
+    final box = await Hive.openBox('preferences');
+    _autoPasteEnabled = box.get('autopaste', defaultValue: false) as bool;
     if (_autoPasteEnabled && _alreadyPasted == false) {
       _pasteContentFromClipboard();
       _alreadyPasted = true;
     }
   }
 
-  void _getQuotes() async {
+  Future<void> _getQuotes() async {
     final quoteDao = QuoteDAO();
-    List<Quote> records = await quoteDao.selectAll();
+    final List<Quote> records = await quoteDao.selectAll();
     _quotes = records;
   }
 
