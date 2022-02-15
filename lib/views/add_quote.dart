@@ -211,8 +211,8 @@ class _AddQuoteState extends State<AddQuote> {
   }
 
   void _runAutoPaste() {
-    final box = Hive.box('preferences');
-    _autoPasteEnabled = box.get('autopaste', defaultValue: false) as bool;
+    _autoPasteEnabled = Hive.box('settings').get('autopaste', defaultValue: false) as bool;
+
     if (_autoPasteEnabled && _alreadyPasted == false) {
       _pasteContentFromClipboard();
       _alreadyPasted = true;

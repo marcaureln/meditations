@@ -142,7 +142,7 @@ class _BookmarksState extends State<Bookmarks> {
   Future<void> _fetchQuotes() async {
     final List<Quote> records = await _quoteDao.selectAll();
 
-    final SortBy sortOrder = await _getSortOrder();
+    final SortBy sortOrder = _getSortOrder();
     _sort(records, sortOrder);
 
     setState(() {
@@ -288,14 +288,13 @@ class _BookmarksState extends State<Bookmarks> {
     });
   }
 
-  Future<SortBy> _getSortOrder() async {
-    final box = await Hive.openBox('preferences');
-    final saved = box.get('sortorder');
-    return SortBy.values.firstWhere((element) => element.toString() == saved, orElse: () => SortBy.none);
+  SortBy _getSortOrder() {
+    final sortOrder = Hive.box('settings').get('sortorder');
+    return SortBy.values.firstWhere((element) => element.toString() == sortOrder.toString(), orElse: () => SortBy.none);
   }
 
   Future<void> _saveSortOrder(SortBy sortOrder) async {
-    final box = await Hive.openBox('preferences');
+    final box = await Hive.openBox('settings');
     box.put('sortorder', sortOrder.toString());
     _sortOrder = sortOrder;
   }

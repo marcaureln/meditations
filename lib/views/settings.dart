@@ -20,14 +20,12 @@ class Settings extends StatefulWidget {
 
 class _SettingsState extends State<Settings> {
   final _rootPath = Directory('/storage/emulated/0/');
-  String _currentVersion = '';
-  bool _autoPasteEnabled = false;
+  late bool _autoPasteEnabled;
 
   @override
   void initState() {
     super.initState();
-    _getAutoPasteValue();
-    _getCurrentVersion();
+    _autoPasteEnabled = Hive.box('settings').get('autopaste', defaultValue: false) as bool;
   }
 
   @override
@@ -83,12 +81,7 @@ class _SettingsState extends State<Settings> {
               child: Icon(Icons.info),
             ),
             title: Text(AppLocalizations.of(context).translate('settings_about')),
-            onTap: () {
-              showLicensePage(
-                context: context,
-                applicationVersion: _currentVersion,
-              );
-            },
+            onTap: _showAboutPage,
           ),
         ],
       ),
@@ -206,28 +199,23 @@ class _SettingsState extends State<Settings> {
     }
   }
 
-  void _getCurrentVersion() {
-    PackageInfo.fromPlatform().then((packageInfo) {
-      setState(() {
-        _currentVersion = '${packageInfo.version} build ${packageInfo.buildNumber}';
-      });
-    }).catchError((_) {
-      setState(() {
-        _currentVersion = AppLocalizations.of(context).translate('error_version');
-      });
-    });
+  Future<void> _showAboutPage() async {
+    final String appVersion = await PackageInfo.fromPlatform().then(
+      (packageInfo) => '${packageInfo.version} build ${packageInfo.buildNumber}',
+      onError: (_) => AppLocalizations.of(context).translate('error_version'),
+    );
+
+    showLicensePage(
+      context: context,
+      applicationVersion: appVersion,
+    );
   }
 
-  Future<void> _getAutoPasteValue() async {
-    final box = await Hive.openBox('preferences');
-    _autoPasteEnabled = box.get('autopaste', defaultValue: false) as bool;
-  }
-
-  Future<void> _setAutoPasteValue(value) async {
-    final box = await Hive.openBox('preferences');
-    await box.put('autopaste', value);
+  Future<void> _setAutoPasteValue(bool value) async {
+    final box = await Hive.openBox('settings');
+    box.put('autopaste', value);
     setState(() {
-      _autoPasteEnabled = value as bool;
+      _autoPasteEnabled = value;
     });
   }
 }

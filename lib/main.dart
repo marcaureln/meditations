@@ -6,6 +6,7 @@ import 'package:stoic/widgets/app.dart';
 
 Future<void> main() async {
   await Hive.initFlutter();
+  await Hive.openBox('settings');
 
   LicenseRegistry.addLicense(() async* {
     final ptSerifLicense = await rootBundle.loadString('assets/google_fonts/OFL.txt');
