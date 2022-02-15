@@ -26,7 +26,7 @@ class QuoteDAO {
   Future<Quote> select(int id) async {
     final record = _quoteStore.record(id);
     final map = await record.get(await _db);
-    return Quote.fromMap(id, map);
+    return Quote.fromMap(id, map!);
   }
 
   Future<List<Quote>> selectAll() async {

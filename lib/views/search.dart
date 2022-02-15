@@ -26,7 +26,7 @@ class QuoteSearchDelegate extends SearchDelegate<Quote> {
   Widget buildLeading(BuildContext context) {
     return IconButton(
       onPressed: () {
-        close(context, null);
+        close(context, Quote(''));
       },
       icon: const Icon(Icons.arrow_back),
     );
@@ -76,10 +76,12 @@ class QuoteSearchDelegate extends SearchDelegate<Quote> {
 
   List<Quote> _search(String terms, List<Quote> list) {
     return list
-        .where((quote) =>
-            quote.content.toLowerCase().contains(terms) ||
-            (quote.author?.toLowerCase()?.contains(terms) ?? false) ||
-            (quote.source?.toLowerCase()?.contains(terms) ?? false),)
+        .where(
+          (quote) =>
+              quote.content.toLowerCase().contains(terms) ||
+              (quote.author?.toLowerCase().contains(terms) ?? false) ||
+              (quote.source?.toLowerCase().contains(terms) ?? false),
+        )
         .toList();
   }
 }

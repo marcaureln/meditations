@@ -1,10 +1,4 @@
-// ignore_for_file: avoid_dynamic_calls
-// ignore_for_file: non_bool_negation_expression
-// ignore_for_file: argument_type_not_assignable
-// ignore_for_file: invalid_assignment
-
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:stoic/db/quote_dao.dart';
 import 'package:stoic/models/quote.dart';
@@ -13,16 +7,16 @@ import 'package:stoic/widgets/quote_tile.dart';
 class Import extends StatefulWidget {
   final String raw;
 
-  const Import({@required this.raw});
+  const Import({required this.raw});
 
   @override
   _ImportState createState() => _ImportState();
 }
 
 class _ImportState extends State<Import> {
-  Future _future;
-  Map _quotes;
-  bool _selectAll;
+  late Future<Map<Quote, bool>> _future;
+  late Map<Quote, bool>? _quotes;
+  late bool _selectAll;
 
   @override
   void initState() {
@@ -40,9 +34,9 @@ class _ImportState extends State<Import> {
           IconButton(onPressed: _import, icon: const Icon(Icons.done)),
         ],
       ),
-      body: FutureBuilder(
+      body: FutureBuilder<Map<Quote, bool>>(
         future: _future,
-        builder: (context, snapshot) {
+        builder: (context, AsyncSnapshot<Map<Quote, bool>> snapshot) {
           if (!snapshot.hasData) {
             return Center(
               child: Column(
@@ -56,15 +50,15 @@ class _ImportState extends State<Import> {
             );
           }
 
-          _quotes = snapshot.data as Map;
-          final List keys = _quotes.keys.toList();
+          _quotes = snapshot.data;
+          final List<Quote> keys = _quotes!.keys.toList();
 
           return ListView.builder(
             padding: const EdgeInsets.all(8),
-            itemCount: _quotes.length,
+            itemCount: _quotes!.length,
             itemBuilder: (context, i) {
               if (i == 0) {
-                final noSelected = _quotes.values.where((value) => value == true).length;
+                final noSelected = _quotes!.values.where((value) => value == true).length;
 
                 return IntrinsicHeight(
                   child: Row(
@@ -74,7 +68,7 @@ class _ImportState extends State<Import> {
                         onChanged: (value) {
                           setState(() {
                             for (final key in keys) {
-                              _quotes[key] = value;
+                              _quotes![key] = value!;
                               _selectAll = value;
                             }
                           });
@@ -82,7 +76,7 @@ class _ImportState extends State<Import> {
                       ),
                       Text(
                         'Select all',
-                        style: Theme.of(context).textTheme.bodyText1.copyWith(fontWeight: FontWeight.bold),
+                        style: Theme.of(context).textTheme.bodyText1!.copyWith(fontWeight: FontWeight.bold),
                       ),
                       const VerticalDivider(indent: 8, endIndent: 8),
                       Text('$noSelected ${noSelected > 1 ? 'quotes' : 'quote'} selected'),
@@ -96,16 +90,16 @@ class _ImportState extends State<Import> {
               return InkWell(
                 onTap: () {
                   setState(() {
-                    _quotes[quote] = !_quotes[quote];
+                    _quotes![quote] = !(_quotes![quote] == true);
                   });
                 },
                 child: Row(
                   children: [
                     Checkbox(
-                      value: _quotes[quote],
+                      value: _quotes![quote],
                       onChanged: (value) {
                         setState(() {
-                          _quotes[quote] = value;
+                          _quotes![quote] = value!;
                         });
                       },
                     ),
@@ -131,7 +125,7 @@ class _ImportState extends State<Import> {
     final quoteDao = QuoteDAO();
     final List<Quote> localStore = await quoteDao.selectAll();
 
-    final List json = jsonDecode(widget.raw);
+    final List<Map> json = jsonDecode(widget.raw) as List<Map>;
     final Map<Quote, bool> quotes = {};
     for (final record in json) {
       final map = Map<String, String>.from(record);
@@ -182,9 +176,9 @@ class _ImportState extends State<Import> {
 
     final quoteDao = QuoteDAO();
     var count = 0;
-    for (final entry in _quotes.entries) {
-      if (entry.value != null) {
-        quoteDao.insert(entry.key as Quote);
+    for (final entry in _quotes!.entries) {
+      if (entry.value) {
+        quoteDao.insert(entry.key);
         count++;
       }
     }

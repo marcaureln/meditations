@@ -6,7 +6,7 @@ import 'package:stoic/theme/text.dart';
 class QuoteTile extends InkWell {
   final Quote quote;
 
-  QuoteTile({@required BuildContext context, @required this.quote, void Function() onTap, void Function() onLongPress})
+  QuoteTile({required BuildContext context, required this.quote, void Function()? onTap, void Function()? onLongPress})
       : super(
           onTap: onTap,
           onLongPress: onLongPress,
@@ -24,14 +24,14 @@ class QuoteTile extends InkWell {
                 SizedBox(
                   width: double.infinity,
                   child: Text(
-                    (quote.author != null) ? quote.author : AppLocalizations.of(context).translate('anonymous'),
+                    quote.author ?? AppLocalizations.of(context).translate('anonymous'),
                     style: ptSerif.bodyText2,
                   ),
                 ),
                 if (quote.source != null)
                   SizedBox(
                     width: double.infinity,
-                    child: Text(quote.source),
+                    child: Text(quote.source ?? ''),
                   ),
               ],
             ),

@@ -16,12 +16,12 @@ class Bookmarks extends StatefulWidget {
 }
 
 class _BookmarksState extends State<Bookmarks> {
-  List<Quote> quotes;
+  List<Quote>? quotes;
   final _quoteDao = QuoteDAO();
   final _scrollController = ScrollController();
-  SortBy _sortOrder;
-  bool _isFabVisible;
-  bool _bottomReached;
+  late SortBy _sortOrder;
+  late bool _isFabVisible;
+  late bool _bottomReached;
 
   final Map<SortBy, String> _sortOptions = {
     SortBy.author: 'A-Z (author)',
@@ -51,7 +51,7 @@ class _BookmarksState extends State<Bookmarks> {
           IconButton(onPressed: _search, icon: const Icon(Icons.search)),
         ],
       ),
-      body: (quotes.isEmpty)
+      body: (quotes?.isEmpty == true)
           ? NoData()
           : Scrollbar(
               controller: _scrollController,
@@ -62,7 +62,7 @@ class _BookmarksState extends State<Bookmarks> {
                 padding: const EdgeInsets.only(left: 8, right: 8, top: 2, bottom: 128),
                 keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
                 physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-                itemCount: quotes.length + 1,
+                itemCount: quotes!.length + 1,
                 itemBuilder: (context, index) {
                   if (index == 0) {
                     return Row(
@@ -71,13 +71,13 @@ class _BookmarksState extends State<Bookmarks> {
                         TextButton.icon(
                           onPressed: _selectSortOrder,
                           icon: const Icon(Icons.import_export),
-                          label: Text(_sortOptions[_sortOrder]),
+                          label: Text(_sortOptions[_sortOrder] ?? ''),
                         )
                       ],
                     );
                   }
 
-                  final Quote quote = quotes[index - 1];
+                  final Quote quote = quotes![index - 1];
 
                   return Dismissible(
                     key: ValueKey(quote.id),
@@ -156,7 +156,7 @@ class _BookmarksState extends State<Bookmarks> {
 
     setState(() {
       _isFabVisible = false;
-      quotes.remove(quote);
+      quotes!.remove(quote);
     });
     ScaffoldMessenger.of(context)
         .showSnackBar(
@@ -168,7 +168,7 @@ class _BookmarksState extends State<Bookmarks> {
               onPressed: () {
                 _quoteDao.insert(quote);
                 setState(() {
-                  quotes.add(quote);
+                  quotes!.add(quote);
                 });
               },
             ),
@@ -182,19 +182,20 @@ class _BookmarksState extends State<Bookmarks> {
     });
   }
 
-  Future<void> _openAddQuotePage({Quote quote}) async {
-    final Quote returnedQuote = await Navigator.push(
+  Future<void> _openAddQuotePage({Quote? quote}) async {
+    final Quote? returnedQuote = await Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => AddQuote(quote: quote)),
+      MaterialPageRoute(builder: (context) => AddQuote(quote ?? Quote(''))),
     );
+
     if (returnedQuote != null) {
       setState(() {
         if (quote != null) {
           // ignore: parameter_assignments
           quote = returnedQuote;
         } else {
-          quotes.add(returnedQuote);
-          _sort(quotes, _sortOrder);
+          quotes!.add(returnedQuote);
+          _sort(quotes!, _sortOrder);
         }
       });
     }
@@ -313,11 +314,11 @@ class _BookmarksState extends State<Bookmarks> {
               onTap: () {
                 _saveSortOrder(option);
                 setState(() {
-                  _sort(quotes, option);
+                  _sort(quotes!, option);
                 });
                 Navigator.pop(context);
               },
-              title: Text(_sortOptions[option]),
+              title: Text(_sortOptions[option] ?? ''),
               trailing: option == _sortOrder ? const Icon(Icons.check) : null,
             );
           },
@@ -335,17 +336,17 @@ class _BookmarksState extends State<Bookmarks> {
         quotes.sort((a, b) => (a.source ?? '').compareTo(b.source ?? ''));
         break;
       case SortBy.newest:
-        quotes.sort((a, b) => b.id - a.id);
+        quotes.sort((a, b) => b.id! - a.id!);
         break;
       case SortBy.none:
-        quotes.sort((a, b) => a.id - b.id);
+        quotes.sort((a, b) => a.id! - b.id!);
         break;
       default:
     }
   }
 
   Future<void> _search() async {
-    final result = await showSearch<Quote>(context: context, delegate: QuoteSearchDelegate(quotes));
+    final result = await showSearch<Quote>(context: context, delegate: QuoteSearchDelegate(quotes!));
     if (result != null) {
       _showActions(result);
     }

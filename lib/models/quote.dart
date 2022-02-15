@@ -1,15 +1,15 @@
 class Quote {
-  int id;
-  String content;
-  String author;
-  String source;
+  int? id;
+  late String content;
+  String? author;
+  String? source;
 
   Quote(this.content, {this.author, this.source, this.id});
 
   Quote.fromMap(this.id, Map<String, dynamic> map) {
     content = map['content'].toString();
-    author = map['author'].toString();
-    source = map['source'].toString();
+    author = map['author']?.toString();
+    source = map['source']?.toString();
   }
 
   Map<String, dynamic> toMap() {

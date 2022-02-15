@@ -9,7 +9,7 @@ import 'package:stoic/theme/app_localizations.dart';
 class AddQuote extends StatefulWidget {
   Quote quote;
 
-  AddQuote({this.quote});
+  AddQuote(this.quote);
 
   @override
   _AddQuoteState createState() => _AddQuoteState();
@@ -18,28 +18,24 @@ class AddQuote extends StatefulWidget {
 class _AddQuoteState extends State<AddQuote> {
   final _formKey = GlobalKey<FormState>();
   final _contentController = TextEditingController();
-  TextEditingController _authorController;
-  TextEditingController _sourceController;
-  FocusNode _authorFieldFocusNode;
-  bool _autoPasteEnabled;
-  bool _alreadyPasted;
-  bool _isContentEmpty;
+  late TextEditingController _authorController;
+  late TextEditingController _sourceController;
+  late FocusNode _authorFieldFocusNode;
+  late bool _autoPasteEnabled;
+  late bool _alreadyPasted;
+  late bool _isContentEmpty;
 
-  List<Quote> _quotes;
+  late List<Quote> _quotes;
 
   @override
   void initState() {
     super.initState();
-    if (widget.quote == null) {
-      widget.quote = Quote('');
-    } else {
-      _contentController.text = widget.quote.content;
-    }
     _getQuotes();
     _runAutoPaste();
     _alreadyPasted = false;
     _isContentEmpty = true;
     _contentController.addListener(_contentFieldListener);
+    _contentController.text = widget.quote.content;
   }
 
   @override
@@ -85,7 +81,7 @@ class _AddQuoteState extends State<AddQuote> {
                             ),
                     ),
                     validator: (text) {
-                      if (text.isEmpty) {
+                      if (text?.isEmpty == true) {
                         return AppLocalizations.of(context).translate('we_cannot_save_quote');
                       }
                       return null;
@@ -97,20 +93,21 @@ class _AddQuoteState extends State<AddQuote> {
                       if (textEditingValue.text.trim().isEmpty) {
                         return List<String>.empty();
                       }
-                      return _quotes
-                          ?.map((quote) => quote.author)
-                          ?.where(
+                      List<String?> list = _quotes
+                          .map((quote) => quote.author)
+                          .where(
                             (author) =>
                                 author != null &&
                                 author.toLowerCase().contains(textEditingValue.text.trim().toLowerCase()),
                           )
-                          ?.toSet()
-                          ?.toList();
+                          .toSet()
+                          .toList();
+                      return Future.value(list as List<String>);
                     },
                     fieldViewBuilder: (context, controller, focusNode, onFieldSubmitted) {
                       _authorFieldFocusNode = focusNode;
                       _authorController = controller;
-                      controller.text = widget.quote.author;
+                      controller.text = widget.quote.author ?? '';
 
                       return TextFormField(
                         textCapitalization: TextCapitalization.words,
@@ -134,19 +131,21 @@ class _AddQuoteState extends State<AddQuote> {
                       if (textEditingValue.text.trim().isEmpty) {
                         return List<String>.empty();
                       }
-                      return _quotes
-                          ?.map((quote) => quote.source)
-                          ?.where(
-                            (source) =>
-                                source != null &&
-                                source.toLowerCase().contains(textEditingValue.text.trim().toLowerCase()),
-                          )
-                          ?.toSet()
-                          ?.toList();
+                      return Future.value(
+                        _quotes
+                            .map((quote) => quote.source)
+                            .where(
+                              (source) =>
+                                  source != null &&
+                                  source.toLowerCase().contains(textEditingValue.text.trim().toLowerCase()),
+                            )
+                            .toSet()
+                            .toList() as List<String>,
+                      );
                     },
                     fieldViewBuilder: (context, controller, focusNode, onFieldSubmitted) {
                       _sourceController = controller;
-                      controller.text = widget.quote.source;
+                      controller.text = widget.quote.source ?? '';
 
                       return TextFormField(
                         controller: controller,
@@ -184,7 +183,7 @@ class _AddQuoteState extends State<AddQuote> {
   }
 
   Future<void> _addQuote() async {
-    if (_formKey.currentState.validate()) {
+    if (_formKey.currentState!.validate()) {
       widget.quote.content = _contentController.text.trim();
       widget.quote.author = _authorController.text.trim().isNotEmpty ? _authorController.text.trim() : null;
       widget.quote.source = _sourceController.text.trim().isNotEmpty ? _sourceController.text.trim() : null;
@@ -211,8 +210,8 @@ class _AddQuoteState extends State<AddQuote> {
     });
   }
 
-  Future<void> _runAutoPaste() async {
-    final box = await Hive.openBox('preferences');
+  void _runAutoPaste() {
+    final box = Hive.box('preferences');
     _autoPasteEnabled = box.get('autopaste', defaultValue: false) as bool;
     if (_autoPasteEnabled && _alreadyPasted == false) {
       _pasteContentFromClipboard();

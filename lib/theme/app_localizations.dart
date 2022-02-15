@@ -6,20 +6,19 @@ import 'package:flutter/services.dart';
 
 class AppLocalizations {
   final Locale locale;
+  late Map<String, String>? _localizedValues;
 
   AppLocalizations(this.locale);
 
   static AppLocalizations of(BuildContext context) {
-    return Localizations.of<AppLocalizations>(context, AppLocalizations);
+    return Localizations.of<AppLocalizations>(context, AppLocalizations) ?? AppLocalizations(const Locale('en', 'US'));
   }
 
   static const LocalizationsDelegate<AppLocalizations> delegate = _AppLocalizationsDelegate();
 
-  Map<String, String> _localizedValues;
-
   Future<bool> load() async {
     final String jsonString = await rootBundle.loadString('lang/${locale.languageCode}.json');
-    // ignore: invalid_assignment
+    //ignore: invalid_assignment
     final Map<String, dynamic> jsonMap = json.decode(jsonString);
     _localizedValues = jsonMap.map((key, value) {
       return MapEntry(key, value.toString());
@@ -27,7 +26,7 @@ class AppLocalizations {
     return true;
   }
 
-  String translate(String key) => _localizedValues[key];
+  String translate(String key) => _localizedValues![key] ?? '';
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
