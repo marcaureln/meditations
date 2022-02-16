@@ -2,7 +2,7 @@ import 'package:sembast/sembast.dart';
 import 'package:stoic/db/app_database.dart';
 import 'package:stoic/models/quote.dart';
 
-class QuoteDAO {
+class QuoteRepository {
   static const String quoteStoreName = 'quotes';
 
   final _quoteStore = intMapStoreFactory.store(quoteStoreName);

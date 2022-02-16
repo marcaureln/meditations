@@ -1,7 +1,7 @@
 import 'package:clipboard/clipboard.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
-import 'package:stoic/db/quote_dao.dart';
+import 'package:stoic/db/quote_repository.dart';
 import 'package:stoic/models/quote.dart';
 import 'package:stoic/theme/app_localizations.dart';
 
@@ -188,12 +188,12 @@ class _AddQuoteState extends State<AddQuote> {
       widget.quote.author = _authorController.text.trim().isNotEmpty ? _authorController.text.trim() : null;
       widget.quote.source = _sourceController.text.trim().isNotEmpty ? _sourceController.text.trim() : null;
 
-      final quoteDao = QuoteDAO();
+      final quoteRepository = QuoteRepository();
 
       if (widget.quote.id != null) {
-        await quoteDao.update(widget.quote);
+        await quoteRepository.update(widget.quote);
       } else {
-        widget.quote.id = await quoteDao.insert(widget.quote);
+        widget.quote.id = await quoteRepository.insert(widget.quote);
       }
 
       if (mounted) {
@@ -220,8 +220,8 @@ class _AddQuoteState extends State<AddQuote> {
   }
 
   Future<void> _getQuotes() async {
-    final quoteDao = QuoteDAO();
-    final List<Quote> records = await quoteDao.selectAll();
+    final quoteRepository = QuoteRepository();
+    final List<Quote> records = await quoteRepository.selectAll();
     _quotes = records;
   }
 

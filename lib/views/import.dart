@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:stoic/db/quote_dao.dart';
+import 'package:stoic/db/quote_repository.dart';
 import 'package:stoic/models/quote.dart';
 import 'package:stoic/widgets/quote_tile.dart';
 
@@ -119,9 +119,9 @@ class _ImportState extends State<Import> {
   }
 
   Future<Map<Quote, bool>> _parseJson(String rawJson) async {
-    final quoteDao = QuoteDAO();
+    final quoteRepository = QuoteRepository();
     final Map<Quote, bool> quotesToImport = {};
-    final List<Quote> localQuotes = await quoteDao.selectAll();
+    final List<Quote> localQuotes = await quoteRepository.selectAll();
     final List jsonList = jsonDecode(rawJson) as List;
 
     for (final entry in jsonList) {
@@ -172,11 +172,11 @@ class _ImportState extends State<Import> {
       },
     );
 
-    final quoteDao = QuoteDAO();
+    final quoteRepository = QuoteRepository();
     var count = 0;
     for (final entry in quotes.entries) {
       if (entry.value) {
-        quoteDao.insert(entry.key);
+        quoteRepository.insert(entry.key);
         count++;
       }
     }

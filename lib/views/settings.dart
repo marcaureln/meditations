@@ -8,7 +8,7 @@ import 'package:package_info/package_info.dart';
 import 'package:path/path.dart' as path;
 import 'package:permission_handler/permission_handler.dart';
 import 'package:share/share.dart';
-import 'package:stoic/db/quote_dao.dart';
+import 'package:stoic/db/quote_repository.dart';
 import 'package:stoic/theme/app_localizations.dart';
 import 'package:stoic/views/import.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -166,8 +166,8 @@ class _SettingsState extends State<Settings> {
 
     if (dir != null) {
       final file = File(path.join(dir, 'Meditations ${DateTime.now()}.json'));
-      final quoteDao = QuoteDAO();
-      final quotes = await quoteDao.selectAll();
+      final quoteRepository = QuoteRepository();
+      final quotes = await quoteRepository.selectAll();
       final records = quotes.map((e) => e.toMap()).toList();
 
       file.writeAsString(jsonEncode(records)).then((file) {
