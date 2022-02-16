@@ -9,7 +9,7 @@ import 'package:path/path.dart' as path;
 import 'package:permission_handler/permission_handler.dart';
 import 'package:share/share.dart';
 import 'package:stoic/db/quote_repository.dart';
-import 'package:stoic/theme/app_localizations.dart';
+import 'package:stoic/localization.dart';
 import 'package:stoic/views/import.dart';
 import 'package:url_launcher/url_launcher.dart';
 

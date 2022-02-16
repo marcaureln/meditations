@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-
-import 'package:stoic/theme/app_localizations.dart';
-import 'package:stoic/theme/theme.dart';
+import 'package:stoic/localization.dart';
+import 'package:stoic/theme.dart';
 
 class NoData extends StatelessWidget {
   @override

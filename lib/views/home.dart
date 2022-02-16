@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'package:stoic/theme/app_localizations.dart';
+import 'package:stoic/localization.dart';
 import 'package:stoic/views/bookmarks.dart';
 import 'package:stoic/views/settings.dart';
 

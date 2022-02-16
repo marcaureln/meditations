@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:stoic/localization.dart';
 import 'package:stoic/models/quote.dart';
-import 'package:stoic/theme/app_localizations.dart';
-import 'package:stoic/theme/theme.dart';
+import 'package:stoic/theme.dart';
 import 'package:stoic/views/add_quote.dart';
 import 'package:stoic/views/home.dart';
 

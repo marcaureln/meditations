@@ -8,7 +8,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:stoic/widgets/app.dart';
+import 'package:stoic/views/app.dart';
 
 void main() {
   // ignore: avoid_types_on_closure_parameters

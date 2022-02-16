@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:stoic/localization.dart';
 import 'package:stoic/models/quote.dart';
-import 'package:stoic/theme/app_localizations.dart';
-import 'package:stoic/theme/text.dart';
+import 'package:stoic/theme.dart';
 
 class QuoteTile extends InkWell {
   final Quote quote;
