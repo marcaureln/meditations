@@ -18,24 +18,22 @@ class AddQuote extends StatefulWidget {
 class _AddQuoteState extends State<AddQuote> {
   final _formKey = GlobalKey<FormState>();
   final _contentController = TextEditingController();
-  late TextEditingController _authorController;
   late TextEditingController _sourceController;
+  late TextEditingController _authorController;
   late FocusNode _authorFieldFocusNode;
-  late bool _autoPasteEnabled;
-  late bool _alreadyPasted;
-  late bool _isContentEmpty;
-
   late List<Quote> _quotes;
+  bool _alreadyPasted = false;
+  bool _isContentEmpty = true;
+  final bool _autoPasteEnabled = Hive.box('settings').get('autopaste', defaultValue: false) as bool;
 
   @override
   void initState() {
     super.initState();
     _getQuotes();
     _runAutoPaste();
-    _alreadyPasted = false;
-    _isContentEmpty = true;
-    _contentController.addListener(_contentFieldListener);
-    _contentController.text = widget.quote.content;
+    _contentController
+      ..addListener(_contentFieldListener)
+      ..text = widget.quote.content;
   }
 
   @override
@@ -211,8 +209,6 @@ class _AddQuoteState extends State<AddQuote> {
   }
 
   void _runAutoPaste() {
-    _autoPasteEnabled = Hive.box('settings').get('autopaste', defaultValue: false) as bool;
-
     if (_autoPasteEnabled && _alreadyPasted == false) {
       _pasteContentFromClipboard();
       _alreadyPasted = true;
