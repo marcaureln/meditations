@@ -14,14 +14,13 @@ class Import extends StatefulWidget {
 }
 
 class _ImportState extends State<Import> {
-  late Future<Map<Quote, bool>> _future;
-  late Map<Quote, bool>? _quotes;
+  late Future<Map<Quote, bool>> _quotesToImport;
   late bool _selectAll;
 
   @override
   void initState() {
     super.initState();
-    _future = _parseJson();
+    _quotesToImport = _parseJson(widget.raw);
     _selectAll = true;
   }
 
@@ -31,11 +30,16 @@ class _ImportState extends State<Import> {
       appBar: AppBar(
         title: const Text('Import'),
         actions: [
-          IconButton(onPressed: _import, icon: const Icon(Icons.done)),
+          IconButton(
+            onPressed: () async {
+              _import(await _quotesToImport);
+            },
+            icon: const Icon(Icons.done),
+          ),
         ],
       ),
       body: FutureBuilder<Map<Quote, bool>>(
-        future: _future,
+        future: _quotesToImport,
         builder: (context, AsyncSnapshot<Map<Quote, bool>> snapshot) {
           if (!snapshot.hasData) {
             return Center(
@@ -50,15 +54,15 @@ class _ImportState extends State<Import> {
             );
           }
 
-          _quotes = snapshot.data;
-          final List<Quote> keys = _quotes!.keys.toList();
+          final Map<Quote, bool> quotesToImport = snapshot.data!;
+          final List<Quote> quotes = quotesToImport.keys.toList();
 
           return ListView.builder(
             padding: const EdgeInsets.all(8),
-            itemCount: _quotes!.length,
+            itemCount: quotesToImport.length,
             itemBuilder: (context, i) {
               if (i == 0) {
-                final noSelected = _quotes!.values.where((value) => value == true).length;
+                final noSelected = quotesToImport.values.where((value) => value == true).length;
 
                 return IntrinsicHeight(
                   child: Row(
@@ -67,8 +71,8 @@ class _ImportState extends State<Import> {
                         value: _selectAll,
                         onChanged: (value) {
                           setState(() {
-                            for (final key in keys) {
-                              _quotes![key] = value!;
+                            for (final key in quotes) {
+                              quotesToImport[key] = value!;
                               _selectAll = value;
                             }
                           });
@@ -85,21 +89,21 @@ class _ImportState extends State<Import> {
                 );
               }
 
-              final quote = keys[i - 1];
+              final quote = quotes[i - 1];
 
               return InkWell(
                 onTap: () {
                   setState(() {
-                    _quotes![quote] = !(_quotes![quote] == true);
+                    quotesToImport[quote] = !(quotesToImport[quote] == true);
                   });
                 },
                 child: Row(
                   children: [
                     Checkbox(
-                      value: _quotes![quote],
+                      value: quotesToImport[quote],
                       onChanged: (value) {
                         setState(() {
-                          _quotes![quote] = value!;
+                          quotesToImport[quote] = value!;
                         });
                       },
                     ),
@@ -114,27 +118,21 @@ class _ImportState extends State<Import> {
     );
   }
 
-  Future<Map<Quote, bool>> _parseJson() async {
-    bool contains(List<Quote> list, Quote element) {
-      for (final e in list) {
-        if (e.equals(element)) return true;
-      }
-      return false;
-    }
-
+  Future<Map<Quote, bool>> _parseJson(String rawJson) async {
     final quoteDao = QuoteDAO();
-    final List<Quote> localStore = await quoteDao.selectAll();
+    final Map<Quote, bool> quotesToImport = {};
+    final List<Quote> localQuotes = await quoteDao.selectAll();
+    final List jsonList = jsonDecode(rawJson) as List;
 
-    final List<Map> json = jsonDecode(widget.raw) as List<Map>;
-    final Map<Quote, bool> quotes = {};
-    for (final record in json) {
-      final map = Map<String, String>.from(record);
+    for (final entry in jsonList) {
+      final map = Map<String, dynamic>.from(entry as Map);
       final quote = Quote.fromMap(null, map);
-      if (contains(localStore, quote)) {
-        quotes[quote] = false;
+
+      if (localQuotes.any((element) => element.equals(quote))) {
+        quotesToImport[quote] = false;
         if (_selectAll) _selectAll = false;
       } else {
-        quotes[quote] = true;
+        quotesToImport[quote] = true;
       }
     }
 
@@ -142,10 +140,10 @@ class _ImportState extends State<Import> {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Duplicates are not checked')));
     }
 
-    return quotes;
+    return quotesToImport;
   }
 
-  void _import() {
+  void _import(Map<Quote, bool> quotes) {
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -176,15 +174,14 @@ class _ImportState extends State<Import> {
 
     final quoteDao = QuoteDAO();
     var count = 0;
-    for (final entry in _quotes!.entries) {
+    for (final entry in quotes.entries) {
       if (entry.value) {
         quoteDao.insert(entry.key);
         count++;
       }
     }
 
-    Navigator.pop(context);
-    Navigator.pop(context);
+    Navigator.popUntil(context, ModalRoute.withName('/'));
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Done, $count quote(s) imported')));
   }
 }
