@@ -5,11 +5,10 @@ import 'package:stoic/db/quote_repository.dart';
 import 'package:stoic/localization.dart';
 import 'package:stoic/models/quote.dart';
 
-// ignore: must_be_immutable
 class AddQuote extends StatefulWidget {
-  Quote quote;
+  final Quote quote;
 
-  AddQuote(this.quote);
+  const AddQuote(this.quote);
 
   @override
   _AddQuoteState createState() => _AddQuoteState();
