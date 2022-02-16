@@ -169,11 +169,14 @@ class _SettingsState extends State<Settings> {
       final quoteDao = QuoteDAO();
       final quotes = await quoteDao.selectAll();
       final records = quotes.map((e) => e.toMap()).toList();
+
       file.writeAsString(jsonEncode(records)).then((file) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('File save as ${file.path}')));
       }).onError((FileSystemException error, stackTrace) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(error.message)));
       });
+
+      if (mounted) Navigator.pop(context);
     }
   }
 
