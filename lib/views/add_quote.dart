@@ -20,10 +20,9 @@ class _AddQuoteState extends State<AddQuote> {
   late TextEditingController _sourceController;
   late TextEditingController _authorController;
   late FocusNode _authorFieldFocusNode;
-  late List<Quote> _quotes;
-  bool _alreadyPasted = false;
-  bool _isContentEmpty = true;
   final bool _autoPasteEnabled = Hive.box('settings').get('autopaste', defaultValue: false) as bool;
+  bool _isContentEmpty = true;
+  List<Quote> _quotes = [];
 
   @override
   void initState() {
@@ -199,9 +198,8 @@ class _AddQuoteState extends State<AddQuote> {
   }
 
   void _runAutoPaste() {
-    if (_autoPasteEnabled && _alreadyPasted == false) {
+    if (_autoPasteEnabled && widget.quote.content.isEmpty) {
       _pasteContentFromClipboard();
-      _alreadyPasted = true;
     }
   }
 
