@@ -88,18 +88,14 @@ class _AddQuoteState extends State<AddQuote> {
                   Autocomplete<String>(
                     optionsBuilder: (textEditingValue) {
                       if (textEditingValue.text.trim().isEmpty) {
-                        return List<String>.empty();
+                        return const Iterable<String>.empty();
                       }
-                      List<String?> list = _quotes
-                          .map((quote) => quote.author)
-                          .where(
-                            (author) =>
-                                author != null &&
-                                author.toLowerCase().contains(textEditingValue.text.trim().toLowerCase()),
-                          )
-                          .toSet()
-                          .toList();
-                      return Future.value(list as List<String>);
+
+                      final Iterable<String> authors = _quotes.map((e) => e.author ?? '').toSet();
+
+                      return authors.where((author) {
+                        return author.toLowerCase().contains(textEditingValue.text.trim().toLowerCase());
+                      });
                     },
                     fieldViewBuilder: (context, controller, focusNode, onFieldSubmitted) {
                       _authorFieldFocusNode = focusNode;
@@ -126,19 +122,14 @@ class _AddQuoteState extends State<AddQuote> {
                   Autocomplete<String>(
                     optionsBuilder: (textEditingValue) {
                       if (textEditingValue.text.trim().isEmpty) {
-                        return List<String>.empty();
+                        return const Iterable<String>.empty();
                       }
-                      return Future.value(
-                        _quotes
-                            .map((quote) => quote.source)
-                            .where(
-                              (source) =>
-                                  source != null &&
-                                  source.toLowerCase().contains(textEditingValue.text.trim().toLowerCase()),
-                            )
-                            .toSet()
-                            .toList() as List<String>,
-                      );
+
+                      final Iterable<String> sources = _quotes.map((e) => e.source ?? '').toSet();
+
+                      return sources.where((source) {
+                        return source.toLowerCase().contains(textEditingValue.text.trim().toLowerCase());
+                      });
                     },
                     fieldViewBuilder: (context, controller, focusNode, onFieldSubmitted) {
                       _sourceController = controller;
