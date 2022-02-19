@@ -7,7 +7,7 @@ class QuoteRepository {
 
   final _quoteStore = intMapStoreFactory.store(quoteStoreName);
 
-  Future<Database> get _db async => AppDatabase.instance.database;
+  Future<Database> get _db async => AppDatabase().database;
 
   Future<int> insert(Quote quote) async {
     return _quoteStore.add(await _db, quote.toMap());

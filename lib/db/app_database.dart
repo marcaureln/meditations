@@ -6,10 +6,13 @@ import 'package:sembast/sembast_io.dart';
 class AppDatabase {
   static const String dbName = 'database.db';
 
-  // ignore: prefer_constructors_over_static_methods
-  static AppDatabase get instance => AppDatabase._();
+  static final AppDatabase _instance = AppDatabase._internal();
 
-  AppDatabase._();
+  factory AppDatabase() {
+    return _instance;
+  }
+
+  AppDatabase._internal();
 
   Future<Database> get database async {
     final appDocumentDir = await getApplicationDocumentsDirectory();
