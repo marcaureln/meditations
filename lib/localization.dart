@@ -6,27 +6,29 @@ import 'package:flutter/services.dart';
 
 class AppLocalizations {
   final Locale locale;
-  late Map<String, String>? _localizedValues;
+  late Map<String, String> _localizedValues;
 
   AppLocalizations(this.locale);
 
+  // ignore: prefer_constructors_over_static_methods
   static AppLocalizations of(BuildContext context) {
-    return Localizations.of<AppLocalizations>(context, AppLocalizations) ?? AppLocalizations(const Locale('en', 'US'));
+    return Localizations.of<AppLocalizations>(context, AppLocalizations) ?? AppLocalizations(const Locale('en', ''));
   }
 
   static const LocalizationsDelegate<AppLocalizations> delegate = _AppLocalizationsDelegate();
 
   Future<bool> load() async {
     final String jsonString = await rootBundle.loadString('lang/${locale.languageCode}.json');
-    //ignore: invalid_assignment
-    final Map<String, dynamic> jsonMap = json.decode(jsonString);
+    final Map jsonMap = json.decode(jsonString) as Map;
+
     _localizedValues = jsonMap.map((key, value) {
-      return MapEntry(key, value.toString());
+      return MapEntry(key.toString(), value.toString());
     });
+
     return true;
   }
 
-  String translate(String key) => _localizedValues![key] ?? '';
+  String translate(String key) => _localizedValues[key] ?? 'Missing translation: $key';
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
