@@ -17,11 +17,13 @@ class AddQuote extends StatefulWidget {
 class _AddQuoteState extends State<AddQuote> {
   final _formKey = GlobalKey<FormState>();
   final _contentController = TextEditingController();
-  late TextEditingController _sourceController;
+  final _notesController = TextEditingController();
   late TextEditingController _authorController;
+  late TextEditingController _sourceController;
   late FocusNode _authorFieldFocusNode;
   final bool _autoPasteEnabled = Hive.box('settings').get('autopaste', defaultValue: false) as bool;
   bool _isContentEmpty = true;
+  late bool _isNotesEmpty;
   List<Quote> _quotes = [];
 
   @override
@@ -29,6 +31,10 @@ class _AddQuoteState extends State<AddQuote> {
     super.initState();
     _getQuotes();
     _runAutoPaste();
+    _isNotesEmpty = widget.quote.notes?.isEmpty ?? true;
+    _notesController
+      ..addListener(_notesFieldListener)
+      ..text = widget.quote.notes ?? '';
     _contentController
       ..addListener(_contentFieldListener)
       ..text = widget.quote.content;
@@ -145,12 +151,41 @@ class _AddQuoteState extends State<AddQuote> {
                           border: const OutlineInputBorder(),
                         ),
                         onEditingComplete: () {
-                          node.unfocus();
-                          _addQuote();
+                          if (_isNotesEmpty) {
+                            node.unfocus();
+                            _addQuote();
+                          } else {
+                            node.nextFocus();
+                          }
                         },
                       );
                     },
                   ),
+                  const SizedBox(height: 20),
+                  if (_isNotesEmpty)
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton.icon(
+                        icon: const Icon(Icons.note_add),
+                        label: const Text('Add notes'),
+                        onPressed: _addNotes,
+                      ),
+                    )
+                  else
+                    TextFormField(
+                      minLines: 1,
+                      maxLines: 2,
+                      controller: _notesController,
+                      decoration: InputDecoration(
+                        labelText: 'Notes',
+                        hintText: 'Comments, page number, etc.',
+                        border: const OutlineInputBorder(),
+                        suffixIcon: IconButton(
+                          icon: const Icon(Icons.delete),
+                          onPressed: _clearNotes,
+                        ),
+                      ),
+                    ),
                   const SizedBox(height: 20),
                   SizedBox(
                     width: double.infinity,
@@ -174,6 +209,7 @@ class _AddQuoteState extends State<AddQuote> {
       widget.quote.content = _contentController.text.trim();
       widget.quote.author = _authorController.text.trim().isNotEmpty ? _authorController.text.trim() : null;
       widget.quote.source = _sourceController.text.trim().isNotEmpty ? _sourceController.text.trim() : null;
+      widget.quote.notes = _notesController.text.trim().isNotEmpty ? _notesController.text.trim() : null;
 
       final quoteRepository = QuoteRepository();
 
@@ -226,6 +262,26 @@ class _AddQuoteState extends State<AddQuote> {
       setState(() {
         _isContentEmpty = false;
       });
+    }
+  }
+
+  void _addNotes() {
+    setState(() {
+      _isNotesEmpty = false;
+    });
+  }
+
+  void _clearNotes() {
+    setState(() {
+      _notesController.text = '';
+      _isNotesEmpty = true;
+    });
+  }
+
+  void _notesFieldListener() {
+    if (_notesController.text.endsWith('\n\n')) {
+      _notesController.text = _notesController.text.trim();
+      _addQuote();
     }
   }
 }
