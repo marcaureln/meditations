@@ -1,15 +1,26 @@
+import 'package:sembast/timestamp.dart';
+
 class Quote {
   int? id;
   late String content;
   String? author;
   String? source;
+  String? notes;
+  late DateTime createdAt;
+  late DateTime updatedAt;
 
-  Quote(this.content, {this.author, this.source, this.id});
+  Quote(this.content, {this.author, this.source, this.notes, this.id}) {
+    createdAt = DateTime.now();
+    updatedAt = DateTime.now();
+  }
 
   Quote.fromMap(this.id, Map<String, dynamic> map) {
     content = map['content'].toString();
     author = map['author']?.toString();
     source = map['source']?.toString();
+    notes = map['notes']?.toString();
+    createdAt = (map['createdAt'] as Timestamp?)?.toDateTime() ?? DateTime.now();
+    updatedAt = (map['updatedAt'] as Timestamp?)?.toDateTime() ?? DateTime.now();
   }
 
   Map<String, dynamic> toMap() {
@@ -17,6 +28,9 @@ class Quote {
       'content': content,
       'author': author,
       'source': source,
+      'notes': notes,
+      'createdAt': Timestamp.fromDateTime(createdAt),
+      'updatedAt': Timestamp.fromDateTime(updatedAt),
     };
   }
 

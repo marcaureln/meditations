@@ -20,6 +20,7 @@ class QuoteRepository {
 
   Future update(Quote quote) async {
     final finder = Finder(filter: Filter.byKey(quote.id));
+    quote.updatedAt = DateTime.now();
     await _quoteStore.update(await _db, quote.toMap(), finder: finder);
   }
 
