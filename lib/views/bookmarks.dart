@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:share/share.dart';
 import 'package:stoic/db/quote_repository.dart';
+import 'package:stoic/db/trash_repository.dart';
 import 'package:stoic/localization.dart';
 import 'package:stoic/models/quote.dart';
 import 'package:stoic/views/add_quote.dart';
@@ -152,12 +153,16 @@ class _BookmarksState extends State<Bookmarks> {
   }
 
   void _removeQuote(Quote quote) {
+    final trashRepository = TrashRepository();
+
     _quoteRepository.delete(quote);
+    trashRepository.insert(quote);
 
     setState(() {
       _isFabVisible = false;
       quotes!.remove(quote);
     });
+
     ScaffoldMessenger.of(context)
         .showSnackBar(
           SnackBar(
@@ -167,6 +172,7 @@ class _BookmarksState extends State<Bookmarks> {
               label: AppLocalizations.of(context).translate('undo'),
               onPressed: () {
                 _quoteRepository.insert(quote);
+                trashRepository.delete(quote);
                 setState(() {
                   quotes!.add(quote);
                 });

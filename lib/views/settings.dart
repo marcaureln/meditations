@@ -11,6 +11,7 @@ import 'package:share/share.dart';
 import 'package:stoic/db/quote_repository.dart';
 import 'package:stoic/localization.dart';
 import 'package:stoic/views/import.dart';
+import 'package:stoic/views/trash.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class Settings extends StatefulWidget {
@@ -74,6 +75,15 @@ class _SettingsState extends State<Settings> {
             title: Text(AppLocalizations.of(context).translate('settings_share')),
             subtitle: Text(AppLocalizations.of(context).translate('settings_share_sub')),
             onTap: _share,
+          ),
+          ListTile(
+            leading: const SizedBox(
+              height: double.infinity,
+              child: Icon(Icons.recycling),
+            ),
+            title: const Text('Trash'),
+            subtitle: const Text('To see removed quotes'),
+            onTap: _showTrash,
           ),
           ListTile(
             leading: const SizedBox(
@@ -220,5 +230,9 @@ class _SettingsState extends State<Settings> {
     setState(() {
       _autoPasteEnabled = value;
     });
+  }
+
+  void _showTrash() {
+    Navigator.push(context, MaterialPageRoute(builder: (context) => const Trash()));
   }
 }
