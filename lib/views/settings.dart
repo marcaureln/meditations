@@ -54,8 +54,10 @@ class _SettingsState extends State<Settings> {
               height: double.infinity,
               child: Icon(Icons.import_export),
             ),
-            title: const Text('Import/Export'),
-            subtitle: const Text('Save or import quotes'),
+            title: Text(
+              '${AppLocalizations.of(context).translate('import')}/${AppLocalizations.of(context).translate('export')}',
+            ),
+            subtitle: Text(AppLocalizations.of(context).translate('settings_import_export_sub')),
             onTap: _showImportExportDialog,
           ),
           ListTile(
@@ -81,8 +83,8 @@ class _SettingsState extends State<Settings> {
               height: double.infinity,
               child: Icon(Icons.recycling),
             ),
-            title: const Text('Trash'),
-            subtitle: const Text('To see removed quotes'),
+            title: Text(AppLocalizations.of(context).translate('trash')),
+            subtitle: Text(AppLocalizations.of(context).translate('settings_trash_sub')),
             onTap: _showTrash,
           ),
           ListTile(
@@ -132,12 +134,12 @@ class _SettingsState extends State<Settings> {
                 onPressed: _export,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    Padding(
+                  children: [
+                    const Padding(
                       padding: EdgeInsets.all(8.0),
                       child: Icon(Icons.download),
                     ),
-                    Text('Export'),
+                    Text(AppLocalizations.of(context).translate('export')),
                   ],
                 ),
               ),
@@ -146,12 +148,12 @@ class _SettingsState extends State<Settings> {
                 onPressed: _import,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    Padding(
+                  children: [
+                    const Padding(
                       padding: EdgeInsets.all(8.0),
                       child: Icon(Icons.upload),
                     ),
-                    Text('Import'),
+                    Text(AppLocalizations.of(context).translate('import')),
                   ],
                 ),
               ),
@@ -181,7 +183,8 @@ class _SettingsState extends State<Settings> {
       final records = quotes.map((e) => e.toMap()).toList();
 
       file.writeAsString(jsonEncode(records)).then((file) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('File save as ${file.path}')));
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('${AppLocalizations.of(context).translate('save_as')} ${file.path}')));
       }).onError((FileSystemException error, stackTrace) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(error.message)));
       });

@@ -23,13 +23,7 @@ class _BookmarksState extends State<Bookmarks> {
   late SortBy _sortOrder;
   late bool _isFabVisible;
   late bool _bottomReached;
-
-  final Map<SortBy, String> _sortOptions = {
-    SortBy.author: 'A-Z (author)',
-    SortBy.source: 'A-Z (source)',
-    SortBy.newest: 'Recently added',
-    SortBy.none: 'Default',
-  };
+  late Map<SortBy, String> _sortOptions;
 
   @override
   void initState() {
@@ -41,6 +35,13 @@ class _BookmarksState extends State<Bookmarks> {
 
   @override
   Widget build(BuildContext context) {
+    _sortOptions = {
+      SortBy.author: AppLocalizations.of(context).translate('sort_by_author'),
+      SortBy.source: AppLocalizations.of(context).translate('sort_by_source'),
+      SortBy.newest: AppLocalizations.of(context).translate('sort_by_newest'),
+      SortBy.none: AppLocalizations.of(context).translate('sort_by_default'),
+    };
+
     if (quotes == null) {
       _fetchQuotes();
       return const Center(child: CircularProgressIndicator(strokeWidth: 2.0));
@@ -351,7 +352,8 @@ class _BookmarksState extends State<Bookmarks> {
   }
 
   Future<void> _search() async {
-    final result = await showSearch<Quote>(context: context, delegate: QuoteSearchDelegate(quotes!));
+    final result = await showSearch<Quote>(context: context, delegate: QuoteSearchDelegate(quotes!, context));
+
     if (result != null) {
       _showActions(result);
     }

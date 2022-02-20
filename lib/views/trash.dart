@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:stoic/db/quote_repository.dart';
 import 'package:stoic/db/trash_repository.dart';
+import 'package:stoic/localization.dart';
 import 'package:stoic/models/quote.dart';
 import 'package:stoic/widgets/empty_trash.dart';
 import 'package:stoic/widgets/quote_tile.dart';
@@ -19,7 +20,7 @@ class _TrashState extends State<Trash> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Trash'),
+        title: Text(AppLocalizations.of(context).translate('trash')),
       ),
       body: FutureBuilder(
         future: _getQuotes(),
@@ -40,7 +41,7 @@ class _TrashState extends State<Trash> {
                     width: double.infinity,
                     child: ElevatedButton.icon(
                       icon: const Icon(Icons.delete_forever),
-                      label: const Text('Empty trash'),
+                      label: Text(AppLocalizations.of(context).translate('empty_trash')),
                       style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all<Color>(Colors.red),
                       ),
@@ -98,14 +99,14 @@ class _TrashState extends State<Trash> {
           const Divider(),
           ListTile(
             leading: const Icon(Icons.restore_from_trash),
-            title: const Text('Restore'),
+            title: Text(AppLocalizations.of(context).translate('restore')),
             onTap: () {
               _restoreQuote(quote);
             },
           ),
           ListTile(
             leading: const Icon(Icons.delete_forever),
-            title: const Text('Delete forever'),
+            title: Text(AppLocalizations.of(context).translate('delete_forever')),
             onTap: () {
               _removeForeverQuote(quote);
             },

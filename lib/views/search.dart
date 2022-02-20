@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:stoic/localization.dart';
 import 'package:stoic/models/quote.dart';
 import 'package:stoic/widgets/quote_tile.dart';
 
 class QuoteSearchDelegate extends SearchDelegate<Quote> {
   final List<Quote> quotes;
+  final BuildContext parentContext;
 
-  QuoteSearchDelegate(this.quotes)
+  QuoteSearchDelegate(this.quotes, this.parentContext)
       : super(
-          searchFieldLabel: 'Search...',
+          searchFieldLabel: AppLocalizations.of(parentContext).translate('search'),
         );
 
   @override

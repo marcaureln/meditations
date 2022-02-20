@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:stoic/db/quote_repository.dart';
+import 'package:stoic/localization.dart';
 import 'package:stoic/models/quote.dart';
 import 'package:stoic/widgets/quote_tile.dart';
 
@@ -28,7 +29,7 @@ class _ImportState extends State<Import> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Import'),
+        title: Text(AppLocalizations.of(context).translate('import')),
         actions: [
           IconButton(
             onPressed: () async {
@@ -45,10 +46,10 @@ class _ImportState extends State<Import> {
             return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
-                  CircularProgressIndicator(strokeWidth: 2.0),
-                  SizedBox(height: 8),
-                  Text('Parsing file...'),
+                children: [
+                  const CircularProgressIndicator(strokeWidth: 2.0),
+                  const SizedBox(height: 8),
+                  Text(AppLocalizations.of(context).translate('parsing_file')),
                 ],
               ),
             );
@@ -79,11 +80,14 @@ class _ImportState extends State<Import> {
                         },
                       ),
                       Text(
-                        'Select all',
+                        AppLocalizations.of(context).translate('select_all'),
                         style: Theme.of(context).textTheme.bodyText1!.copyWith(fontWeight: FontWeight.bold),
                       ),
                       const VerticalDivider(indent: 8, endIndent: 8),
-                      Text('$noSelected ${noSelected > 1 ? 'quotes' : 'quote'} selected'),
+                      if (noSelected > 1)
+                        Text('$noSelected ${AppLocalizations.of(context).translate('many_quote_selected')}')
+                      else
+                        Text('$noSelected ${AppLocalizations.of(context).translate('one_quote_selected')}')
                     ],
                   ),
                 );
@@ -137,7 +141,9 @@ class _ImportState extends State<Import> {
     }
 
     if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Duplicates are not checked')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(AppLocalizations.of(context).translate('avoid_duplicates'))),
+      );
     }
 
     return quotesToImport;
@@ -157,12 +163,12 @@ class _ImportState extends State<Import> {
               child: Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    CircularProgressIndicator(
+                  children: [
+                    const CircularProgressIndicator(
                       strokeWidth: 2.0,
                     ),
-                    SizedBox(height: 8),
-                    Text('Importing quotes...'),
+                    const SizedBox(height: 8),
+                    Text(AppLocalizations.of(context).translate('import_in_progress')),
                   ],
                 ),
               ),
@@ -182,6 +188,12 @@ class _ImportState extends State<Import> {
     }
 
     Navigator.popUntil(context, ModalRoute.withName('/'));
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Done, $count quote(s) imported')));
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          '${AppLocalizations.of(context).translate('done')}, $count ${AppLocalizations.of(context).translate('import_count')}',
+        ),
+      ),
+    );
   }
 }

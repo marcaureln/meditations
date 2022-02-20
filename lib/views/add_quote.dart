@@ -167,7 +167,7 @@ class _AddQuoteState extends State<AddQuote> {
                       width: double.infinity,
                       child: ElevatedButton.icon(
                         icon: const Icon(Icons.note_add),
-                        label: const Text('Add notes'),
+                        label: Text(AppLocalizations.of(context).translate('add_notes')),
                         onPressed: _addNotes,
                       ),
                     )
@@ -177,8 +177,8 @@ class _AddQuoteState extends State<AddQuote> {
                       maxLines: 2,
                       controller: _notesController,
                       decoration: InputDecoration(
-                        labelText: 'Notes',
-                        hintText: 'Comments, page number, etc.',
+                        labelText: AppLocalizations.of(context).translate('notes'),
+                        hintText: AppLocalizations.of(context).translate('notes_placeholder'),
                         border: const OutlineInputBorder(),
                         suffixIcon: IconButton(
                           icon: const Icon(Icons.delete),

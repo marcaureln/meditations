@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:stoic/localization.dart';
 import 'package:stoic/theme.dart';
 
 class EmptyTrash extends StatelessWidget {
@@ -8,7 +9,7 @@ class EmptyTrash extends StatelessWidget {
       child: SizedBox(
         width: MediaQuery.of(context).size.width * .8,
         child: Text(
-          'Nothing in trash ✨',
+          '${AppLocalizations.of(context).translate('trash_empty')} ✨',
           style: myTheme.textTheme.bodyText1,
           textAlign: TextAlign.center,
         ),
