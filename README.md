@@ -4,6 +4,14 @@
 
 The idea of making this application came to me while I was reading Marcus Aurelius's Meditations. Like many readers, I usually highlight passages that hit me. But, this time, I wanted to have these passages next to me. I didn't want to take the book out of my library and delve into it to find a particular passage. I used to use note-taking apps like Google Keep, but when you start collecting a lot of quotes, things begin being messy. Furthermore, I wanted special features that these apps don't provide. So, that's why I decided to build my quotepad.
 
+## Screenshots
+<p>
+<img src="https://github.com/marcaureln/meditations/blob/master/1.jpg?raw=true" height="500px">
+<img src="https://github.com/marcaureln/meditations/blob/master/2.jpg?raw=true" height="500px">
+<img src="https://github.com/marcaureln/meditations/blob/master/3.jpg?raw=true" height="500px">
+<img src="https://github.com/marcaureln/meditations/blob/master/4.jpg?raw=true" height="500px">
+</p>
+
 ## Features
 
 - Create, modify, delete and share quotes
