@@ -130,7 +130,7 @@ class _ImportState extends State<Import> {
 
     for (final entry in jsonList) {
       final map = Map<String, dynamic>.from(entry as Map);
-      final quote = Quote.fromMap(null, map);
+      final quote = Quote.fromMap(null, map, hasTimestamp: false);
 
       if (localQuotes.any((element) => element.equals(quote))) {
         quotesToImport[quote] = false;

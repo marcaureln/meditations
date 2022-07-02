@@ -7,6 +7,7 @@ import 'package:hive/hive.dart';
 import 'package:package_info/package_info.dart';
 import 'package:path/path.dart' as path;
 import 'package:permission_handler/permission_handler.dart';
+import 'package:sembast/timestamp.dart';
 import 'package:share/share.dart';
 import 'package:stoic/db/quote_repository.dart';
 import 'package:stoic/localization.dart';
@@ -165,6 +166,14 @@ class _SettingsState extends State<Settings> {
   }
 
   Future<void> _export() async {
+    dynamic dateSerializer(dynamic object) {
+      if (object is Timestamp) {
+        return object.toIso8601String();
+      }
+
+      return object;
+    }
+
     final dir = await FilesystemPicker.open(
       title: 'Save to folder',
       context: context,
@@ -182,7 +191,7 @@ class _SettingsState extends State<Settings> {
       final quotes = await quoteRepository.selectAll();
       final records = quotes.map((e) => e.toMap()).toList();
 
-      file.writeAsString(jsonEncode(records)).then((file) {
+      file.writeAsString(jsonEncode(records, toEncodable: dateSerializer)).then((file) {
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text('${AppLocalizations.of(context).translate('save_as')} ${file.path}')));
       }).onError((FileSystemException error, stackTrace) {

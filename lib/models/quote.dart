@@ -14,13 +14,19 @@ class Quote {
     updatedAt = DateTime.now();
   }
 
-  Quote.fromMap(this.id, Map<String, dynamic> map) {
+  Quote.fromMap(this.id, Map<String, dynamic> map, {bool hasTimestamp = true}) {
     content = map['content'].toString();
     author = map['author']?.toString();
     source = map['source']?.toString();
     notes = map['notes']?.toString();
-    createdAt = (map['createdAt'] as Timestamp?)?.toDateTime() ?? DateTime.now();
-    updatedAt = (map['updatedAt'] as Timestamp?)?.toDateTime() ?? DateTime.now();
+
+    if (hasTimestamp) {
+      createdAt = (map['createdAt'] as Timestamp?)?.toDateTime() ?? DateTime.now();
+      updatedAt = (map['updatedAt'] as Timestamp?)?.toDateTime() ?? DateTime.now();
+    } else {
+      createdAt = DateTime.tryParse(map['createdAt'] as String) ?? DateTime.now();
+      updatedAt = DateTime.tryParse(map['updatedAt'] as String) ?? DateTime.now();
+    }
   }
 
   Map<String, dynamic> toMap() {
