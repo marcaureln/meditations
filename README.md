@@ -5,11 +5,12 @@
 The idea of making this application came to me while I was reading Marcus Aurelius's Meditations. Like many readers, I usually highlight passages that hit me. But, this time, I wanted to have these passages next to me. I didn't want to take the book out of my library and delve into it to find a particular passage. I used to use note-taking apps like Google Keep, but when you start collecting a lot of quotes, things begin being messy. Furthermore, I wanted special features that these apps don't provide. So, that's why I decided to build my quotepad.
 
 ## Screenshots
+
 <p>
-<img src="https://github.com/marcaureln/meditations/blob/master/1.jpg?raw=true" height="500px">
-<img src="https://github.com/marcaureln/meditations/blob/master/2.jpg?raw=true" height="500px">
-<img src="https://github.com/marcaureln/meditations/blob/master/3.jpg?raw=true" height="500px">
-<img src="https://github.com/marcaureln/meditations/blob/master/4.jpg?raw=true" height="500px">
+<img src="gh_assets/1.jpg" height="500px">
+<img src="gh_assets/2.jpg" height="500px">
+<img src="gh_assets/3.jpg" height="500px">
+<img src="gh_assets/4.jpg" height="500px">
 </p>
 
 ## Features
@@ -24,7 +25,7 @@ The idea of making this application came to me while I was reading Marcus Aureli
 
 ## Contributing
 
-If it happens to you to use the app and that you find a bug or want to implement a new feature, you are welcome. 
+If it happens to you to use the app and that you find a bug or want to implement a new feature, you are welcome.
 Follow these steps to contribute to this repository:
 
 1. Fork the repository
@@ -35,4 +36,4 @@ Follow these steps to contribute to this repository:
 
 ## License
 
-Distributed under the MIT License. See `LICENSE` for more information.
+See [LICENSE](LICENSE) for more information.
